@@ -7,3 +7,6 @@ eval/datasets/cache/
 # 不进版本库：内容随路由与卡片改动而变，提交只会制造无意义的 diff 噪声。
 eval/gold/prompts/
 eval/gold/judgments/
+
+# pytest 临时目录（--basetemp 指向仓内，防沙箱 tmp 权限问题）
+.pytest-tmp/
