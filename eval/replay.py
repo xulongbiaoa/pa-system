@@ -116,3 +116,30 @@ def summarize(trades, seed=42):
         "proven_edge": proven,
         "note": note,
     }
+
+
+def simulate_plan(bars_after, plan, side, window=300, fee_mult=1.0):
+    """按计划的 order_type 分派回放（市价 / 限价）。
+
+    2026-10-30 补：限价口径已定版进 core（穿越才成交、未成交留档），但
+    `simulate_limit_trade` 一直**没有任何调用方**——pilot_run 与 gold_run 都
+    直接走市价回放。结果是：判断层写 limit 的单子被当成「以限价成交」，
+    正好是这条口径要防的高估；未成交单也不会被留档。
+
+    返回 dict 一定带 order_type；限价未成交时 filled=False、无 R。
+    """
+    ot = (plan or {}).get("order_type") or "market"
+    if ot == "limit":
+        t = simulate_limit_trade(
+            bars_after, side, plan["entry"], plan["stop"],
+            plan["targets"][0], window=window, fee_mult=fee_mult,
+        )
+        t["order_type"] = "limit"
+        return t
+    t = simulate_trade(bars_after[:window], side, plan["entry"], plan["stop"],
+                       plan["targets"][0], fee_mult=fee_mult)
+    if t is None:
+        return {"filled": False, "exit_reason": "no_bars", "order_type": "market"}
+    t["order_type"] = "market"
+    t["filled"] = True  # 市价单不存在「未成交」，但契约要统一
+    return t

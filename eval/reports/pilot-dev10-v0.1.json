@@ -6,6 +6,8 @@
  "gate_reject_rules": {},
  "gate_notes": {},
  "h6_active": false,
+ "unfilled": 0,
+ "unfilled_segments": [],
  "trades": [],
  "summary": {
   "n": 0

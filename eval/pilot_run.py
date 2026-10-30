@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from gate.risk_rules import adjudicate  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import build_feature_pack, load_config  # noqa: E402
-from replay import simulate_trade, summarize  # noqa: E402
+from replay import simulate_plan, summarize  # noqa: E402
 
 DS = os.path.join(os.path.dirname(__file__), "datasets", "dev")
 JD = os.path.join(os.path.dirname(__file__), "pilot", "judgments")
@@ -57,6 +57,8 @@ def run(judgments_dir=JD):
         "gate_reject_rules": {},
         "gate_notes": {},
         "h6_active": bool(ledger),
+        "unfilled": 0,
+        "unfilled_segments": [],
         "trades": [],
     }
     if not os.path.isdir(judgments_dir):
@@ -108,14 +110,15 @@ def run(judgments_dir=JD):
             continue
         # 生命周期锚在决策点：只取决策点后 300 根，到期按第 300 根收盘出场
         future = seg["bars"][DECISION:DECISION + LIFECYCLE]
-        t = simulate_trade(
-            future, c["side"], plan["entry"], plan["stop"],
-            plan["targets"][0],
-        )
-        if t:
-            t.update({"segment": seg_id, "setup": c["setup"],
-                      "bars_after": len(future)})
-            report["trades"].append(t)
+        # 按计划的 order_type 分派：限价单必须穿越才成交、未成交留档
+        t = simulate_plan(future, plan, c["side"], window=LIFECYCLE)
+        if not t.get("filled", True):
+            report["unfilled"] += 1
+            report["unfilled_segments"].append(seg_id)
+            continue
+        t.update({"segment": seg_id, "setup": c["setup"],
+                  "bars_after": len(future)})
+        report["trades"].append(t)
     report["summary"] = summarize(report["trades"])
     report["no_trade_rate"] = (
         round(report["no_trade"] / report["judged"], 4) if report["judged"] else None

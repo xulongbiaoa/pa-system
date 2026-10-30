@@ -22,7 +22,7 @@ from gate.risk_rules import adjudicate  # noqa: E402
 from gold_build import DECISION, bars_of, gold_segments, pack_at_decision  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import load_config  # noqa: E402
-from replay import simulate_trade, summarize  # noqa: E402
+from replay import simulate_plan, summarize  # noqa: E402
 
 LIFECYCLE = 300
 JD = os.path.join(os.path.dirname(__file__), "gold", "judgments")
@@ -43,6 +43,7 @@ def score(judgments_dir=JD, gold=None, cfg=None):
         "verdict_agree": 0, "reason_agree": 0, "reason_compared": 0,
         "setup_agree": 0, "setup_compared": 0, "side_agree": 0,
         "gate_reject": 0, "gate_reject_rules": {}, "gate_notes": {},
+        "unfilled": 0, "unfilled_segments": [],
         "trades": [], "mismatches": [],
     }
     for g in gold:
@@ -94,11 +95,15 @@ def score(judgments_dir=JD, gold=None, cfg=None):
                 rep["gate_reject_rules"][h["rule"]] = (
                     rep["gate_reject_rules"].get(h["rule"], 0) + 1)
             continue
-        t = simulate_trade(bars[DECISION:DECISION + LIFECYCLE], c["side"],
-                           plan["entry"], plan["stop"], plan["targets"][0])
-        if t:
-            t.update({"segment": g["segment"], "setup": c["setup"]})
-            rep["trades"].append(t)
+        t = simulate_plan(bars[DECISION:DECISION + LIFECYCLE], plan, c["side"],
+                          window=LIFECYCLE)
+        if not t.get("filled", True):
+            # 限价未成交必须留档：未成交率本身就是样本选择偏差的度量
+            rep["unfilled"] += 1
+            rep["unfilled_segments"].append(g["segment"])
+            continue
+        t.update({"segment": g["segment"], "setup": c["setup"]})
+        rep["trades"].append(t)
     rep["verdict_agree_rate"] = (
         round(rep["verdict_agree"] / rep["n_judged"], 4) if rep["n_judged"] else None)
     rep["reason_agree_rate"] = (

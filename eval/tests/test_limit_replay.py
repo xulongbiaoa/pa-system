@@ -44,3 +44,28 @@ def test_bars_for_days():
     assert bars_for_days("15m", 7) == 672
     assert bars_for_days("1d", 7) == 7
     assert bars_for_days("4h", 7) == 42
+
+
+def test_simulate_plan_dispatches_on_order_type():
+    """限价口径必须真的进管线：写 limit 却按市价回放，正是这条口径要防的高估。"""
+    from replay import simulate_plan
+    bars = [B(100, 101, 99, 100), B(100, 101, 98, 99)]  # 最低 98，未穿越 95
+    plan = {"entry": 95.0, "stop": 90.0, "targets": [110.0], "order_type": "limit"}
+    t = simulate_plan(bars, plan, "long", window=300)
+    assert t["order_type"] == "limit" and t["filled"] is False
+
+
+def test_simulate_plan_limit_fills_when_crossed():
+    from replay import simulate_plan
+    bars = [B(100, 101, 94, 99), B(99, 112, 98, 111)]  # 第二根穿越 95 并打到 110
+    plan = {"entry": 95.0, "stop": 90.0, "targets": [110.0], "order_type": "limit"}
+    t = simulate_plan(bars, plan, "long", window=300)
+    assert t["filled"] is True and t["exit_reason"] == "target"
+
+
+def test_simulate_plan_defaults_to_market():
+    from replay import simulate_plan
+    bars = [B(100, 111, 99, 108)]
+    t = simulate_plan(bars, {"entry": 100.0, "stop": 94.0, "targets": [110.0]},
+                      "long", window=300)
+    assert t["order_type"] == "market" and t["filled"] is True

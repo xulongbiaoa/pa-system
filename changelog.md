@@ -152,3 +152,13 @@ core.md 未改，红线 3 仍是 1%。提案全文 review-out/凯利仓位提案
 
 外部复核、代码复核、凯利提案、概览勘误、Muse 简报五份文档移入仓库 `review-out/`，附 README 索引（每份的结论一句话 + 裁定落地位置 + 待裁定项）。目的是让「谁在什么时候依据什么改了哪条规则」有凭证可查，而不是散在工作区里。
 41 段标注原件不重复入库：已在 `knowledge/reviews/annotations-external-20261030.jsonl`，与工作区的 `annotations.jsonl` 逐字节相同（已 diff 校验）。
+
+## 2026-10-30 · 限价口径接进回放（原为死代码）
+
+排查「还有哪些定版口径没落地」时发现：`eval/replay.simulate_limit_trade` **没有任何调用方**。pilot_run 与 gold_run 都直接调 `simulate_trade`，于是判断层写 `order_type="limit"` 的单子被当成「以限价成交」——正好是这条口径（穿越才成交）要防的高估，而且未成交单连档都不留。
+
+改法：新增 `replay.simulate_plan(bars_after, plan, side, window)` 按 `order_type` 分派，返回恒带 `order_type` 与 `filled`；两个运行器改为调它，未成交进 `unfilled` / `unfilled_segments` 单独留档（未成交率本身是样本选择偏差的度量）。市价路径显式补 `filled=True`——市价不存在未成交，但契约要统一，否则调用方得写两套判断。
+
+口径核对（顺带确认，非改动）：决策窗取 `bars[:180]`、未来窗取 `bars[180:]`，回放首根即决策点**下一根**，不存在「用入场那根自己的高低点判止损」的同根前视。
+
+测试 85 → 88 全过（新增 3 个：分派、穿越成交、默认市价）。试点报告新增 `unfilled: 0`。
