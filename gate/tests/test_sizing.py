@@ -53,3 +53,38 @@ def test_size_is_monotone_in_sample_size():
         f = suggest(int(n * 0.65), n, 2.0)["f_applied"]
         assert f >= prev
         prev = f
+
+
+def test_p_for_cap_is_the_decision_threshold():
+    """触顶胜率：解 1/4·f*(p)=1%。b=2.84 → 29.0%，b=1.32 → 45.4%。"""
+    from gate.sizing import p_for_cap
+    assert abs(p_for_cap(2.926 / 1.031) - 0.290) < 0.002
+    assert abs(p_for_cap(1.409 / 1.070) - 0.454) < 0.003
+
+
+def test_precision_cost_depends_on_payoff_ratio():
+    """同样是 ±50% 精度，盈亏比 2.84 只要 18 笔，1.32 要 200 多笔。"""
+    from gate.sizing import n_for_precision
+    hi = n_for_precision(0.5, 2.926 / 1.031, 0.5)
+    lo = n_for_precision(0.5, 1.409 / 1.070, 0.5)
+    assert 15 <= hi <= 22
+    assert lo > 150
+    assert n_for_precision(0.5, 2.926 / 1.031, 0.2) > 80
+
+
+def test_stage_ladder():
+    """四段阶梯：explore → no_edge / capped → kelly。"""
+    assert suggest(1, 2, 2.84)["stage"] == "explore"
+    assert suggest(9, 31, 1.32)["stage"] == "no_edge"
+    assert suggest(20, 40, 2.84)["stage"] == "capped"
+    s = suggest(200, 300, 1.0)  # b=1 时 p̂=0.667 也才 0.333 全凯利
+    assert s["stage"] in ("kelly", "capped")
+
+
+def test_when_capped_precision_does_not_change_size():
+    """一旦触顶，胜率再准也不改变仓位——所以此时不必等精确胜率。"""
+    a = suggest(20, 40, 2.84)   # p̂=0.5
+    b = suggest(30, 40, 2.84)   # p̂=0.75
+    assert a["stage"] == b["stage"] == "capped"
+    assert a["f_applied"] == b["f_applied"] == a["cap"]
+    assert a["kelly_lo"] != b["kelly_lo"]  # 但底层估计差很多

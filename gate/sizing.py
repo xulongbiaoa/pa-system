@@ -26,6 +26,8 @@
 答案：**证据没到，任何仓位都是猜**。
 """
 
+import math
+
 RISK_CAP = 0.01     # 与 gate.risk_rules.RISK_FRAC_MAX 同源
 FRACTIONAL = 0.25   # 分数凯利：默认 1/4，参数不确定时留安全边际
 MIN_N = 30          # 与 replay.summarize 的统计底线一致
@@ -55,6 +57,40 @@ def kelly_fraction(p, b):
     return max(0.0, p - (1 - p) / b)
 
 
+def p_for_cap(b, cap=RISK_CAP, fractional=FRACTIONAL):
+    """胜率到多少，仓位就顶到上限、再精确也没用。
+
+    解 `fractional × f*(p) = cap`：
+        p* = (cap/fractional × b + 1) / (b + 1)
+    b=2.84、cap=1%、1/4 凯利 → p* ≈ 0.29；b=1.32 → p* ≈ 0.45。
+
+    这是本模块最重要的一条：**触顶之后你不需要知道胜率，只需要知道它过了 p***。
+    把「估一个数」换成「过一个阈」，所需样本少一个量级。
+    """
+    if b is None or b <= 0:
+        return None
+    return (cap / fractional * b + 1) / (b + 1)
+
+
+def n_for_precision(p, b, rel_tol=0.5):
+    """把凯利估到 ±rel_tol 相对精度需要多少笔。
+
+    凯利对胜率的敏感度 ∂f*/∂p = 1 + 1/b，所以胜率的标准误只需
+    `|f*| × rel_tol / (1+1/b)`；再由 SE = √(p(1−p)/n) 反解 n。
+    实测：p=0.5、b=2.84 时 ±50% 要 18 笔、±20% 要 110 笔；
+    而 b=1.32 时同样 ±50% 要 214 笔——**盈亏比低的策略，样本成本高一个量级**。
+    """
+    if not p or b is None or b <= 0 or p >= 1:
+        return None
+    f = kelly_fraction(p, b)
+    if f <= 0:
+        return None
+    dp = abs(f * rel_tol) / (1 + 1 / b)
+    if dp <= 0:
+        return None
+    return math.ceil(p * (1 - p) / (dp * dp))
+
+
 def suggest(wins, n, b, cap=RISK_CAP, fractional=FRACTIONAL, min_n=MIN_N, z=Z):
     """返回仓位建议与判定依据。b 用**已实现**的净盈亏比（台账口径）。
 
@@ -74,14 +110,19 @@ def suggest(wins, n, b, cap=RISK_CAP, fractional=FRACTIONAL, min_n=MIN_N, z=Z):
         "kelly_naive": round(k_naive, 4),
         "kelly_lo": round(k_lo, 4), "kelly_hi": round(k_hi, 4),
         "fractional": fractional, "cap": cap,
+        # 决策相关的两个门槛（与「估一个精确胜率」无关）
+        "p_for_cap": round(p_for_cap(b, cap, fractional), 4) if b else None,
+        "n_for_50pct_precision": n_for_precision(p_hat, b, 0.5) if p_hat else None,
     }
     if n < min_n:
         out.update({"f_raw": 0.0, "f_applied": 0.0, "binding": "evidence",
+                    "stage": "explore",
                     "reason": f"样本不足（n={n}<{min_n}），凯利不可用 → 0"})
         return out
     f_raw = k_lo * fractional
     if f_raw <= 0:
         out.update({"f_raw": 0.0, "f_applied": 0.0, "binding": "evidence",
+                    "stage": "no_edge",
                     "reason": f"下界凯利 ≤0（p_lo={out['p_lo']}，b={b}），负优势 → 0"})
         return out
     f_applied = min(f_raw, cap)
@@ -89,7 +130,10 @@ def suggest(wins, n, b, cap=RISK_CAP, fractional=FRACTIONAL, min_n=MIN_N, z=Z):
     out.update({
         "f_raw": round(f_raw, 4), "f_applied": round(f_applied, 4),
         "binding": binding,
+        # capped = 胜率已过阈值、仓位被上限接管，此时再提高胜率精度不影响仓位
+        "stage": "capped" if binding == "cap" else "kelly",
         "reason": (f"下界凯利 {round(k_lo, 4)} × {fractional} = {round(f_raw, 4)}"
-                   + (f"，触上限 {cap}" if binding == "cap" else "")),
+                   + (f"，触上限 {cap}（胜率精度已不影响仓位）"
+                      if binding == "cap" else "")),
     })
     return out
