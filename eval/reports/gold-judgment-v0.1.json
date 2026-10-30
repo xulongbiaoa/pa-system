@@ -2,6 +2,7 @@
  "n_gold": 30,
  "n_judged": 0,
  "format_fail": 0,
+ "ledger_present": false,
  "verdict_agree": 0,
  "reason_agree": 0,
  "reason_compared": 0,

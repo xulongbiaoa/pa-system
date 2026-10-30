@@ -60,7 +60,9 @@ def main():
         if bars is None:
             print("缺 K 线，跳过:", g["segment"])
             continue
-        text = build_prompt(pack_at_decision(bars, cfg), bars[:DECISION])
+        text = build_prompt(pack_at_decision(bars, cfg), bars[:DECISION],
+                            segment=g["segment"],
+                            symbol=(g.get("gold") or {}).get("symbol"))
         with open(os.path.join(OUT, g["segment"] + ".md"), "w") as f:
             f.write(text)
         n += 1

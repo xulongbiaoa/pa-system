@@ -272,3 +272,31 @@ def test_min_stop_frac_for_floor():
     from gate.risk_rules import min_stop_frac_for_floor
     f = min_stop_frac_for_floor(1.5)
     assert 0.0049 < f < 0.0052
+
+
+def test_h6_notes_when_ledger_has_no_cell():
+    """传了台账但没这一格，必须留痕——传 {} 看起来像接好了，实际 H6 从未生效。"""
+    r = adjudicate(_plan(), _pack(), bars_left=50, ledger={})
+    assert r["verdict"] == "pass"
+    assert any("H6" in n and "样本" in n for n in r["notes"]), r["notes"]
+
+
+def test_h6_notes_when_cell_empty():
+    ledger = {("A1", "上升"): {"n": 0, "wins": 0}}
+    r = adjudicate(_plan(), _pack(), bars_left=50, ledger=ledger)
+    assert not any(h["rule"] == "H6" for h in r["hard_hits"])
+    assert any("H6" in n for n in r["notes"]), r["notes"]
+
+
+def test_limit_order_type_uses_limit_fee():
+    """order_type=limit 必须走限价费率；原先 gate 只认 limit_in，写 limit 的
+    单子按市价费率算 RR，H1 永远吃不到限价优惠（2026-10-30 复核）。"""
+    market = adjudicate(_plan(order_type="market"), _pack(), bars_left=50)
+    limit = adjudicate(_plan(order_type="limit"), _pack(), bars_left=50)
+    assert limit["rr_by_target"][0] > market["rr_by_target"][0]
+
+
+def test_legacy_limit_in_still_honoured():
+    legacy = adjudicate(_plan(limit_in=True), _pack(), bars_left=50)
+    limit = adjudicate(_plan(order_type="limit"), _pack(), bars_left=50)
+    assert legacy["rr_by_target"] == limit["rr_by_target"]

@@ -10,3 +10,6 @@ eval/gold/judgments/
 
 # pytest 临时目录（--basetemp 指向仓内，防沙箱 tmp 权限问题）
 .pytest-tmp/
+
+# 本地 agent 工作区（记忆与运行态），不进版本库
+.workbuddy-ai/

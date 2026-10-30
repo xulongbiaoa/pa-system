@@ -243,3 +243,19 @@ core.md 未改，红线 3 仍是 1%。提案全文 review-out/凯利仓位提案
 **③ 记录一个新洞**：`adjudicate` 的 `flags` 参数没有任何生产者。`perception/fortress.py` 算了 `decaying`/`trampled`，但没翻成 flags；`parabolic`/`second_bar_confirmed` 连测量函数都没有。**S1–S3 在所有真实回放里一次都没触发**，降仓层至今是空的（与当初 H6 没接线同类）。不现在补，因为 parabolic 判据需要新常数，另案。
 
 测试 109 → 113。
+
+## 2026-10-30 · 复核 c90b535 三份文档后修的五处
+
+复核记录见 `review-out/文档复核-20261030.md`。结论是文档内容站得住（12 项数字、8 条代码缺口断言、6 处交叉引用全部复算通过），要修的是**文档自己列出的缺口**和两处索引。
+
+**① 召回自样本泄漏 + 池退化**（`judge/prompt_builder.py`）。原实现只按趋势标签把「每类第一条」拼起来，实测任何样本都只返回 `ex-APT` + `ex-ARB`，且不排除当前样本——APT/ARB/AVAX 三段的提示里会出现自己的 `draft_verdict`。改为：排除自身（segment/id）、排除同标的且 K 线时间区间相交的切片（只按文件名排除挡不住同一段行情的另一份切片）、只从 dev 池召回（val/test 的答案不得进任何提示）、按 (语境, 结论) 分桶轮转。`build_prompt` 新增 `segment`/`symbol` 参数，`gold_build`/`pa_cli` 都传。
+
+**② CLI gate 的 context 与台账**（`judge/pa_cli.py`、`eval/gold_run.py`）。CLI 原先只 update side/setup：`context` 缺省 → H6 的 (setup, 语境) 键永远查不中；台账也没传。gold_run 同理。两处按 `pilot_run` 的既有写法接线，决策根不再硬编码 180。同时 `adjudicate` 区分「未提供台账」与「台账无该格样本」——后者也写 notes，堵住「传 `{}` 看起来像接好了、实际 H6 从未生效」这个洞。
+
+**③ 费用双轨与 order_type 口径**（`gate/risk_rules.py`、`eval/replay.py`）。schema 只认 `order_type`，gate 只读 `limit_in`：写 limit 的单子按市价费率算 RR，H1 永远吃不到限价优惠；回放又硬编码 `FEE=0.0005`，与 H1 的 config 费率（限价 0.02%）是两套账。改为 gate 以 `order_type` 为准（`limit_in` 兼容）、回放统一读 config、限价单入场按限价费率结算。市价单 R 不变，DOT 2.926202 / ds23 −1.031392 仍是金标准回归值。
+
+**④ 评估链路去 numpy**（`eval/replay.py`）。`summarize` 的 bootstrap 与分位改纯标准库（线性插值口径同 `np.percentile`）。原先顶层 `import numpy`，本机无 numpy 时 `gold_run`/`gold_build` 整体起不来——评估层等于没有可执行入口。
+
+**⑤ 测试 123 → 139**。新增召回隔离 7（自身/重叠窗口/val 不召回/多样性/确定性）、H6 与限价费率 4、回放费率与无 numpy 3、接线审计 2。
+
+**仍未修**（已写进架构 §3 的「未修」清单）：`void_if` 无受限表达式与解释器；回放不执行前提失效（core 红线 5）；`second_bar_confirmed` 仍是模型自声明；S1 `parabolic` 无生产者；`knowledge/examples` 无 split 字段，未纳入 §8.1 隔离模型。

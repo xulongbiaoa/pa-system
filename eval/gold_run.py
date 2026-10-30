@@ -24,10 +24,22 @@ from gold_build import DECISION, bars_of, gold_segments, pack_at_decision  # noq
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import load_config  # noqa: E402
 from replay import simulate_plan, summarize  # noqa: E402
+import ledger as ledger_store  # noqa: E402
+from ledger import gate_view  # noqa: E402
 
 LIFECYCLE = 300
 JD = os.path.join(os.path.dirname(__file__), "gold", "judgments")
 OUT = os.path.join(os.path.dirname(__file__), "reports", "gold-judgment-v0.1.json")
+LEDGER_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "knowledge", "ledger", "mode_stats.json"
+)
+
+
+def load_ledger(path=LEDGER_PATH):
+    """H6 台账视图。**不得**用正在评估的这批 gold 结果填台账（那是自证），
+    台账应由更早的独立回放/实盘填充；文件不存在就返回空台账，让 H6 在 notes
+    里写明「无该格样本」而不是静默跳过。"""
+    return gate_view(ledger_store.load(path))
 
 
 def _ai_verdict(j):
@@ -39,8 +51,10 @@ def score(judgments_dir=JD, gold=None, cfg=None):
     """返回报告 dict。judgments_dir 里没有对应段的判断就计入未判，不算失败。"""
     cfg = cfg or load_config()
     gold = gold or gold_segments()
+    ledger = load_ledger()
     rep = {
         "n_gold": len(gold), "n_judged": 0, "format_fail": 0,
+        "ledger_present": bool(ledger),
         "verdict_agree": 0, "reason_agree": 0, "reason_compared": 0,
         "setup_agree": 0, "setup_compared": 0, "side_agree": 0,
         "gate_reject": 0, "gate_reject_rules": {}, "gate_notes": {},
@@ -88,7 +102,8 @@ def score(judgments_dir=JD, gold=None, cfg=None):
                      "context": pack["trend"]["label"]})
         v = adjudicate(plan, pack, bars_left=LIFECYCLE,
                        feature_refs=c.get("feature_refs", []),
-                       flags=build_flags(plan, pack), mode="annotation")
+                       flags=build_flags(plan, pack),
+                       ledger=ledger, mode="annotation")
         for note in v.get("notes", []):
             rep["gate_notes"][note] = rep["gate_notes"].get(note, 0) + 1
         if v["verdict"] == "reject":

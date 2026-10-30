@@ -50,3 +50,19 @@ def test_all_production_callers_wire_build_flags():
         assert "build_flags" in src, f"{rel} 未接 build_flags（flags 又没生产者了）"
         assert "flags=build_flags(plan, pack)" in src, \
             f"{rel} 导入了 build_flags 但没传给 adjudicate"
+
+
+def test_cli_gate_passes_context_and_ledger():
+    """CLI 的 gate 分支必须把 context 与台账一起交给 adjudicate。
+
+    2026-10-30 复核：pa_cli 只 update 了 side/setup，context 缺省 → H6 的
+    (setup, 语境) 键永远查不中；台账也没传，H6 在 CLI 路径上从未生效。
+    """
+    src = (ROOT / "judge" / "pa_cli.py").read_text(encoding="utf-8")
+    assert '"context": pack["trend"]["label"]' in src, "pa_cli 没传 context"
+    assert "ledger=load_ledger()" in src, "pa_cli 没传台账"
+
+
+def test_gold_run_passes_ledger():
+    src = (ROOT / "eval" / "gold_run.py").read_text(encoding="utf-8")
+    assert "ledger=ledger" in src, "gold_run 没传台账"

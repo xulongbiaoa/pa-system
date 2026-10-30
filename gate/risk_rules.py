@@ -93,7 +93,7 @@ def _round_level(price):
 
 def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=None,
                mode="annotation"):
-    """plan: {side, entry, stop, targets[], risk_frac, limit_in?}
+    """plan: {side, entry, stop, targets[], risk_frac, order_type?, limit_in?}
     flags: {parabolic, trample, decaying, second_bar_confirmed}
     ledger: {(setup, 语境): {'n': int, 'wins': int}}，语境须为
     plan['context'] 且取值在 CONTEXTS 枚举内，否则 H6 不查（结果里 notes 会
@@ -106,10 +106,15 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     fees = cfg["fees"]
     target_rr = cfg.get("target_rr")  # 设计目标（毛口径），None = 未声明
     flags = flags or {}
+    # 下单方式口径统一（2026-10-30 复核）：schema 只认 order_type，gate 原先只读
+    # limit_in，两套键名并存 → 判断层写 limit 的单子按**市价**费率算 RR，H1 永远
+    # 吃不到限价优惠，回放又按市价费率结算。这里以 order_type 为准，保留
+    # limit_in 兼容旧调用。
+    limit_in = (plan.get("order_type") == "limit") or bool(plan.get("limit_in"))
     hard, soft = [], []
     notes = []
     rr_by_target = [
-        _rr(plan["entry"], plan["stop"], t, fees, plan.get("limit_in", False))
+        _rr(plan["entry"], plan["stop"], t, fees, limit_in)
         for t in plan["targets"]
     ]
     rr_gross = (_rr_gross(plan["entry"], plan["stop"], plan["targets"][0])
@@ -130,7 +135,7 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     rr_at_decision = None
     if px:
         rr_at_decision = [
-            _rr(px, plan["stop"], t, fees, plan.get("limit_in", False))
+            _rr(px, plan["stop"], t, fees, limit_in)
             for t in plan["targets"]
         ]
     rr_gate = rr_by_target
@@ -197,6 +202,13 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         st = ledger.get((plan["setup"], context))
         if st and st.get("n", 0) >= 3 and st.get("wins", 0) == 0:
             hard.append({"rule": "H6", "detail": f"{plan['setup']}×{context} 样本{st['n']} 0胜，停牌"})
+        elif not st or not st.get("n"):
+            # 传了台账但这一格是空的：和「没传台账」是两件事，不许静默。
+            # 2026-10-30 复核发现：传 {} 看起来像接好了，实际 H6 从未生效。
+            n_cell = (st or {}).get("n", 0)
+            notes.append(
+                f"H6 未生效：台账无 {plan['setup']}×{context} 样本（n={n_cell}）"
+            )
     # 软规则：降仓。
     # 2026-10-30 去掉 S1/S3 的 RR 条件：设计目标定为盈亏比 2:1（净 RR ≈ 1.95）
     # 后，S1 的 `< 2.5` 与 S3 的 `< 2.0` 对**每一个**合格计划都恒成立，条件

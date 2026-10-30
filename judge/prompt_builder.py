@@ -19,6 +19,10 @@ import os
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 KB = os.path.join(ROOT, "knowledge")
 
+# 召回池只开 dev：val/test 的答案不得进入任何提示（2026-10-30 复核后修）。
+# 开发集样本自己也从 dev 池取，靠 segment/时间区间排除自身。
+POOL_SPLIT = "dev"
+
 TREND_CARD = {"上升": "A1-m2b", "下降": "A2-m2s"}
 
 
@@ -45,28 +49,67 @@ def route_cards(pack):
     return [follow, "B1-trend-breakout", "B2-breakout-pullback"], reasons
 
 
-def recall_examples(pack, k=3):
+def _bar_range(bars):
+    ts = [b["t"] for b in bars if isinstance(b, dict) and "t" in b]
+    return (min(ts), max(ts)) if ts else None
+
+
+def _overlap(a, b):
+    return bool(a and b and not (a[1] < b[0] or b[1] < a[0]))
+
+
+def recall_examples(pack, k=3, *, segment=None, symbol=None, bars=None,
+                    pool_split=POOL_SPLIT):
+    """召回参考样本。三条硬约束（2026-10-30 复核后修）：
+
+    1. **不许召回自己**：按 segment/id 排除当前样本；
+    2. **不许召回归属重叠的窗口**：同标的且 K 线时间区间相交的样本一并排除
+       （只按文件名排除挡不住「同一段行情的另一份切片」）；
+    3. **只从允许的池召回**：默认只从 dev 池取，val/test 样本的提示里不得出现
+       验证/测试集的答案。
+
+    原实现只按趋势标签把「每类第一条」拼起来，实测任何样本都只返回
+    ex-APT + ex-ARB 两条，且这三条都不设防——APT/ARB/AVAX 三段会在自己的
+    提示里读到自己的 draft_verdict。改动后按 (语境, 草稿结论) 分桶轮转，
+    同语境优先，保证 k 条尽量不同桶。
+    """
     exdir = os.path.join(KB, "examples")
+    if not os.path.isdir(exdir):
+        return []
+    cur_range = _bar_range(bars or [])
     pool = []
-    if os.path.isdir(exdir):
-        for name in sorted(os.listdir(exdir)):
-            if name.endswith(".json"):
-                pool.append(json.load(open(os.path.join(exdir, name))))
+    for name in sorted(os.listdir(exdir)):
+        if not name.endswith(".json"):
+            continue
+        e = json.load(open(os.path.join(exdir, name)))
+        if pool_split and e.get("split") != pool_split:
+            continue
+        if segment and (e.get("segment") == segment
+                        or e.get("id") == "ex-" + segment):
+            continue
+        if symbol and e.get("symbol") == symbol and _overlap(
+                cur_range, _bar_range(e.get("bars") or [])):
+            continue
+        pool.append(e)
+
     trend = pack["trend"]["label"]
-    same = [e for e in pool if e["annotation"]["context"] == trend]
-    rest = [e for e in pool if e["annotation"]["context"] != trend]
+    buckets = {}
+    for e in pool:
+        key = (e["annotation"].get("context"),
+               e["annotation"].get("draft_verdict"))
+        buckets.setdefault(key, []).append(e)
+    # 同语境优先，其余按 (语境, 结论) 字典序——确定性，不靠文件系统顺序
+    order = sorted(buckets, key=lambda kk: (kk[0] != trend, str(kk[0]), str(kk[1])))
     picked = []
-    for e in same + rest:
-        v = e["annotation"]["draft_verdict"]
-        if v == "no_trade" and not any(
-            p["annotation"]["draft_verdict"] == "no_trade" for p in picked
-        ):
-            picked.append(e)
-        elif v == "candidate" and not any(
-            p["annotation"]["draft_verdict"] == "candidate" for p in picked
-        ):
-            picked.append(e)
-        if len(picked) >= k:
+    while len(picked) < k:
+        progressed = False
+        for key in order:
+            if len(picked) >= k:
+                break
+            if buckets[key]:
+                picked.append(buckets[key].pop(0))
+                progressed = True
+        if not progressed:
             break
     return picked[:k]
 
@@ -78,7 +121,7 @@ def bars_table(bars):
     return "\n".join(lines)
 
 
-def build_prompt(pack, bars, prev_hypotheses=None):
+def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None):
     parts = []
     parts.append(_read(os.path.join(KB, "core.md")))
     parts.append(_read(os.path.join(KB, "router.md")))
@@ -91,7 +134,7 @@ def build_prompt(pack, bars, prev_hypotheses=None):
                    "认定不了就写进 uncertainty 并空仓。")
     parts.append("## 特征包（感知层输出，只许引用其中的字段）\n```json\n"
                  + json.dumps(pack, ensure_ascii=False) + "\n```")
-    exs = recall_examples(pack)
+    exs = recall_examples(pack, segment=segment, symbol=symbol, bars=bars)
     if exs:
         brief = [
             {

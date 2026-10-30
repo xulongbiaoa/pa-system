@@ -69,3 +69,36 @@ def test_simulate_plan_defaults_to_market():
     t = simulate_plan(bars, {"entry": 100.0, "stop": 94.0, "targets": [110.0]},
                       "long", window=300)
     assert t["order_type"] == "market" and t["filled"] is True
+
+
+def test_limit_fill_charges_limit_entry_fee():
+    """限价单入场按 fees['limit_in'] 计费，与 H1 的净 RR 同口径。
+
+    原先本模块硬编码 FEE=0.0005：裁决层按 0.02% 承诺 RR、回放按 0.05% 结算，
+    承诺与结算两套账（2026-10-30 复核）。
+    """
+    bars = [B(100, 101, 98.9, 100), B(100, 104, 99.5, 103.5)]
+    market = simulate_trade(bars, "long", 99.0, 97.0, 103.0)
+    limit = simulate_limit_trade(bars, "long", 99.0, 97.0, 103.0)
+    assert limit["filled"] is True
+    # 入场费更低 → 净 R 更高；差额 = (0.0005-0.0002)*99/risk
+    assert limit["r"] > market["r"]
+    assert abs((limit["r"] - market["r"]) - 0.0003 * 99.0 / 2.0) < 1e-9
+
+
+def test_replay_has_no_numpy_dependency():
+    """评估链路必须能在无第三方包的环境跑（原先顶层 import numpy，
+    gold_run/gold_build 整体起不来）。"""
+    import inspect
+    import replay
+    src = inspect.getsource(replay)
+    assert "import numpy" not in src, "replay 又引入 numpy 了"
+
+
+def test_summarize_without_numpy():
+    from replay import summarize
+    s = summarize([{"r": 1.0, "win": True}, {"r": -1.0, "win": False},
+                   {"r": 2.0, "win": True}])
+    assert s["n"] == 3 and s["median_r"] == 1.0
+    assert s["mean_r_ci95"][0] <= s["mean_r"] <= s["mean_r_ci95"][1]
+    assert s["proven_edge"] is False and "样本不足" in s["note"]
