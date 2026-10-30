@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 eval/datasets/cache/
 .tmp/
+# 粘贴式提示与判断是可由脚本重生成的中间物（eval/gold_build.py / pilot_build.py），
+# 不进版本库：内容随路由与卡片改动而变，提交只会制造无意义的 diff 噪声。
+eval/gold/prompts/
+eval/gold/judgments/
