@@ -1,11 +1,13 @@
 """模式台账 v1：按 setup 建格累计，语境与下单方式只做审计分层。
 
-## 为什么必须有 b
+消费者只有两个：H6 停牌（setup×语境 的 n/wins）与人读绩效报告
+（summarize 的平均 R 与已实现盈亏比 b——描述统计，不是仓位输入）。
+台账格子存 R 的一二阶量（r_sum / r_win_sum / r_loss_sum），b 由实现值算、
+不由承诺 RR 代替（两者实测能差 3 倍以上，见 changelog「H1 改为现价口径」）。
 
-`gate.sizing.suggest` 要 `b`（已实现盈亏比）才能算触顶胜率 `p*`、精度成本
-`n_for_precision` 与阶段 `stage`。没有 b，凯利只能退回「拿计划首目标 RR 当
-b」，那是**承诺**不是**实现**——两者在实测里能差 3 倍以上（见 changelog
-「H1 改为现价口径」一节）。所以台账格子必须存 R 的一二阶量，b 由实现值算。
+凯利 sizing 曾是第三个消费者，2026-10-31 按用户裁定整体移除（从未
+生效、用不到）：`gate/sizing.py` 已删，裁决层不再给仓位建议，台账视图
+不再输出 b 系列字段；R 一二阶量保留，只服务报告与审计。
 
 ## 为什么按 setup 建格，不按 setup×语境×下单方式
 
@@ -21,14 +23,11 @@ b」，那是**承诺**不是**实现**——两者在实测里能差 3 倍以�
 分格粒度是**样本预算决策**，不是审美决策。每多一个维度，样本成本乘上该
 维度的取值数。所以：
 
-- **凯利的 p 与 b 取该 setup 的全池合计**（`all`）——最粗、最先填得满；
 - **H6 停牌取 setup×语境**（`by_context`）——它是「这个 setup 在这个语境里
   已经连败」的否决判断，可以稀疏，不需要 n≥30；
 - **下单方式**（`by_order_type`）只记录、不进任何参数估计。理由：限价单
   「等回踩再进」会系统性抬高实现 b（ds23 实测抬价 2% 让承诺 RR 从 2.59
   到 7.98），但成交条件也随之变严，市价单与限价单是两个不同 (p, b) 总体。
-  一旦某 setup 的 limit 占比 >30% 且全池 n≥30，就该把它拆成参数维度——
-  届时**另案提案**，不在这里提前拆。
 
 ## 文件形状
 
@@ -40,8 +39,7 @@ b」，那是**承诺**不是**实现**——两者在实测里能差 3 倍以�
       }
     }
 
-`b = (r_win_sum/wins) / (|r_loss_sum|/(n−wins))`，任一侧无样本则 None（不给
-凯利瞎猜的机会）。
+`b = (r_win_sum/wins) / (|r_loss_sum|/(n−wins))`，任一侧无样本则 None。
 """
 
 import json
@@ -129,11 +127,10 @@ def save(store, path=DEFAULT_PATH):
 
 
 def gate_view(store):
-    """转成裁决层的台账视图：{(setup, 语境): {n, wins, b, b_n, b_wins}}。
+    """转成裁决层的台账视图：{(setup, 语境): {n, wins}}。
 
     - `n` / `wins`：该 setup×语境的样本 → H6 停牌用（语境特异，可以稀疏）
-    - `b` / `b_n` / `b_wins`：该 setup 全池的样本与盈亏比 → 凯利用（最粗，
-      最先填得满；与 p 同总体，不许拿 A 总体的 b 配 B 总体的 p）
+    - 只输出 n/wins（H6 口径）；b 系列字段随凯利移除（2026-10-31）。
 
     某 setup 没有对应语境格子时也照样给（n=0），让 H6 判「无样本」而不是
     「查不中」——静默失效是这一层最容易犯的错。
@@ -141,7 +138,6 @@ def gate_view(store):
     out = {}
     for setup, seg in (store or {}).items():
         all_cell = seg.get("all") or empty_cell()
-        b = cell_b(all_cell)
         ctxs = seg.get("by_context") or {}
         if not ctxs:
             ctxs = {"未定": empty_cell()}
@@ -149,10 +145,7 @@ def gate_view(store):
             out[(setup, ctx)] = {
                 "n": cell.get("n", 0),
                 "wins": cell.get("wins", 0),
-                "b": b,
-                "b_n": all_cell.get("n", 0),
-                "b_wins": all_cell.get("wins", 0),
-            }
+                            }
     return out
 
 

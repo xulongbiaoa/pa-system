@@ -184,30 +184,74 @@ def summarize(trades, seed=42):
     }
 
 
-def simulate_plan(bars_after, plan, side, window=300, fee_mult=1.0):
-    """按计划的 order_type 分派回放（市价 / 限价）。
+def _scale_fracs(n_targets):
+    """分批出场配比（2026-10-31 用户裁定开启）：T1 出 1/2、T2 出 1/4、
+    余 1/4 跟末目标；2 个目标 = 各半；1 个目标 = 全出（与 full 等价）。
+    依据 Brooks 分批口径（v21 s92 第一目标至少出一半；v36 s21 配比）。"""
+    if n_targets <= 1:
+        return [1.0]
+    if n_targets == 2:
+        return [0.5, 0.5]
+    return [0.5, 0.25, 0.25]
 
-    2026-10-30 补：限价口径已定版进 core（穿越才成交、未成交留档），但
-    `simulate_limit_trade` 一直**没有任何调用方**——pilot_run 与 gold_run 都
-    直接走市价回放。结果是：判断层写 limit 的单子被当成「以限价成交」，
-    正好是这条口径要防的高估；未成交单也不会被留档。
 
-    返回 dict 一定带 order_type；限价未成交时 filled=False、无 R。
-    """
+def _one_tranche(bars_after, plan, side, target, window, fee_mult, void):
     ot = (plan or {}).get("order_type") or "market"
-    void = (plan or {}).get("void")
     if ot == "limit":
         t = simulate_limit_trade(
-            bars_after, side, plan["entry"], plan["stop"],
-            plan["targets"][0], window=window, fee_mult=fee_mult,
-            void=void,
-        )
+            bars_after, side, plan["entry"], plan["stop"], target,
+            window=window, fee_mult=fee_mult, void=void)
         t["order_type"] = "limit"
         return t
     t = simulate_trade(bars_after[:window], side, plan["entry"], plan["stop"],
-                       plan["targets"][0], fee_mult=fee_mult, void=void)
+                       target, fee_mult=fee_mult, void=void)
     if t is None:
         return {"filled": False, "exit_reason": "no_bars", "order_type": "market"}
     t["order_type"] = "market"
-    t["filled"] = True  # 市价单不存在「未成交」，但契约要统一
+    t["filled"] = True
     return t
+
+
+def simulate_plan(bars_after, plan, side, window=300, fee_mult=1.0):
+    """按计划的 order_type 与 exit_mode 分派回放。
+
+    exit_mode（2026-10-31 开启分批出场）：
+    - "full"（缺省）：全仓在首目标结算（2026-10-30 定版口径不变）。
+    - "scale"：目标 ≥2 时分批——各档共用同一入场/止损/void/窗口，
+      每档独立模拟到自己的目标，总 R = 配比加权。各档共用止损、
+      不移保本（简化口径，记账在此）。限价未成交 = 全单未成交。
+
+    返回 dict 一定带 order_type 与 exit_mode；限价未成交时 filled=False、无 R。
+    """
+    void = (plan or {}).get("void")
+    targets = list((plan or {}).get("targets") or [])
+    mode = (plan or {}).get("exit_mode") or "full"
+    if mode != "scale" or len(targets) < 2:
+        t = _one_tranche(bars_after, plan, side, targets[0], window, fee_mult, void)
+        t["exit_mode"] = "full"
+        return t
+    fracs = _scale_fracs(len(targets))
+    chosen = [targets[0], targets[1], targets[-1]] if len(targets) > 2 else targets
+    tranches = []
+    for frac, tgt in zip(fracs, chosen):
+        t = _one_tranche(bars_after, plan, side, tgt, window, fee_mult, void)
+        if not t.get("filled", True):
+            return {"filled": False, "exit_reason": t.get("exit_reason"),
+                    "order_type": t["order_type"], "exit_mode": "scale"}
+        t["frac"] = frac
+        t["target"] = tgt
+        tranches.append(t)
+    r = sum(t["frac"] * t["r"] for t in tranches)
+    return {
+        "r": r,
+        "win": r > 0,
+        "exit_price": tranches[-1]["exit_price"],
+        "exit_bar": max(t["exit_bar"] for t in tranches),
+        "exit_reason": "scale:" + ",".join(t["exit_reason"] for t in tranches),
+        "order_type": tranches[0]["order_type"],
+        "exit_mode": "scale",
+        "filled": True,
+        "tranches": [{"frac": t["frac"], "target": t["target"], "r": t["r"],
+                      "exit_reason": t["exit_reason"],
+                      "exit_bar": t["exit_bar"]} for t in tranches],
+    }

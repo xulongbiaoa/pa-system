@@ -57,6 +57,19 @@ def layer_of(trade, pack):
     return 3 if trade["setup"] == "G1" else 2
 
 
+def _attempts_at_decision(pack, ev):
+    """决策根账本里与事件缺口锚同址的 attempts；无缺口事件返回 None。"""
+    gp = ev.get("gap_price")
+    if gp is None:
+        return None
+    tol = 0.25 * (pack.get("seg_avg_range") or 0)
+    gaps = (pack.get("gaps") or {})
+    for g in (gaps.get("open") or []) + (gaps.get("closed") or []):
+        if abs(g.get("price", 1e18) - gp) <= max(tol, 1e-9):
+            return g.get("attempts")
+    return None
+
+
 def run(judgments_dir=None, ev_dir=None):
     global _DS
     _DS = (os.path.join(ROOT, "datasets", "fresh2")
@@ -117,6 +130,11 @@ def run(judgments_dir=None, ev_dir=None):
         t.update({"event": eid, "segment": ev["segment"], "bar": bar,
                   "setup": c["setup"], "side": c["side"],
                   "entry": plan["entry"]})
+        # 2026-10-31 审计修复（attempts 双定义统一）：分层一律用**决策根**
+        # 账本的 attempts（判读员眼里的二次性），采样器到达快照只留档在
+        # events.json。v0.5 的 VET 案：采样 attempts=0、决策根账本已是
+        # 三次回补未遂——用快照分层测的不是同一个东西。
+        t["attempts_at_decision"] = _attempts_at_decision(pack, ev)
         t["layer"] = layer_of(t, pack)
         rep["trades"].append(t)
     layers = {}

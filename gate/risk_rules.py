@@ -12,7 +12,6 @@ import math
 
 from perception.features import load_config, net_rr as _net_rr
 
-from .sizing import suggest
 
 RR_MIN = 1.5
 RISK_FRAC_MAX = 0.01  # core 红线 3「单笔风险 1%」；原为 0.015，源自方案原文
@@ -199,11 +198,12 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     if mode == "trainer" and bars_left < CUTOFF_LEFT:
         hard.append({"rule": "H4", "detail": f"距局内窗口末尾 {bars_left} 根 < {CUTOFF_LEFT}"})
     # H5 引用完整性
-    conf = {
-        "gaps": pack.get("gaps", {}).get("confidence"),
-        "ema": pack.get("ema", {}).get("confidence"),
-        "trend": pack.get("trend", {}).get("confidence"),
-    }
+    # 2026-10-31 审计修复：原先只查 gaps/ema/trend 三个根，fortress/mm/
+    # pullback/trend_age 的置信不查——判读引用「未定」置信的 MM 候选作
+    # 放行依据时无人拦。改通用口径：包里任何带 confidence 字段的子包，
+    # 被 feature_refs 引用且置信「未定」即拒。
+    conf = {k: v.get("confidence") for k, v in pack.items()
+            if isinstance(v, dict) and "confidence" in v}
     for ref in feature_refs:
         root = ref.split(".")[0]
         if conf.get(root) == "未定":
@@ -219,7 +219,15 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     else:
         st = ledger.get((plan["setup"], context))
         if st and st.get("n", 0) >= 3 and st.get("wins", 0) == 0:
-            hard.append({"rule": "H6", "detail": f"{plan['setup']}×{context} 样本{st['n']} 0胜，停牌"})
+            # 2026-10-31 审计修复（防误杀）：原阈值 n≥3 即硬停牌，但真胜率
+            # 45% 的模式连输 3 把的概率约 17%，且与本系统「绩效 n<30 不下
+            # 结论」的回放纪律矛盾。硬停牌抬到 n≥8；n=3..7 只记观察。
+            if st["n"] >= 8:
+                hard.append({"rule": "H6", "detail": f"{plan['setup']}×{context} 样本{st['n']} 0胜，停牌"})
+            else:
+                notes.append(
+                    f"H6 观察：{plan['setup']}×{context} 样本{st['n']} 0胜，"
+                    f"未达硬停牌门槛（n≥8），只记观察不拒")
         elif not st or not st.get("n"):
             # 传了台账但这一格是空的：和「没传台账」是两件事，不许静默。
             # 2026-10-30 复核发现：传 {} 看起来像接好了，实际 H6 从未生效。
@@ -289,19 +297,9 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     if flags.get("decaying"):
         soft.append({"rule": "S3", "detail": "衰减边缘，仓位减半"})
         risk_mult *= 0.5
-    # 仓位建议（只建议，不否决；上限仍是 H3 的 RISK_FRAC_MAX）
-    # 台账格子带 b（已实现净盈亏比）才给凯利；缺 b 就退回计划首目标 RR 并标注。
-    # 格子里 n/wins 是 setup×语境（H6 口径），b_n/b_wins 是 setup 全池（凯利
-    # 口径）——凯利的 p 与 b 必须同总体，不许拿 A 总体的 b 配 B 总体的 p。
-    size_hint = None
-    if ledger is not None and context in CONTEXTS and plan.get("setup"):
-        cell = ledger.get((plan["setup"], context))
-        if cell:
-            b = cell.get("b") or rr_main
-            size_hint = suggest(cell.get("b_wins", cell.get("wins", 0)),
-                                cell.get("b_n", cell.get("n", 0)),
-                                b, cap=RISK_FRAC_MAX)
-            size_hint["b_source"] = "ledger" if cell.get("b") else "plan_first_target"
+    # 凯利 sizing 已于 2026-10-31 按用户裁定整体移除（从未生效、用不到，
+    # 不留）：仓位只由骨架硬数字决定（风险 100/笔、H3 上限 1%），裁决层
+    # 不再给仓位建议。台账只保留 H6 需要的 n/wins。
     return {
         "verdict": "reject" if hard else "pass",
         "hard_hits": hard,
@@ -318,6 +316,5 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         "rr_gross": rr_gross,
         "rr_gap_to_target": None if (rr_gross is None or target_rr is None)
         else round(rr_gross - target_rr, 4),
-        "size_hint": size_hint,
         "notes": notes,
     }

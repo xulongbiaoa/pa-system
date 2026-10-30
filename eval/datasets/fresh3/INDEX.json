@@ -1,0 +1,247 @@
+{
+ "splits": {
+  "fresh": [
+   {
+    "id": "f3-ICPUSDT-15m-1729329300000",
+    "symbol": "ICPUSDT",
+    "interval": "15m",
+    "t_start": 1729329300000,
+    "t_end": 1729760400000,
+    "sha256": "cce0bd4e3612982b"
+   },
+   {
+    "id": "f3-ICPUSDT-1h-1760198400000",
+    "symbol": "ICPUSDT",
+    "interval": "1h",
+    "t_start": 1760198400000,
+    "t_end": 1761922800000,
+    "sha256": "f1d1dac8f892eea1"
+   },
+   {
+    "id": "f3-DASHUSDT-15m-1746352800000",
+    "symbol": "DASHUSDT",
+    "interval": "15m",
+    "t_start": 1746352800000,
+    "t_end": 1746783900000,
+    "sha256": "5475024ebd8cecf4"
+   },
+   {
+    "id": "f3-DASHUSDT-4h-1718582400000",
+    "symbol": "DASHUSDT",
+    "interval": "4h",
+    "t_start": 1718582400000,
+    "t_end": 1725480000000,
+    "sha256": "7850562e8c39cd0e"
+   },
+   {
+    "id": "f3-ZECUSDT-15m-1726011000000",
+    "symbol": "ZECUSDT",
+    "interval": "15m",
+    "t_start": 1726011000000,
+    "t_end": 1726442100000,
+    "sha256": "06c601de7bf368f3"
+   },
+   {
+    "id": "f3-ZECUSDT-1d-1700784000000",
+    "symbol": "ZECUSDT",
+    "interval": "1d",
+    "t_start": 1700784000000,
+    "t_end": 1742169600000,
+    "sha256": "ab9dc65c6ba5c464"
+   },
+   {
+    "id": "f3-NEOUSDT-15m-1756113300000",
+    "symbol": "NEOUSDT",
+    "interval": "15m",
+    "t_start": 1756113300000,
+    "t_end": 1756544400000,
+    "sha256": "9afc47f0a66bcfa2"
+   },
+   {
+    "id": "f3-NEOUSDT-1h-1720944000000",
+    "symbol": "NEOUSDT",
+    "interval": "1h",
+    "t_start": 1720944000000,
+    "t_end": 1722668400000,
+    "sha256": "ab57f742f20b5874"
+   },
+   {
+    "id": "f3-QTUMUSDT-15m-1747619100000",
+    "symbol": "QTUMUSDT",
+    "interval": "15m",
+    "t_start": 1747619100000,
+    "t_end": 1748050200000,
+    "sha256": "fbfe596368577a51"
+   },
+   {
+    "id": "f3-QTUMUSDT-4h-1722600000000",
+    "symbol": "QTUMUSDT",
+    "interval": "4h",
+    "t_start": 1722600000000,
+    "t_end": 1729497600000,
+    "sha256": "1df97814243efaf8"
+   },
+   {
+    "id": "f3-IOTAUSDT-15m-1732961700000",
+    "symbol": "IOTAUSDT",
+    "interval": "15m",
+    "t_start": 1732961700000,
+    "t_end": 1733392800000,
+    "sha256": "76dee13164a683e0"
+   },
+   {
+    "id": "f3-IOTAUSDT-1d-1693526400000",
+    "symbol": "IOTAUSDT",
+    "interval": "1d",
+    "t_start": 1693526400000,
+    "t_end": 1734912000000,
+    "sha256": "bfe4a960edbf7d8c"
+   },
+   {
+    "id": "f3-ENJUSDT-15m-1719280800000",
+    "symbol": "ENJUSDT",
+    "interval": "15m",
+    "t_start": 1719280800000,
+    "t_end": 1719711900000,
+    "sha256": "598a2fc4ec38215d"
+   },
+   {
+    "id": "f3-ENJUSDT-1h-1755345600000",
+    "symbol": "ENJUSDT",
+    "interval": "1h",
+    "t_start": 1755345600000,
+    "t_end": 1757070000000,
+    "sha256": "08a8db5b9e7f717d"
+   },
+   {
+    "id": "f3-SUSHIUSDT-15m-1745067600000",
+    "symbol": "SUSHIUSDT",
+    "interval": "15m",
+    "t_start": 1745067600000,
+    "t_end": 1745498700000,
+    "sha256": "4faa7fc8d5807266"
+   },
+   {
+    "id": "f3-SUSHIUSDT-4h-1744992000000",
+    "symbol": "SUSHIUSDT",
+    "interval": "4h",
+    "t_start": 1744992000000,
+    "t_end": 1751889600000,
+    "sha256": "801a3a48be7dd538"
+   },
+   {
+    "id": "f3-COMPUSDT-15m-1741304700000",
+    "symbol": "COMPUSDT",
+    "interval": "15m",
+    "t_start": 1741304700000,
+    "t_end": 1741735800000,
+    "sha256": "5fba8be406b6669a"
+   },
+   {
+    "id": "f3-COMPUSDT-1d-1706832000000",
+    "symbol": "COMPUSDT",
+    "interval": "1d",
+    "t_start": 1706832000000,
+    "t_end": 1748217600000,
+    "sha256": "f01f0889163a95b8"
+   },
+   {
+    "id": "f3-YFIUSDT-15m-1753269300000",
+    "symbol": "YFIUSDT",
+    "interval": "15m",
+    "t_start": 1753269300000,
+    "t_end": 1753700400000,
+    "sha256": "d235fce6a527b621"
+   },
+   {
+    "id": "f3-YFIUSDT-1h-1757037600000",
+    "symbol": "YFIUSDT",
+    "interval": "1h",
+    "t_start": 1757037600000,
+    "t_end": 1758762000000,
+    "sha256": "b04fd9422424308b"
+   },
+   {
+    "id": "f3-ENSUSDT-15m-1721345400000",
+    "symbol": "ENSUSDT",
+    "interval": "15m",
+    "t_start": 1721345400000,
+    "t_end": 1721776500000,
+    "sha256": "963d4ff3ab52a1b9"
+   },
+   {
+    "id": "f3-ENSUSDT-4h-1731715200000",
+    "symbol": "ENSUSDT",
+    "interval": "4h",
+    "t_start": 1731715200000,
+    "t_end": 1738612800000,
+    "sha256": "41e6f75a0281573f"
+   },
+   {
+    "id": "f3-KSMUSDT-15m-1721538900000",
+    "symbol": "KSMUSDT",
+    "interval": "15m",
+    "t_start": 1721538900000,
+    "t_end": 1721970000000,
+    "sha256": "a4a7db3de3716047"
+   },
+   {
+    "id": "f3-KSMUSDT-1d-1697673600000",
+    "symbol": "KSMUSDT",
+    "interval": "1d",
+    "t_start": 1697673600000,
+    "t_end": 1739059200000,
+    "sha256": "c63308b60a30a408"
+   },
+   {
+    "id": "f3-BATUSDT-15m-1750353300000",
+    "symbol": "BATUSDT",
+    "interval": "15m",
+    "t_start": 1750353300000,
+    "t_end": 1750784400000,
+    "sha256": "2b86d3d7b79d7b0d"
+   },
+   {
+    "id": "f3-BATUSDT-1h-1724914800000",
+    "symbol": "BATUSDT",
+    "interval": "1h",
+    "t_start": 1724914800000,
+    "t_end": 1726639200000,
+    "sha256": "8ee6e318d5086612"
+   },
+   {
+    "id": "f3-LRCUSDT-15m-1726656300000",
+    "symbol": "LRCUSDT",
+    "interval": "15m",
+    "t_start": 1726656300000,
+    "t_end": 1727087400000,
+    "sha256": "7a4785ad0186bfd1"
+   },
+   {
+    "id": "f3-LRCUSDT-4h-1718337600000",
+    "symbol": "LRCUSDT",
+    "interval": "4h",
+    "t_start": 1718337600000,
+    "t_end": 1725235200000,
+    "sha256": "a5f5d922fe3f2d50"
+   },
+   {
+    "id": "f3-STORJUSDT-15m-1747214100000",
+    "symbol": "STORJUSDT",
+    "interval": "15m",
+    "t_start": 1747214100000,
+    "t_end": 1747645200000,
+    "sha256": "8044b95626fa5619"
+   },
+   {
+    "id": "f3-STORJUSDT-1d-1691280000000",
+    "symbol": "STORJUSDT",
+    "interval": "1d",
+    "t_start": 1691280000000,
+    "t_end": 1732665600000,
+    "sha256": "fd91fd2e2b0b65c0"
+   }
+  ]
+ },
+ "note": "ablation v0.5 fresh3, never judged before"
+}

@@ -90,10 +90,10 @@ def _pack(label, conf="确定", verdict="一致"):
                       "gap_consistency": {"verdict": verdict}}}
 
 
-def test_route_trend_carries_follow_card_and_breakout_family():
+def test_route_trend_carries_follow_card_and_breakout_family():  # B3 于 2026-10-31 审计修复进趋势轨（替 B1）
     cards, _ = route_cards(_pack("上升"))
     assert cards[0] == "A1-m2b"
-    assert "B1-trend-breakout" in cards and "B2-breakout-pullback" in cards
+    assert "B3-failed-breakout" in cards and "B2-breakout-pullback" in cards
     cards, _ = route_cards(_pack("下降"))
     assert cards[0] == "A2-m2s"
 

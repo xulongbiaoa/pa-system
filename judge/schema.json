@@ -98,6 +98,13 @@
        "void_if": {
         "type": "string"
        },
+       "exit_mode": {
+        "enum": [
+         "full",
+         "scale"
+        ],
+        "description": "出场方式：full 全仓首目标结算；scale 分批（T1 出 1/2、T2 出 1/4、余 1/4 跟末目标，须 targets≥2）"
+       },
        "order_type": {
         "enum": [
          "market",

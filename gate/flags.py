@@ -16,7 +16,8 @@ decaying 即置位）。
 second_bar_confirmed 不是感知量：它是判断层选定的入场方式，由 plan
 声明（judge/schema.json 的 plan.second_bar_confirmed），这里只转手。
 
-parabolic（S1）不在此生产：判据（连续根数 / 实体 / 总幅倍数）需要新
+parabolic（S1）**未启用**（2026-10-31 审计标注：账面状态与
+S2/S3 分开记——S2/S3 已接线，S1 判据不存在）：判据（连续根数 / 实体 / 总幅倍数）需要新
 常数，无样本与原册依据前不设——见 review-out/README 待办，接线审计
 测试里以 PENDING 登记，判据定版后从 PENDING 移除并在此补生产者。
 """

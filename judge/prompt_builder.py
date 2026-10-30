@@ -52,7 +52,11 @@ def route_cards(pack):
         reasons.append("标签与账本冲突/置信边界 → 反转候选")
         return ["C1-mtr", "B3-failed-breakout", follow], reasons
     reasons.append("趋势确定且账本同向 → 顺势菜单")
-    return [follow, "B1-trend-breakout", "B2-breakout-pullback"], reasons
+    # 2026-10-31 审计修复：趋势轨原带 B1（顺势突破）——但本地规则下突破
+    # 当根入场已禁用，B1 作为入场卡基本惰性；B3（突破失败翻面）是五轮
+    # 消融的候选主力，却只在冲突轨才进菜单。换 B3 进来，B1 的强突破判据
+    # 由《眼睛检查清单》与 B2/B3 卡内引用承载。
+    return [follow, "B2-breakout-pullback", "B3-failed-breakout"], reasons
 
 
 def _bar_range(bars):
@@ -177,6 +181,12 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "## 任务（输出格式是硬契约，先看骨架再判断）\n"
         "判读顺序：先看图（若随附图表）定语境、形态与 setup，再用数字附件的"
         "精确价位定价、核对账本与红线；附件 trend 标签与图读冲突时以图为准。\n"
+        "入场方式分工（2026-10-31 定版）：顺势延续类（A1/A2/B2）的入场是 "
+        "stop 触发——入场价写信号 K 极值外侧、order_type 写 market（按触发 "
+        "价计）；限价（order_type=limit）只用于翻面类（B3/G1）与区间边缘，"
+        "因为那里的限价位本身就是决胜点。出场方式：targets≥2 的计划 exit_mode 写 scale（分批：首目标出 1/2、次目标出 1/4、余 1/4 跟末目标，共用止损）；单目标写 full。\n"
+        "顺势计划写限价回踩单的，必须在 "
+        "strongest_countercase 里说明为何不用 stop 触发。\n"
         "只输出一个 JSON 对象，不要任何解释文字、不要代码围栏。顶层只许 "
         "context / primary / hypotheses / candidates / no_trade_reason / "
         "pending_conditions / uncertainty 七个字段，多一个键即作废。骨架：\n"

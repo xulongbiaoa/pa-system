@@ -38,45 +38,12 @@ def test_cell_b_none_when_one_side_missing():
     assert cell_b(store["B1"]["all"]) is None      # 无亏损样本 → 不给 b
     assert cell_b(empty_cell()) is None
 
-
-def test_gate_view_b_from_all_but_n_from_context():
-    # 语境格只有 2 笔，全池有 40 笔：H6 看 2 笔、凯利看 40 笔
-    store = {}
-    for i in range(40):
-        accumulate(store, "A1", "上升" if i < 2 else "下降", "market",
-                   2.0 if i % 2 else -1.0)
-    view = gate_view(store)
-    up = view[("A1", "上升")]
-    assert up["n"] == 2 and up["b_n"] == 40
-    assert up["b"] is not None
-
-
 def test_gate_view_keeps_h6_semantics():
     store = {}
     for _ in range(3):
         accumulate(store, "A1", "上升", "market", -1.0)
     view = gate_view(store)
     assert view[("A1", "上升")]["wins"] == 0 and view[("A1", "上升")]["n"] == 3
-
-
-def test_gate_uses_setup_pool_for_kelly_not_context_cell():
-    # 语境格 2 笔（若错用会落到 explore 阶段=0），全池 60 笔、胜率 60%、b=3
-    store = {}
-    for i in range(60):
-        ctx = "上升" if i < 2 else "下降"
-        accumulate(store, "A1", ctx, "market", 3.0 if i % 5 < 3 else -1.0)
-    plan = {"side": "long", "entry": 100.0, "stop": 93.87, "targets": [110.0],
-            "risk_frac": 0.01, "setup": "A1", "context": "上升"}
-    pack = {"swings": {"major": [{"bar": 5, "kind": "L", "close": 95.0, "anchor": 94.3}]},
-            "seg_avg_range": 2.0, "last_close": 100.0,
-            "gaps": {"confidence": "确定"}, "ema": {"confidence": "确定"},
-            "trend": {"confidence": "确定"}}
-    r = adjudicate(plan, pack, bars_left=50, ledger=gate_view(store))
-    hint = r["size_hint"]
-    assert hint["b_source"] == "ledger"
-    assert hint["n"] == 60                      # 用的是全池，不是语境格的 2
-    assert hint["stage"] != "explore"
-
 
 def test_save_load_roundtrip(tmp_path):
     store = {}

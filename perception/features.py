@@ -249,7 +249,8 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
             "bands": build_fortress_bands(bars, minor + major),
             "confidence": "确定" if (minor or major) else "未定",
         },
-        "trend_age": trend_age(bars, legs, emas, closes),
+        "trend_age": trend_age(bars, legs, emas, closes,
+                              {"上升": "up", "下降": "down"}.get(trend["label"])),
         "mm": {
             "candidates": mm_candidates,
             "confidence": "边界" if mm_candidates else "未定",
