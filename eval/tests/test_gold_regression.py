@@ -16,7 +16,7 @@ import os
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
 GOLD_BOOK = os.path.join(ROOT, "knowledge", "gold-book")
-BASELINE_ITEMS = 10
+BASELINE_ITEMS = 31
 
 
 def _items():
