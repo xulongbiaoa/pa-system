@@ -47,3 +47,7 @@ gate/risk_rules.py：硬规则 H1 净RR<1.5 / H2 止损结构内或压整数位 
 ## 2026-10-30 · 外部复核对账与感知层三修
 
 外部 AI 盲审 41 段回填 knowledge/reviews/（自报告转录，jsonl 待补）：语境一致 33/41、结论一致 17/41，分歧 26 段以草稿过宽被砍为主，两放行单（ds23 B3、DOT A2）双方一致。对账报告 eval/reports/review-diff-v0.1.md。按复核意见修感知层三处：① 新增 trend.gap_consistency 与 trend.window（标签与账本冲突显式标记）；② pullback 参照方向改为趋势标签、新增 expired 标记（原 dir_against 语义反转属实）；③ precision.r6 修复低价标的精度压零（ds19 seg_avg_range 曾为 0.0）。测试累计 35 全过。待用户拍板：入场截止红线与决策点口径互斥问题、金标准分歧裁定。
+
+## 2026-10-30 · 复核原件归档 + 裁决层 H2 修正 + 待裁定清单
+
+外部复核 annotations.jsonl 原件归档并替换 reviews（41 条校验通过、与转录零出入）。两放行单过裁决+回放：ds23 通过、揭盲 −1.03R（方差内）；DOT 首过被 H2 误杀（只看大级别摆动、漏掉小级别第二腿高点），H2 改为大小级别合并取最近摆动后通过、揭盲 +2.93R，测试仍 35 全过。8 段语境翻转用新 gap_consistency 复核：4 段标冲突（与复核的结构判断同向）、4 段属标签时效问题（已知限制：缺近段子窗标签）。待裁定清单 eval/reports/gold-adjudication-sheet.md 已备，金标准冻结等用户拍板四项。

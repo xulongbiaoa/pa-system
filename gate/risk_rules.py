@@ -39,8 +39,10 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # H1 净 RR（按声明的目标序列末级计价）
     if rr_main is None or rr_main < RR_MIN:
         hard.append({"rule": "H1", "detail": f"净RR={rr_main} < {RR_MIN}"})
-    # H2 止损在结构外：多头止损须低于最近的大级别摆动低点锚，且不压整数位
-    swings = pack.get("swings", {}).get("major", [])
+    # H2 止损在结构外：止损须越过入场最近一侧的摆动极值（大小级别合并看；
+    # 2026-10-30 修正：原先只看大级别摆动，DOT A2 案的第二腿高点 1.576
+    # 只是小级别摆动，大级别最近高点远在 1.896，合理止损 1.585 被误杀）
+    swings = pack.get("swings", {}).get("major", []) + pack.get("swings", {}).get("minor", [])
     seg_avg = pack.get("seg_avg_range") or 0
     entry, stop = plan["entry"], plan["stop"]
     if plan["side"] == "long":

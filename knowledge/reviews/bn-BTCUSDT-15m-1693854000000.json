@@ -3,15 +3,18 @@
  "context": "下降",
  "verdict": "no_trade",
  "setup": "A2",
- "side": null,
- "qualified": null,
+ "side": "short",
+ "qualified": false,
  "entry": null,
  "stop": null,
  "targets": [],
  "no_trade_reason": "成色不合格",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：25859 起的下降趋势未走完、25667（EMA）是空点；备选：25540 一带止跌转区间；接管条件：收盘站上 25760 上方则下降面降级。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend=下降/-2/确定，ema=25667.35、slope3=-18.0，ride_ratio_20=0.15，价格 25588 在 EMA 下方",
+  "openGaps 五条 25700–25848 全为 long 被套（depth 160–308，持续 7–50 根），套牢多头压顶",
+  "175L 25540 → 178H 25658.6 两腿反弹（25639.7→25580.8→25658.6）正落在 ema=25667 一带，179 以 97% 实体阴线收 25588、clv=0.03，A2 位置与触发均成立",
+  "但止损须放 25658.6 外侧（≈25673），风险 85；最小目标（反弹前低）25540 仅 48，净 RR≈0.56，远低于 1.5"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "A2 形态教科书级，但入场 25588 已距反弹低点 48 点、止损 85 点，目标空间被吃光。此类单只能等反弹更高再空。"
 }

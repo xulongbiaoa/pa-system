@@ -9,9 +9,12 @@
  "stop": null,
  "targets": [],
  "no_trade_reason": "位置不对",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：0.7396 起的上升趋势未走完、0.792–0.813 横盘是高位整理；备选：整理上沿 0.813 假破后回落；接管条件：收盘站上 0.813 或跌破 0.792 才定方向。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend=上升/+2/确定，ema=0.79674、slope3=+0.0019，ride_ratio_20=0.90，价格 0.805 在 EMA 上方",
+  "openGaps 四条 0.7105–0.779 全为 short 被套，缺口账本偏多",
+  "165H 0.8086 后 166–179 共 14 根在 0.792–0.813 横盘，179 收 0.805、clv=1.00 但仍在区间内",
+  "A1 前置②「回踩已走出第二腿」不成立（pullback.bars=2、depth_ratio=0.24，回踩极浅且未触及 EMA），B1 又不产生入场"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "趋势向上但价格贴在区间上沿、无回踩，追多等于在 B1 突破当根入场，空仓。等回踩 0.797（EMA）再审。"
 }

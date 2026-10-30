@@ -9,9 +9,12 @@
  "stop": null,
  "targets": [],
  "no_trade_reason": "位置不对",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：13.04–13.22 的极窄横盘延续、无方向；备选：13.37 被套多头缺口为上方目标；接管条件：收盘突破 13.22 或跌破 13.04 才定方向。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend 标下降/-2，但 132L 13.05、163H 13.17、172L 13.04 构成 40 根 0.9% 的横盘，摆动序列无方向",
+  "openGaps 仅 13.37 long 一条（@85、depth 0.39），无持续套牢盘",
+  "ema=13.118、slope3=+0.016，价格 13.17 与 EMA 几乎重合",
+  "seg_avg_range=0.0437（0.33%），179 实体 33%、区间仅 0.03，扣费后无 RR 空间"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "极窄横盘，特征标签「下降」由更早的下跌段带来，当前无方向，空仓。"
 }

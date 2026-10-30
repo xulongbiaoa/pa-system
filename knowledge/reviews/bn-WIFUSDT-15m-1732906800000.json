@@ -3,15 +3,18 @@
  "context": "震荡",
  "verdict": "no_trade",
  "setup": "B1",
- "side": null,
+ "side": "long",
  "qualified": null,
  "entry": null,
  "stop": null,
  "targets": [],
  "no_trade_reason": "位置不对",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：3.051 起的抬升段正在挑战 3.33 区间上沿、突破待确认；备选：3.33 假破回落至 3.20；接管条件：三根内收盘收回 3.317 下方则转 B3 翻面。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend 标下降/-2，但 openGaps 两条 3.192/3.234 全为 short 被套，价格 3.324 站在缺口上方，与「下降」前提相反",
+  "129L 3.051 → 179H 3.33 连续 50 根抬升，ema=3.2272、slope3=+0.029、ride_ratio_20=1.0",
+  "179 以 44% 实体阳线收 3.324、clv=0.87，触及窗口高点 3.33 但未有效站上（close<3.33）",
+  "突破既未成立（未收在位外）也未失败（未收回位内），B1/B3 都不满足；此处追多属突破当根入场"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "特征标签与缺口账本冲突，已按结构判区间上沿。等收盘站稳 3.33 或收回 3.317 下方再定。"
 }

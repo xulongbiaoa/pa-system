@@ -3,15 +3,18 @@
  "context": "上升",
  "verdict": "no_trade",
  "setup": "B1",
- "side": null,
+ "side": "long",
  "qualified": null,
  "entry": null,
  "stop": null,
  "targets": [],
  "no_trade_reason": "位置不对",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：185.2 起的上升段未走完、179 刚突破 195.49 创窗口新高；备选：195.5 为假破、回落至 191.9；接管条件：三根内收盘收回 193.65 下方则突破失败转 B3。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend 标震荡/0/边界，但 openGaps 七条 186.6–190.52 全为 short 被套，价格站在全部缺口上方",
+  "168L 191.91 → 179H 195.49 为连续 HH，179 以 65% 实体阳线收 195.47、clv=0.98，创窗口新高（win hi=195.49）",
+  "ema=193.54、slope3=+0.52，价格在 EMA 上方 1%，ride_ratio_20=0.75",
+  "B1 卡片明确「本卡不产生入场」，突破当根追多即尖峰追单；回踩 193.6 的 B2 尚未成形"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "方向偏多、突破成立，但无回踩。等回踩 193.6（前高翻面位）走出第二腿再按 A1/B2 审。"
 }

@@ -9,9 +9,12 @@
  "stop": null,
  "targets": [],
  "no_trade_reason": "位置不对",
- "primary_hypothesis": "",
+ "primary_hypothesis": "主假设：8.86e-6–1.151e-5 区间内往返，价格回到中下位无优势；备选：167H 1.037e-5 后的下跌是区间内回落；接管条件：收盘破 8.86e-6 或站上 1.037e-5 才定方向。",
  "key_evidence": [
-  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+  "trend 标上升/+2，但 168–179 已跌破 161L 9.70e-6 与 154L 9.63e-6，HH+HL 序列被破坏",
+  "openGaps 仅三条且极浅（9e-6 short、1.014e-5 long、9.31e-6 short，depth 约 1e-6），无持续套牢盘",
+  "价格 9.60e-6 位于 ema=1.0e-5 下方 4%，处 8.86e-6–1.151e-5 区间的中下位",
+  "179 为 61% 实体阳线但仅收复 178 跌幅，未触及任何要塞"
  ],
- "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+ "confidence_note": "上升结构已被破坏、区间未到边缘，空仓。"
 }
