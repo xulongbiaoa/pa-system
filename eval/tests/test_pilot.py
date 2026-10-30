@@ -1,0 +1,47 @@
+"""试点管线空跑验证：两份手工判断（1 空仓 + 1 候选）走完整条管线。"""
+
+import json
+import os
+
+from pilot_run import run
+from perception.features import build_feature_pack, load_config
+
+ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
+DS = os.path.join(ROOT, "eval", "datasets", "dev")
+
+
+def _hyp():
+    return [
+        {"id": "H1", "statement": "测试假设", "holds_if": "x", "void_if": "y",
+         "takeover_if": "", "menu": ["A1"]}
+    ]
+
+
+def test_pipeline_end_to_end(tmp_path):
+    jd = tmp_path / "judgments"
+    jd.mkdir()
+    # 1) no_trade 判断
+    seg1 = json.load(open(os.path.join(DS, "ds03.json")))
+    j1 = {"primary": "H1", "hypotheses": _hyp(), "candidates": [],
+          "no_trade_reason": "位置不对", "pending_conditions": [], "uncertainty": []}
+    (jd / "ds03.json").write_text(json.dumps(j1))
+    # 2) 候选判断：按 ds04 决策点特征包机械构造一个能过裁决的计划
+    seg2 = json.load(open(os.path.join(DS, "ds04.json")))
+    bars = seg2["bars"][:180]
+    pack = build_feature_pack(bars, [], load_config())
+    entry = bars[-1]["c"]
+    lows = [s["anchor"] for s in pack["swings"]["major"] if s["kind"] == "L" and s["anchor"] < entry]
+    stop = (max(lows) if lows else entry * 0.98) - 0.13 * pack["seg_avg_range"]
+    risk = entry - stop
+    j2 = {"primary": "H1", "hypotheses": _hyp(),
+          "candidates": [{"setup": "A1", "side": "long", "qualified": True,
+                          "reason": "管线验证用", "feature_refs": ["trend.label"],
+                          "plan": {"entry": entry, "stop": stop,
+                                   "targets": [entry + 1.8 * risk],
+                                   "void_if": "收盘破起点", "risk_frac": 0.01}}],
+          "no_trade_reason": None, "pending_conditions": [], "uncertainty": []}
+    (jd / "ds04.json").write_text(json.dumps(j2))
+    rep = run(str(jd))
+    assert rep["judged"] == 2 and rep["format_fail"] == 0
+    assert rep["no_trade"] == 1
+    assert len(rep["trades"]) + rep["gate_reject"] == 1

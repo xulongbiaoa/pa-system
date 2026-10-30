@@ -7,6 +7,7 @@
 import json
 import os
 
+from .fortress import build_fortress_bands, trend_age
 from .gaps import build_ledger, trimmed_avg_range
 from .legs import legs_from_swings
 from .swings import find_swings
@@ -139,4 +140,9 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
             "closed": [g for g in ledger if g["status"] == "closed"],
             "confidence": "确定" if map_anchors else "未定",
         },
+        "fortress": {
+            "bands": build_fortress_bands(bars, minor + major),
+            "confidence": "确定" if (minor or major) else "未定",
+        },
+        "trend_age": trend_age(bars, legs, emas, closes),
     }
