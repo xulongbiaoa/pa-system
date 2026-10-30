@@ -76,9 +76,7 @@ REQUIRED_PACK_FIELDS = [
 ]
 
 # pack 内已知未产出的子字段：登记原因，产出后必须移除登记。
-PENDING_PACK = {
-    "trend.recent": "近段子窗趋势标签未实现（标签为全窗口径，区间日尾盘高潮可带偏全窗）",
-}
+PENDING_PACK = {}
 
 
 def _synthetic_pack():
@@ -106,3 +104,9 @@ def test_pack_mm_candidates_produced():
     for c in pack["mm"]["candidates"]:
         assert c["kind"] in ("leg_end_continuation", "pullback_base")
         assert isinstance(c["target"], (int, float))
+
+
+def test_pack_trend_recent_produced():
+    pack = _synthetic_pack()
+    recent = pack["trend"].get("recent")
+    assert recent is not None and "label" in recent and "window" in recent

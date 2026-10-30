@@ -133,6 +133,18 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
     open_gaps = [g for g in ledger if g["status"] == "open"]
     trend["window"] = len(bars)
     trend["gap_consistency"] = gap_consistency(trend["score"], open_gaps)
+    # 近段子窗标签（2026-10-30 补，官网盲测语境轴 0/2 的头号欠账）：
+    # 主标签的 trend_state 只看最后两对摆动——有效窗口其实已是近段，却没
+    # 写明，判断层无从知道它和全窗结构可能冲突。这里把近段单独成标：
+    # 取末 max(30, 全窗/3) 根内的 major 摆动重算；摆动不足即「未定」，
+    # 未定本身就是信息（近段没有成形的摆动结构）。窗口是测量口径、
+    # 不是交易阈值，写死在此并注明。
+    span = max(30, len(bars) // 3)
+    recent_swings = [s for s in major if s.get("bar") is not None
+                     and s["bar"] >= len(bars) - span]
+    recent = trend_state(recent_swings)
+    recent["window"] = span
+    trend["recent"] = recent
     # 回调口径（2026-10-30 按外部复核意见修正）：参照方向 = 趋势标签方向
     # （±2 时），标签不定才退回最后一条腿的方向。dir_against = 最近一条
     # 逆势腿的方向；depth_ratio ≥ 1 = 回吐已超过被回吐腿，标 expired。
@@ -173,8 +185,9 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
     # ② 以腿后首个反向 major 摆动极值（回踩极值）为基的同腿投影。
     # 用哪条、算不算数，由判断层按八锚点口径挑；pack 只保证原料齐全。
     mm_candidates = []
-    swing_by_bar = {s.get("bar"): s for s in major}
-    for leg in legs[-2:]:
+    seen_mm = set()
+    for leg in reversed(legs):  # 新腿优先，去重后限量（旧口径只取近 2 腿，
+        # 日级大腿投影很快滚出窗口——官网盲测 10-27 实锤）
         h = leg["end"] - leg["start"]
         mm_candidates.append({
             "base": r6(leg["end"]), "kind": "leg_end_continuation",
@@ -194,6 +207,13 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
                         "dir": leg["dir"]},
                 "target": r6(mm_project(base, leg["start"], leg["end"])),
             })
+        deduped = []
+        for c in mm_candidates:
+            k = (c["kind"], c["base"], c["target"])
+            if k not in seen_mm:
+                seen_mm.add(k)
+                deduped.append(c)
+        mm_candidates = deduped[:10]
     return {
         "bars": len(bars),
         # 决策点价格（2026-10-30 补）：特征包原先**没有任何绝对价位**——
