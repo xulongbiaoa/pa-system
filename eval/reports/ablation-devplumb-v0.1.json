@@ -1,0 +1,16 @@
+{
+ "judged": 25,
+ "format_fail": 0,
+ "no_trade": 25,
+ "gate_reject": 0,
+ "gate_reject_rules": {},
+ "gate_notes": {},
+ "h6_active": false,
+ "unfilled": 0,
+ "unfilled_segments": [],
+ "trades": [],
+ "summary": {
+  "n": 0
+ },
+ "no_trade_rate": 1.0
+}
