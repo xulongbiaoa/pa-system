@@ -56,6 +56,12 @@ def validate_judgment(j):
                 for k in ("entry", "stop", "targets", "void_if", "risk_frac"):
                     if k not in p:
                         errs.append(f"plan 缺字段 {k}")
+                v = p.get("void")
+                if v is not None:
+                    if not isinstance(v, dict) or not isinstance(v.get("level"), (int, float)):
+                        errs.append("plan.void.level 必须是数字")
+                    if isinstance(v, dict) and v.get("side") not in ("above", "below"):
+                        errs.append("plan.void.side 必须是 above/below")
     if not (j.get("candidates")) and j.get("no_trade_reason") not in NO_TRADE:
         errs.append("无候选时 no_trade_reason 必须是枚举值")
     return errs

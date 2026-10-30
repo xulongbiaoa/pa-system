@@ -43,6 +43,26 @@
         "default": "market",
         "description": "限价单按 core 限价口径回放：穿越才成交、未成交留档"
        },
+       "void": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "level": {
+          "type": "number"
+         },
+         "side": {
+          "enum": [
+           "above",
+           "below"
+          ]
+         }
+        },
+        "required": [
+         "level",
+         "side"
+        ],
+        "description": "结构化前提失效：生命周期内任一根收盘越过 level（side 指失效侧）即按收盘价出场，回放强制执行；void_if 文字说明与此并存，冲突时以结构化为准"
+       },
        "second_bar_confirmed": {
         "type": "boolean",
         "default": false,

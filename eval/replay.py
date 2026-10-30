@@ -29,8 +29,24 @@ def _fees(fees=None):
     return _FEES
 
 
+def void_hit(void, close):
+    """前提失效判定（结构化 void 的唯一原语）：收盘越过 level 即失效。
+
+    void = {"level": float, "side": "above"|"below"}：side=above 表示
+    收盘 > level 失效（空单前提被收回上方等），side=below 表示
+    收盘 < level 失效（多单收盘破起点/回落突破位内侧等）。
+    判据只看收盘——与全系统「穿越以收盘计」的口径一致。
+    """
+    if not void:
+        return False
+    lvl = void.get("level")
+    if lvl is None:
+        return False
+    return close > lvl if void.get("side") == "above" else close < lvl
+
+
 def simulate_trade(bars_after, side, entry, stop, target, fee_mult=1.0,
-                   fees=None, entry_fee=None):
+                   fees=None, entry_fee=None, void=None):
     fees = _fees(fees)
     risk = abs(entry - stop)
     if risk <= 0:
@@ -53,6 +69,11 @@ def simulate_trade(bars_after, side, entry, stop, target, fee_mult=1.0,
             if b["l"] <= target:
                 exit_price, exit_bar, exit_reason = target, i, "target"
                 break
+        # 前提失效是收盘判定：同根内止损/目标（盘中先发生）优先，
+        # 都没触发才在收盘判 void，失效即按收盘价出场（市价出口径计费）。
+        if void_hit(void, b["c"]):
+            exit_price, exit_bar, exit_reason = b["c"], i, "void"
+            break
     gross = (exit_price - entry) if side == "long" else (entry - exit_price)
     fin = fees["market_in"] if entry_fee is None else entry_fee
     cost = (entry * fin + exit_price * fees["out"]) * fee_mult
@@ -76,7 +97,7 @@ def bars_for_days(interval, days=7):
 
 
 def simulate_limit_trade(bars_after, side, limit_price, stop, target,
-                         window=300, fee_mult=1.0, fees=None):
+                         window=300, fee_mult=1.0, fees=None, void=None):
     """限价单回放（2026-10-30 用户口径）：
     - 成交从严：价格必须穿越限价（买单 bar 低点 < 限价；卖单 bar 高点 >
       限价），仅触及不算成交——防「砸穿才成交」的好单被系统性高估；
@@ -96,11 +117,16 @@ def simulate_limit_trade(bars_after, side, limit_price, stop, target,
         if side == "short" and b["h"] > limit_price:
             fill_bar = i
             break
+        # 成交前先判前提：收盘已越过 void 线，挂单作废（留档单独统计，
+        # 与未成交同级）——前提死了的单子不许等它成交。
+        if void_hit(void, b["c"]):
+            return {"filled": False, "exit_reason": "void_before_fill",
+                    "fill_bar": None, "void_bar": i}
     if fill_bar is None:
         return {"filled": False, "exit_reason": "unfilled", "fill_bar": None}
     t = simulate_trade(seg[fill_bar:], side, limit_price, stop, target,
                        fee_mult=fee_mult, fees=fees,
-                       entry_fee=fees["limit_in"])
+                       entry_fee=fees["limit_in"], void=void)
     if t is None:
         return {"filled": False, "exit_reason": "unfilled", "fill_bar": None}
     t.update({"filled": True, "fill_bar": fill_bar,
@@ -169,15 +195,17 @@ def simulate_plan(bars_after, plan, side, window=300, fee_mult=1.0):
     返回 dict 一定带 order_type；限价未成交时 filled=False、无 R。
     """
     ot = (plan or {}).get("order_type") or "market"
+    void = (plan or {}).get("void")
     if ot == "limit":
         t = simulate_limit_trade(
             bars_after, side, plan["entry"], plan["stop"],
             plan["targets"][0], window=window, fee_mult=fee_mult,
+            void=void,
         )
         t["order_type"] = "limit"
         return t
     t = simulate_trade(bars_after[:window], side, plan["entry"], plan["stop"],
-                       plan["targets"][0], fee_mult=fee_mult)
+                       plan["targets"][0], fee_mult=fee_mult, void=void)
     if t is None:
         return {"filled": False, "exit_reason": "no_bars", "order_type": "market"}
     t["order_type"] = "market"

@@ -58,7 +58,7 @@
 4. **评估链路去 numpy**（`eval/replay.py`）：`summarize` 改纯标准库（bootstrap + 线性插值分位）。原先顶层 `import numpy`，本机无 numpy 时 gold_run/gold_build 整体起不来。
 5. **测试** 123 → 139：新增召回隔离 7 个、H6/限价费率 4 个、回放费率与无 numpy 3 个、接线审计 2 个。
 
-仍未处理（已写进架构 §3 的「未修」清单）：`void_if` 无解释器、回放不执行前提失效、`second_bar_confirmed` 自声明、S1 无生产者、examples 池无 split 字段。
+仍未处理（已写进架构 §3 的「未修」清单）：`second_bar_confirmed` 自声明、S1 无生产者、examples 池无 split 字段。~~`void_if` 无解释器、回放不执行前提失效~~ → **已补（2026-10-30）**：结构化 `plan.void = {level, side}` 为唯一解释口径（收盘越线即失效），回放市价/限价双路执行（限价含成交前作废 `void_before_fill` 留档），同根止损/目标盘中优先于收盘 void；`void_if` 文字与结构化并存、冲突以结构化为准。
 
 ## 入场价可博弈（已修：取 A 案）
 
