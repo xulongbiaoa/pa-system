@@ -1,0 +1,33 @@
+{
+ "events": 60,
+ "judged": 60,
+ "format_fail": 0,
+ "with_candidate": 6,
+ "qualified": 6,
+ "no_trade": 54,
+ "gate_reject": 6,
+ "gate_reject_rules": {
+  "H1": 6,
+  "H2": 1
+ },
+ "unfilled": 0,
+ "structured_pending": 60,
+ "trades": [],
+ "layers": {
+  "L0": {
+   "n": 0
+  },
+  "L1": {
+   "n": 0
+  },
+  "L2": {
+   "n": 0
+  },
+  "L3": {
+   "n": 0
+  }
+ },
+ "summary": {
+  "n": 0
+ }
+}

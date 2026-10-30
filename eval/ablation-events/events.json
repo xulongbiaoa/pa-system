@@ -1,0 +1,1000 @@
+[
+ {
+  "event": "fr-AAVEUSDT-15m-1745270100000@b67",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "symbol": "AAVEUSDT",
+  "interval": "15m",
+  "bar": 67,
+  "close": 149.18,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 148.26,
+    "hi": 148.96,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-AAVEUSDT-15m-1745270100000@b95",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "symbol": "AAVEUSDT",
+  "interval": "15m",
+  "bar": 95,
+  "close": 153.11,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 153.68,
+    "hi": 153.68,
+    "trapped": "long",
+    "attempts": 1,
+    "opened_at": 73
+   }
+  ]
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b63",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "symbol": "AAVEUSDT",
+  "interval": "1h",
+  "bar": 63,
+  "close": 170.61,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 168.2,
+    "hi": 170.61,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b92",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "symbol": "AAVEUSDT",
+  "interval": "1h",
+  "bar": 92,
+  "close": 164.5,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 165.19,
+    "hi": 166.85,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b60",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "symbol": "BCHUSDT",
+  "interval": "15m",
+  "bar": 60,
+  "close": 395.2,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 396.1,
+    "hi": 396.1,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b82",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "symbol": "BCHUSDT",
+  "interval": "15m",
+  "bar": 82,
+  "close": 392.4,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 395.3,
+    "hi": 397.1,
+    "anchors": 6
+   }
+  ]
+ },
+ {
+  "event": "fr-BCHUSDT-4h-1731686400000@b60",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "symbol": "BCHUSDT",
+  "interval": "4h",
+  "bar": 60,
+  "close": 513.8,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 490.5,
+    "hi": 512.3,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-BCHUSDT-4h-1731686400000@b84",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "symbol": "BCHUSDT",
+  "interval": "4h",
+  "bar": 84,
+  "close": 513.4,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 520.5,
+    "hi": 540.6,
+    "anchors": 8
+   }
+  ]
+ },
+ {
+  "event": "fr-ENAUSDT-15m-1749197700000@b61",
+  "segment": "fr-ENAUSDT-15m-1749197700000",
+  "symbol": "ENAUSDT",
+  "interval": "15m",
+  "bar": 61,
+  "close": 0.2989,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.2985,
+    "hi": 0.3015,
+    "anchors": 8
+   }
+  ]
+ },
+ {
+  "event": "fr-ENAUSDT-15m-1749197700000@b81",
+  "segment": "fr-ENAUSDT-15m-1749197700000",
+  "symbol": "ENAUSDT",
+  "interval": "15m",
+  "bar": 81,
+  "close": 0.3057,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.3059,
+    "hi": 0.3072,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-ENAUSDT-1h-1758682800000@b63",
+  "segment": "fr-ENAUSDT-1h-1758682800000",
+  "symbol": "ENAUSDT",
+  "interval": "1h",
+  "bar": 63,
+  "close": 0.5902,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.5934,
+    "hi": 0.6021,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-ENAUSDT-1h-1758682800000@b87",
+  "segment": "fr-ENAUSDT-1h-1758682800000",
+  "symbol": "ENAUSDT",
+  "interval": "1h",
+  "bar": 87,
+  "close": 0.5749,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.5664,
+    "hi": 0.5705,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-ETCUSDT-15m-1744070400000@b61",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "symbol": "ETCUSDT",
+  "interval": "15m",
+  "bar": 61,
+  "close": 14.33,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 14.36,
+    "hi": 14.52,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-ETCUSDT-15m-1744070400000@b99",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "symbol": "ETCUSDT",
+  "interval": "15m",
+  "bar": 99,
+  "close": 14.08,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 14.03,
+    "hi": 14.06,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-ETCUSDT-1h-1744794000000@b64",
+  "segment": "fr-ETCUSDT-1h-1744794000000",
+  "symbol": "ETCUSDT",
+  "interval": "1h",
+  "bar": 64,
+  "close": 15.5,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 15.49,
+    "hi": 15.55,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-ETCUSDT-1h-1744794000000@b103",
+  "segment": "fr-ETCUSDT-1h-1744794000000",
+  "symbol": "ETCUSDT",
+  "interval": "1h",
+  "bar": 103,
+  "close": 15.89,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 15.84,
+    "hi": 15.96,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-FETUSDT-15m-1736014500000@b66",
+  "segment": "fr-FETUSDT-15m-1736014500000",
+  "symbol": "FETUSDT",
+  "interval": "15m",
+  "bar": 66,
+  "close": 1.475,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.477,
+    "hi": 1.491,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-FETUSDT-15m-1736014500000@b94",
+  "segment": "fr-FETUSDT-15m-1736014500000",
+  "symbol": "FETUSDT",
+  "interval": "15m",
+  "bar": 94,
+  "close": 1.492,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.5,
+    "hi": 1.511,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-FETUSDT-4h-1736683200000@b67",
+  "segment": "fr-FETUSDT-4h-1736683200000",
+  "symbol": "FETUSDT",
+  "interval": "4h",
+  "bar": 67,
+  "close": 1.23,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.155,
+    "hi": 1.202,
+    "anchors": 7
+   }
+  ]
+ },
+ {
+  "event": "fr-FETUSDT-4h-1736683200000@b93",
+  "segment": "fr-FETUSDT-4h-1736683200000",
+  "symbol": "FETUSDT",
+  "interval": "4h",
+  "bar": 93,
+  "close": 1.119,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 1.142,
+    "hi": 1.142,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 88
+   },
+   {
+    "kind": "fortress",
+    "lo": 1.138,
+    "hi": 1.174,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b73",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "symbol": "HBARUSDT",
+  "interval": "15m",
+  "bar": 73,
+  "close": 0.04859,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 0.04863,
+    "hi": 0.04863,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 68
+   }
+  ]
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b93",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "symbol": "HBARUSDT",
+  "interval": "15m",
+  "bar": 93,
+  "close": 0.04897,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.04867,
+    "hi": 0.04899,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-HBARUSDT-4h-1741262400000@b64",
+  "segment": "fr-HBARUSDT-4h-1741262400000",
+  "symbol": "HBARUSDT",
+  "interval": "4h",
+  "bar": 64,
+  "close": 0.1935,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.19014,
+    "hi": 0.19635,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-HBARUSDT-4h-1741262400000@b105",
+  "segment": "fr-HBARUSDT-4h-1741262400000",
+  "symbol": "HBARUSDT",
+  "interval": "4h",
+  "bar": 105,
+  "close": 0.18591,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.18338,
+    "hi": 0.18849,
+    "anchors": 6
+   }
+  ]
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b60",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "symbol": "JUPUSDT",
+  "interval": "15m",
+  "bar": 60,
+  "close": 1.1793,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.1795,
+    "hi": 1.1879,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b82",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "symbol": "JUPUSDT",
+  "interval": "15m",
+  "bar": 82,
+  "close": 1.14,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.1374,
+    "hi": 1.1535,
+    "anchors": 7
+   }
+  ]
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b62",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "symbol": "JUPUSDT",
+  "interval": "4h",
+  "bar": 62,
+  "close": 1.0451,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.0599,
+    "hi": 1.1109,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b87",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "symbol": "JUPUSDT",
+  "interval": "4h",
+  "bar": 87,
+  "close": 0.9356,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.9457,
+    "hi": 0.9803,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b65",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "symbol": "LDOUSDT",
+  "interval": "15m",
+  "bar": 65,
+  "close": 1.298,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.3,
+    "hi": 1.312,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b95",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "symbol": "LDOUSDT",
+  "interval": "15m",
+  "bar": 95,
+  "close": 1.259,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.27,
+    "hi": 1.282,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-LDOUSDT-1d-1717977600000@b79",
+  "segment": "fr-LDOUSDT-1d-1717977600000",
+  "symbol": "LDOUSDT",
+  "interval": "1d",
+  "bar": 79,
+  "close": 1.072,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.0,
+    "hi": 1.068,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-LDOUSDT-1d-1717977600000@b101",
+  "segment": "fr-LDOUSDT-1d-1717977600000",
+  "symbol": "LDOUSDT",
+  "interval": "1d",
+  "bar": 101,
+  "close": 1.032,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.038,
+    "hi": 1.121,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-ONDOUSDT-15m-1756139400000@b60",
+  "segment": "fr-ONDOUSDT-15m-1756139400000",
+  "symbol": "ONDOUSDT",
+  "interval": "15m",
+  "bar": 60,
+  "close": 0.9004,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.8924,
+    "hi": 0.8986,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-ONDOUSDT-15m-1756139400000@b95",
+  "segment": "fr-ONDOUSDT-15m-1756139400000",
+  "symbol": "ONDOUSDT",
+  "interval": "15m",
+  "bar": 95,
+  "close": 0.9138,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.9048,
+    "hi": 0.9142,
+    "anchors": 8
+   },
+   {
+    "kind": "fortress",
+    "lo": 0.9204,
+    "hi": 0.9238,
+    "anchors": 6
+   }
+  ]
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b62",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "symbol": "ONDOUSDT",
+  "interval": "1d",
+  "bar": 62,
+  "close": 0.8135,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.805,
+    "hi": 0.8321,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b89",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "symbol": "ONDOUSDT",
+  "interval": "1d",
+  "bar": 89,
+  "close": 0.8326,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.8291,
+    "hi": 0.8757,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b77",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "symbol": "PYTHUSDT",
+  "interval": "15m",
+  "bar": 77,
+  "close": 0.3991,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.3976,
+    "hi": 0.3993,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b102",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "symbol": "PYTHUSDT",
+  "interval": "15m",
+  "bar": 102,
+  "close": 0.3982,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.3967,
+    "hi": 0.3989,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-PYTHUSDT-1d-1709251200000@b77",
+  "segment": "fr-PYTHUSDT-1d-1709251200000",
+  "symbol": "PYTHUSDT",
+  "interval": "1d",
+  "bar": 77,
+  "close": 0.4249,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.4624,
+    "hi": 0.5018,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-PYTHUSDT-1d-1709251200000@b101",
+  "segment": "fr-PYTHUSDT-1d-1709251200000",
+  "symbol": "PYTHUSDT",
+  "interval": "1d",
+  "bar": 101,
+  "close": 0.4294,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.4377,
+    "hi": 0.5018,
+    "anchors": 14
+   }
+  ]
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b61",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "symbol": "SHIBUSDT",
+  "interval": "15m",
+  "bar": 61,
+  "close": 2.247e-05,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 2.226e-05,
+    "hi": 2.239e-05,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b85",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "symbol": "SHIBUSDT",
+  "interval": "15m",
+  "bar": 85,
+  "close": 2.226e-05,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 2.226e-05,
+    "hi": 2.233e-05,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-SHIBUSDT-4h-1745971200000@b76",
+  "segment": "fr-SHIBUSDT-4h-1745971200000",
+  "symbol": "SHIBUSDT",
+  "interval": "4h",
+  "bar": 76,
+  "close": 1.605e-05,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.558e-05,
+    "hi": 1.598e-05,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-SHIBUSDT-4h-1745971200000@b106",
+  "segment": "fr-SHIBUSDT-4h-1745971200000",
+  "symbol": "SHIBUSDT",
+  "interval": "4h",
+  "bar": 106,
+  "close": 1.423e-05,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.435e-05,
+    "hi": 1.499e-05,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-TRXUSDT-15m-1743679800000@b71",
+  "segment": "fr-TRXUSDT-15m-1743679800000",
+  "symbol": "TRXUSDT",
+  "interval": "15m",
+  "bar": 71,
+  "close": 0.2387,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.2381,
+    "hi": 0.2385,
+    "anchors": 3
+   },
+   {
+    "kind": "fortress",
+    "lo": 0.2385,
+    "hi": 0.2392,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-TRXUSDT-15m-1743679800000@b151",
+  "segment": "fr-TRXUSDT-15m-1743679800000",
+  "symbol": "TRXUSDT",
+  "interval": "15m",
+  "bar": 151,
+  "close": 0.2387,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.2384,
+    "hi": 0.2386,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-TRXUSDT-1h-1718132400000@b67",
+  "segment": "fr-TRXUSDT-1h-1718132400000",
+  "symbol": "TRXUSDT",
+  "interval": "1h",
+  "bar": 67,
+  "close": 0.11656,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.11661,
+    "hi": 0.11697,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-TRXUSDT-1h-1718132400000@b108",
+  "segment": "fr-TRXUSDT-1h-1718132400000",
+  "symbol": "TRXUSDT",
+  "interval": "1h",
+  "bar": 108,
+  "close": 0.11531,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.11535,
+    "hi": 0.11545,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b79",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "symbol": "UNIUSDT",
+  "interval": "15m",
+  "bar": 79,
+  "close": 7.387,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 7.392,
+    "hi": 7.424,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b107",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "symbol": "UNIUSDT",
+  "interval": "15m",
+  "bar": 107,
+  "close": 7.421,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 7.441,
+    "hi": 7.441,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 94
+   }
+  ]
+ },
+ {
+  "event": "fr-UNIUSDT-1d-1704758400000@b90",
+  "segment": "fr-UNIUSDT-1d-1704758400000",
+  "symbol": "UNIUSDT",
+  "interval": "1d",
+  "bar": 90,
+  "close": 11.401,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 11.568,
+    "hi": 11.568,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 85
+   }
+  ]
+ },
+ {
+  "event": "fr-UNIUSDT-1d-1704758400000@b117",
+  "segment": "fr-UNIUSDT-1d-1704758400000",
+  "symbol": "UNIUSDT",
+  "interval": "1d",
+  "bar": 117,
+  "close": 7.531,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 7.807,
+    "hi": 7.807,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 112
+   }
+  ]
+ },
+ {
+  "event": "fr-WLDUSDT-15m-1746357300000@b60",
+  "segment": "fr-WLDUSDT-15m-1746357300000",
+  "symbol": "WLDUSDT",
+  "interval": "15m",
+  "bar": 60,
+  "close": 0.923,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.924,
+    "hi": 0.931,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-WLDUSDT-15m-1746357300000@b83",
+  "segment": "fr-WLDUSDT-15m-1746357300000",
+  "symbol": "WLDUSDT",
+  "interval": "15m",
+  "bar": 83,
+  "close": 0.956,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.955,
+    "hi": 0.958,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b62",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "symbol": "WLDUSDT",
+  "interval": "1h",
+  "bar": 62,
+  "close": 1.6,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.593,
+    "hi": 1.621,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b115",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "symbol": "WLDUSDT",
+  "interval": "1h",
+  "bar": 115,
+  "close": 1.488,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 1.462,
+    "hi": 1.477,
+    "anchors": 3
+   }
+  ]
+ },
+ {
+  "event": "fr-XLMUSDT-15m-1744771500000@b96",
+  "segment": "fr-XLMUSDT-15m-1744771500000",
+  "symbol": "XLMUSDT",
+  "interval": "15m",
+  "bar": 96,
+  "close": 0.2349,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.2356,
+    "hi": 0.2365,
+    "anchors": 4
+   }
+  ]
+ },
+ {
+  "event": "fr-XLMUSDT-15m-1744771500000@b122",
+  "segment": "fr-XLMUSDT-15m-1744771500000",
+  "symbol": "XLMUSDT",
+  "interval": "15m",
+  "bar": 122,
+  "close": 0.2371,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.2356,
+    "hi": 0.2364,
+    "anchors": 5
+   }
+  ]
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b60",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "symbol": "XLMUSDT",
+  "interval": "1d",
+  "bar": 60,
+  "close": 0.0963,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.0955,
+    "hi": 0.1031,
+    "anchors": 8
+   }
+  ]
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b85",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "symbol": "XLMUSDT",
+  "interval": "1d",
+  "bar": 85,
+  "close": 0.0963,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 0.0977,
+    "hi": 0.0977,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 67
+   },
+   {
+    "kind": "fortress",
+    "lo": 0.0975,
+    "hi": 0.1026,
+    "anchors": 7
+   }
+  ]
+ }
+]
