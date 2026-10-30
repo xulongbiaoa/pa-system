@@ -14,9 +14,9 @@ from gate.flags import build_flags
 ROOT = Path(__file__).resolve().parents[2]
 
 # 未接线但已登记的键：键 → 原因。判据定版后必须从这里移除并补生产者。
-PENDING = {
-    "parabolic": "S1 判据（连续根数/实体/总幅倍数）需新常数，无样本与原册依据前不设",
-}
+# 2026-10-31：parabolic/S1 已整体删除（判据自始不存在，不再以 PENDING
+# 形式保留装饰性条目），登记随之清空。
+PENDING = {}
 
 CALLERS = ["judge/pa_cli.py", "eval/gold_run.py", "eval/pilot_run.py"]
 
@@ -27,7 +27,7 @@ def _adjudicate_flag_keys():
 
 
 def _producible_keys():
-    plan = {"entry": 100.0, "stop": 89.0, "second_bar_confirmed": True}
+    plan = {"entry": 100.0, "stop": 89.0}
     pack = {"fortress": {"bands": [
         {"lo": 99.0, "hi": 101.0, "trampled": True, "decaying": False},
         {"lo": 90.0, "hi": 92.0, "trampled": False, "decaying": True},

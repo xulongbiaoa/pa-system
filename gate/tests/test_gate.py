@@ -28,6 +28,9 @@ def _plan(**kw):
         "risk_frac": 0.01,
         "setup": "A1",
         "context": "上升",
+        # 毛 RR 1.63 不到设计目标 2:1：夹具按 H8 口径带封顶说明，
+        # 个别测试要验 H8 时自行 del p["cap_reason"]
+        "cap_reason": "110 上方完好要塞封顶，目标按序列只能取到此处",
     }
     p.update(kw)
     return p
@@ -77,11 +80,12 @@ def test_h1_uses_first_target_not_last():
 def test_soft_rule_no_longer_depends_on_target_choice():
     # 旧行为：S1 按**末级目标** RR 判断（首目标 1.6 / 末级 3.3 → 不降仓），
     # 于是「多写一个远目标」就能免掉降仓。2026-10-30 去掉 RR 条件后该漏洞
-    # 一并消失：加不加远目标都降仓。
+    # 一并消失；S1 已于 2026-10-31 删除，本例改用 S2 钉同一不变量：
+    # 软降仓只看 flags，加不加远目标都降仓。
     r = adjudicate(_plan(targets=[110.0, 130.0]), _pack(), bars_left=50,
-                   flags={"parabolic": True})
+                   flags={"trample": True})
     assert r["risk_mult"] == 0.5
-    assert any(s["rule"] == "S1" for s in r["soft_hits"])
+    assert any(s["rule"] == "S2" for s in r["soft_hits"])
 
 
 def test_h6_skipped_notes_when_ledger_missing():
@@ -132,9 +136,9 @@ def test_h6_small_sample_zero_wins_is_observation_only():
 
 
 def test_soft_rule_downgrades_not_rejects():
-    r = adjudicate(_plan(), _pack(), bars_left=50, flags={"parabolic": True})
+    r = adjudicate(_plan(), _pack(), bars_left=50, flags={"trample": True})
     assert r["verdict"] == "pass" and r["risk_mult"] == 0.5
-    assert any(s["rule"] == "S1" for s in r["soft_hits"])
+    assert any(s["rule"] == "S2" for s in r["soft_hits"])
 
 
 def test_replay_stop_priority_same_bar():
@@ -213,29 +217,36 @@ def test_reports_gap_to_design_target():
 
 
 def test_design_target_does_not_veto_below_target():
-    # 毛 1.6（低于设计目标）但净 RR 仍过 1.5 地板 → 放行，只报差距
+    # 毛 1.6（低于设计目标）但净 RR 仍过 1.5 地板、且带封顶说明 → 放行，
+    # 只报差距。2026-10-31 H8 后口径细化：不否决的是 RR 水平本身，
+    # 否决的是「低于目标又不说明被什么挡住」（见 test_h8.py）。
     r = adjudicate(_plan(targets=[109.808]), _pack(), bars_left=50)
     assert r["verdict"] == "pass"
     assert r["rr_gap_to_target"] < 0
     assert not any(h["rule"] == "H1" for h in r["hard_hits"])
+    p = _plan(targets=[109.808])
+    del p["cap_reason"]
+    r2 = adjudicate(p, _pack(), bars_left=50)
+    assert any(h["rule"] == "H8" for h in r2["hard_hits"])
 
 
 def test_soft_rules_unconditional_after_design_target():
-    # 设计目标定为盈亏比 2:1 后，S1 的 <2.5 与 S3 的 <2.0 对每个合格计划都
-    # 恒成立，条件已是死代码——2026-10-30 直接去掉，改为无条件减仓。
+    # S2 无条件减仓（2026-10-30 去掉恒真 RR 条件）。S1/S3 已于
+    # 2026-10-31 删除：parabolic 判据自始不存在、decaying 计数口径
+    # 无区分力——两键传入 flags 也必须毫无效果，不许留装饰性规则。
     r = adjudicate(_plan(targets=[112.26]), _pack(), bars_left=50,
-                   flags={"parabolic": True, "decaying": True})
+                   flags={"parabolic": True, "decaying": True,
+                          "trample": True})
     rules = {s["rule"] for s in r["soft_hits"]}
-    assert rules == {"S1", "S3"} and r["risk_mult"] == 0.25
+    assert rules == {"S2"} and r["risk_mult"] == 0.5
 
 
-def test_soft_rules_now_also_catch_high_rr_plans():
-    # 去掉 RR 条件后是**收紧**：净 RR 2.87 的计划原先逃过 S1，现在也要减半
+def test_s1_deleted_parabolic_flag_is_inert():
+    # 高 RR 计划 + parabolic 键：S1 删除后软规则零命中、仓位不减
     r = adjudicate(_plan(targets=[118.0]), _pack(), bars_left=50,
                    flags={"parabolic": True})
     assert r["rr_gate"][-1] > 2.5
-    assert any(s["rule"] == "S1" for s in r["soft_hits"])
-    assert r["risk_mult"] == 0.5
+    assert r["soft_hits"] == [] and r["risk_mult"] == 1.0
 
 
 # --- 毛目标与净地板的量纲：地板不能高过设计目标能给的净 RR -------------------

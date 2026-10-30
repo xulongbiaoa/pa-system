@@ -381,3 +381,40 @@ core.md 未改，红线 3 仍是 1%。提案全文 review-out/凯利仓位提案
   （重画回路 / 多决策点 / hypotheses 程序透传）只登记、不立项。
 - 接线 bug 第 36 条：campaign_run 组装 plan 时漏并 side/setup/context
   （pilot/event 两 runner 均有此步），计分时 KeyError，已修。
+
+## 2026-10-31 审计欠账二批处置（用户指令「现在修」）
+
+- S1 删除：parabolic 判据自始不存在、flag 无生产者，PENDING 登记
+  一并撤销（test_wiring 的 PENDING 清空）。恢复条件不变：原册锚点
+  判据 + 样本，先补生产者再谈规则。
+- S3 删除：decaying 三种计数口径（tests≥4 / +crosses≥1 / crosses≥2）
+  在 140 段语料的规范计划触发率分别为 88% / 81% / 63%，无区分力；
+  衰减的真信号是逐测反应递减，计数聚合表达不了。fortress 的
+  decaying 字段保留为描述量（口径 tests≥4 且 crosses≥1），gate
+  不再消费。S2（trample）保留：语料触发约 41–50%，且踩踏是用户
+  体系有定义的状态。此前「生产零触发」定性更正为候选稀缺所致。
+- second_bar_confirmed 删除：判断层自声明却可豁免 S2 减半，自声明
+  免核对不成立。schema / flags / prompt 同步移除，S2 改无条件。
+- void 半执行修复：validate 强制 qualified 计划带结构化 void
+  （level+side），缺失判格式不合格；回放执行路径原本就在
+  （test_void_replay），堵的是判断层只写文字版的口子。红线 5 自此
+  对新判读全执行；存量档案不追溯。
+- H8 新设（设计目标说明义务）：毛 RR（首目标、计划口径）低于设计
+  目标 2:1 且 plan 无 cap_reason → 拒。口径说明：不否决 RR 水平
+  本身（带说明的 1.6 计划照常放行，原 test_design_target 断言保
+  留），否决的是「取不到 2:1 又不点名封顶结构」——core 既有义务
+  首次执法，与 H7「反证必填」同族。prompt/schema 已同步。
+- priors 进回路：prompt_builder 按路由卡片注入 priors.md 中原册
+  已核的先验（B3→突破失败 80%、C1→MTR 40%、顺势卡→逆势成旗
+  80%、MM 50%/60–70%），每条标注 E-mini 口径、本市场未验证、
+  只作 P 的锚不作放行依据；未核验条目不注入。campaign 提示同享。
+- 要塞带粒度：聚类加跨度上限 2×段均幅（单链 chaining 剪断）。
+  140 段语料复测：带宽/段均幅 >3× 占比 5.8%→0%，最大值 4.81+→
+  2.98，p90 2.26→2.27（残余宽度来自收盘簇极值钉边口径，动它会
+  连带改变 crosses 语义，留作单独议题，不在本批）。
+- 触发纪律：router 新增「触发纪律」节 + prompt 同步——触发成立
+  即写候选，不默认多等一根；选择等必须在 reason 里标明等什么、
+  代价是什么（执行轴盲考 1/7 的文本侧处置；验证靠盲考 v2）。
+- examples split 更正：审计台账 #35 不成立（41 份全带 split 且
+  构造正确），已补回归测试锁定，台账附记已更正。
+- 接线 bug 累计 36 条（新增 campaign_run 漏并 plan 三键）。

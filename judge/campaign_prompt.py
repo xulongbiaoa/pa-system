@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from judge.prompt_builder import _read, route_cards, bars_table, KB  # noqa: E402
+from judge.prompt_builder import _read, route_cards, bars_table, KB, priors_section  # noqa: E402
 
 MAP_TASK = """## 任务：画战役地图（预演制第一遍，本遍不下单）
 你站在第 90 根收盘处。只输出一个 JSON 对象（不要解释、不要围栏），字段：
@@ -50,7 +50,9 @@ candidates/no_trade_reason/pending_conditions/uncertainty）。
 3. 无点被测试，或点被测试但 trigger 未成立 → candidates 留空，
    用 pending_conditions 记下在等哪个点的什么触发。
 点外造单（写了地图上没有的位置）= 违规，会被单独计数。
-hypotheses 直接沿用地图的主备假设（可按 takeover_if 更新 primary）。"""
+hypotheses 直接沿用地图的主备假设（可按 takeover_if 更新 primary）。
+plan 契约与单点判读完全一致：结构化 void 必备（只写文字版判格式
+不合格）；首目标毛 RR 取不到 2:1 时必须带 cap_reason 点名封顶结构。"""
 
 
 def _context_parts(pack, bars):
@@ -61,6 +63,9 @@ def _context_parts(pack, bars):
         parts.append(_read(os.path.join(KB, "setups", c + ".md")))
     if (pack.get("gaps") or {}).get("open"):
         parts.append(_read(os.path.join(KB, "setups", "G1-confluence-gap.md")))
+    pri = priors_section(cards)
+    if pri:
+        parts.append(pri)
     parts.append("## 本次路由依据\n" + "; ".join(reasons))
     parts.append("## 数字附件（特征包；语境与形态以图读为准）\n```json\n"
                  + json.dumps(pack, ensure_ascii=False) + "\n```")

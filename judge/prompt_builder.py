@@ -124,6 +124,37 @@ def recall_examples(pack, k=3, *, segment=None, symbol=None, bars=None,
     return picked[:k]
 
 
+# 阿布先验注入（2026-10-31 审计处置：priors 此前只躺在库里、没进决策
+# 回路）。只注入 knowledge/priors.md 中「原册已核」的条目，按本次路由
+# 卡片选取；每条都标注 E-mini 出身与本市场未验证——先验是定性倾向
+# （P 的锚），不是放行依据，更不许当成本市场的已验证概率引用。
+_PRIORS_BY_CARD = [
+    (("B3-failed-breakout",),
+     "交易区间突破失败 ≈ 80%（Brooks V15/V18；v13 s5 原话）"),
+    (("C1-mtr",),
+     "主要趋势反转最终走成波段 ≈ 40%（Brooks V22/V11/V21；v11 s22/s25）"),
+    (("A1-m2b", "A2-m2s", "B2-breakout-pullback"),
+     "强趋势中逆势尝试 ≈ 80% 失败并走成顺势旗形（Brooks V14/V15/V12；v20 s10）"),
+]
+_PRIOR_MM = ("MM 目标达成：普通趋势 ≈ 50%（V20 s42）；异常强突破 + 跟进"
+             " ≈ 60–70%（V20 s39）")
+
+
+def priors_section(cards):
+    lines = []
+    for keys, text in _PRIORS_BY_CARD:
+        if any(k in cards for k in keys):
+            lines.append("- " + text)
+    if cards:
+        lines.append("- " + _PRIOR_MM)
+    if not lines:
+        return ""
+    return ("## 阿布先验（原册已核，E-mini 口径；本市场未验证，只作倾向）\n"
+            + "\n".join(lines)
+            + "\n用法：给 P 一个不虚报的锚——与先验冲突的方向要更强的"
+              "到达行为才成立；先验本身不构成入场理由。")
+
+
 def bars_table(bars):
     lines = ["idx,o,h,l,c"]
     for i, b in enumerate(bars):
@@ -164,6 +195,9 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         ]
         parts.append("## 参考样本（草稿标注，只作语境类比）\n```json\n"
                      + json.dumps(brief, ensure_ascii=False) + "\n```")
+    pri = priors_section(cards)
+    if pri:
+        parts.append(pri)
     cases = recall_cases(pack, cards)
     if cases:
         blocks = []
@@ -203,9 +237,15 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "等于主假设的 id；hypothesis 六字段（id/statement/holds_if/void_if/"
         "takeover_if/menu）一个不许少，menu 是 setup 数组；假设不许带数字权重。"
         "有合格候选时 candidates 每项含 setup/side/qualified/reason/feature_refs 与 "
-        "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/void/"
-        "second_bar_confirmed；void 若写必须是结构化对象 "
-        "{\"level\": 数字, \"side\": \"above\" 或 \"below\"}，不许写成散句）。若随附 G1 卡且引用 G1：该候选必须另带 "
+        "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/exit_mode/"
+        "cap_reason；void 必备且必须是结构化对象 "
+        "{\"level\": 数字, \"side\": \"above\" 或 \"below\"}——回放只执行结构化 "
+        "void，只写文字版等于前提破无人出场，缺 void 直接判格式不合格）。"
+        "首目标毛 RR 取不到设计目标 2:1 时，plan 必须带 cap_reason 点名封顶"
+        "结构（哪条要塞/MM/摆动极值挡住了目标），缺失由 gate 以 H8 拒。"
+        "触发纪律（2026-10-31）：卡上触发条件成立即写候选，不默认多等一根"
+        "确认——等跟进在阿布体系里是明码的概率换价格（v22），若你选择等，"
+        "必须在 reason 里写明等什么、付出什么价格代价。若随附 G1 卡且引用 G1：该候选必须另带 "
         "conditions 条件矩阵（R1/R2/R3 必需、V1/V2/V3 否决、E1/E2 增强，"
         "逐项写 rule_id/role/status/dimension/evidence_refs/groups（role 只能是 "
         "required / enhancing / veto 三个英文词，E 类增强项写 enhancing 不许写 "

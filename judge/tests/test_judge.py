@@ -114,3 +114,43 @@ def test_route_range_still_carries_mtr_and_caps_at_three():
         cards, _ = route_cards(_pack(label, conf, verdict))
         assert 1 <= len(cards) <= 3
         assert len(set(cards)) == len(cards)
+
+
+def _judgment_with_plan(plan):
+    j = _valid_judgment()
+    j["candidates"] = [{
+        "setup": "A1", "side": "long", "qualified": True,
+        "reason": "回踩第二腿信号成立", "feature_refs": ["ema.value"],
+        "plan": plan,
+    }]
+    j["no_trade_reason"] = None
+    return j
+
+
+_BASE_PLAN = {"entry": 100.0, "stop": 98.0, "targets": [104.4],
+              "void_if": "收盘跌破 97.5", "risk_frac": 0.01}
+
+
+def test_plan_without_structured_void_rejected():
+    # 2026-10-31：回放只执行结构化 void，只写文字版 = 前提破无人出场
+    errs = validate_judgment(_judgment_with_plan(dict(_BASE_PLAN)))
+    assert any("void" in e for e in errs), errs
+
+
+def test_plan_with_structured_void_passes():
+    p = dict(_BASE_PLAN, void={"level": 97.5, "side": "below"})
+    assert validate_judgment(_judgment_with_plan(p)) == []
+
+
+def test_priors_section_by_cards():
+    from judge.prompt_builder import priors_section
+    mtr = priors_section(["C1-mtr"])
+    assert "40%" in mtr and "本市场未验证" in mtr
+    rng = priors_section(["B3-failed-breakout"])
+    assert "80%" in rng and "突破失败" in rng
+    trend = priors_section(["A1-m2b", "B2-breakout-pullback",
+                            "B3-failed-breakout"])
+    assert "逆势尝试" in trend and "MM 目标达成" in trend
+    # 未核验条目（本地定性线/样本不足）不许混入注入
+    for s in (mtr, rng, trend):
+        assert "未验证（样本不足" not in s and "起点裁决线" not in s

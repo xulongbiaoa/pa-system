@@ -3,8 +3,10 @@
 硬规则（违反即拒绝）：H1 净 RR、H2 止损结构外、H3 单笔风险上限、
 H4 入场截止、H5 引用完整性（引用了置信「未定」的特征）、H6 模式停牌、
 H7 条件矩阵（契约 v2：必需/否决逐项执法，G1 另查矩阵完整性、
-R2 同源组数与最强反证）。
-软规则（降仓不拒绝）：S1 抛物线高潮折扣、S2 踩踏继承、S3 衰减边缘。
+R2 同源组数与最强反证）、H8 设计目标说明义务（毛 RR 不到 2:1
+须带 cap_reason 点名封顶结构）。
+软规则（降仓不拒绝）：S2 踩踏继承。（S1/S3 已于 2026-10-31 删除：
+S1 判据自始不存在；S3 的计数口径无区分力，见 gate/flags.py 头注。）
 每次裁决返回命中的规则编号与数值明细，写入日志供改规证据统计。
 """
 
@@ -94,8 +96,9 @@ def _round_level(price):
 
 def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=None,
                mode="annotation"):
-    """plan: {side, entry, stop, targets[], risk_frac, order_type?, limit_in?}
-    flags: {parabolic, trample, decaying, second_bar_confirmed}
+    """plan: {side, entry, stop, targets[], risk_frac, order_type?, limit_in?,
+              cap_reason?}
+    flags: {trample}（gate/flags.py 生产，来自感知层带状态）
     ledger: {(setup, 语境): {'n': int, 'wins': int}}，语境须为
     plan['context'] 且取值在 CONTEXTS 枚举内，否则 H6 不查（结果里 notes 会
     写明原因，不让规则静默失效）。
@@ -170,6 +173,20 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # 现价与计划入场价的 element-wise min，限价计划取限价入场价）
     if rr_main is None or rr_main < RR_MIN:
         hard.append({"rule": "H1", "detail": f"净RR={rr_main} < {RR_MIN}（首目标）"})
+    # H8 设计目标说明义务（2026-10-31 审计处置「RR 应试化」）：core 定版
+    # 口径——设计目标 2:1，取不到必须说明被哪条结构挡住，不许默默改近
+    # 目标凑合格。此前该义务无人执法，裁决只报 rr_gap_to_target 的数字，
+    # 计划可以贴着 1.5 地板画而永不解释。现按 H7「反证必填」的同族
+    # 口径执法：毛 RR（计划口径、首目标）低于设计目标且 plan 未带
+    # cap_reason（点名封顶结构）→ 文档不完整，拒。已过 H1 的才查，
+    # 避免与 H1 拒单叠报。
+    if (rr_main is not None and rr_main >= RR_MIN
+            and target_rr is not None and rr_gross is not None
+            and rr_gross < target_rr
+            and not str(plan.get("cap_reason") or "").strip()):
+        hard.append({"rule": "H8", "detail":
+                     f"毛RR={rr_gross} < 设计目标 {target_rr} 且未说明封顶结构"
+                     f"（plan.cap_reason 缺失）"})
     # H2 止损在结构外：止损须越过入场最近一侧的摆动极值（大小级别合并看；
     # 2026-10-30 修正：原先只看大级别摆动，DOT A2 案的第二腿高点 1.576
     # 只是小级别摆动，大级别最近高点远在 1.896，合理止损 1.585 被误杀）
@@ -284,19 +301,19 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # 后，S1 的 `< 2.5` 与 S3 的 `< 2.0` 对**每一个**合格计划都恒成立，条件
     # 实际是死代码，只剩「抛物线就减半」「衰减就减半」在起作用。与其留一个
     # 永远为真的条件让人以为还有闸门，不如写明它是无条件减仓。
-    # 注意这是**收紧**：净 RR ≥ 2.5 的计划原先逃过 S1，现在也要减半。方向与
-    # 「裁决层只能否决或降仓」一致，故无需另案；若要改回有条件，须先证明
-    # 高 RR 能豁免抛物线风险，那是放宽，要证据。
+    # 2026-10-31 审计处置：S1 整体删除——parabolic 判据自始不存在、
+    # flags 生产者从未写过，永远不会置位的规则只是装饰（与凯利同例，
+    # 按「剪掉不明的枝」移除；恢复须先有原册锚点判据 + 样本）。
+    # S2 同时去掉 second_bar_confirmed 豁免：该字段是判断层自声明，
+    # 却能免掉踩踏减半——自声明、免核对，不成立。字段已从 schema 与
+    # flags 删除，S2 对踩踏相关带无条件减半（收紧方向）。
     risk_mult = 1.0
-    if flags.get("parabolic"):
-        soft.append({"rule": "S1", "detail": "抛物线高潮后首次恢复，仓位减半"})
+    if flags.get("trample"):
+        soft.append({"rule": "S2", "detail": "踩踏继承区，仓位减半"})
         risk_mult *= 0.5
-    if flags.get("trample") and not flags.get("second_bar_confirmed"):
-        soft.append({"rule": "S2", "detail": "踩踏继承区未见第二根确认，仓位减半"})
-        risk_mult *= 0.5
-    if flags.get("decaying"):
-        soft.append({"rule": "S3", "detail": "衰减边缘，仓位减半"})
-        risk_mult *= 0.5
+    # S3（衰减减半）已删（2026-10-31）：decaying 的计数口径在语料上
+    # 触发率 63–88%、无区分力，见 gate/flags.py 头注。decaying 键即使
+    # 被旧调用方传入也忽略。
     # 凯利 sizing 已于 2026-10-31 按用户裁定整体移除（从未生效、用不到，
     # 不留）：仓位只由骨架硬数字决定（风险 100/笔、H3 上限 1%），裁决层
     # 不再给仓位建议。台账只保留 H6 需要的 n/wins。

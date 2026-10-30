@@ -38,7 +38,11 @@ def test_pipeline_end_to_end(tmp_path):
                           "reason": "管线验证用", "feature_refs": ["trend.label"],
                           "plan": {"entry": entry, "stop": stop,
                                    "targets": [entry + 1.8 * risk],
-                                   "void_if": "收盘破起点", "risk_frac": 0.01}}],
+                                   "void_if": "收盘破起点", "risk_frac": 0.01,
+                                   # 2026-10-31 契约：结构化 void 必备；
+                                   # 毛 RR 1.8 不到 2:1 须带封顶说明（H8）
+                                   "void": {"level": stop, "side": "below"},
+                                   "cap_reason": "管线夹具：目标按 1.8R 构造"}}],
           "no_trade_reason": None, "pending_conditions": [], "uncertainty": []}
     (jd / "ds04.json").write_text(json.dumps(j2))
     rep = run(str(jd))

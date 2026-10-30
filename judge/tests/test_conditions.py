@@ -39,7 +39,8 @@ def _cand(**kw):
     c = {"setup": "G1", "side": "long", "qualified": True, "reason": "公式三齐",
          "feature_refs": ["gaps.open"],
          "plan": {"entry": 100.0, "stop": 94.0, "targets": [110.0],
-                  "void_if": "收盘破落点", "risk_frac": 0.01},
+                  "void_if": "收盘破落点", "risk_frac": 0.01,
+                  "void": {"level": 93.5, "side": "below"}},
          "conditions": _matrix(),
          "strongest_countercase": "缺口被强阴线回补关闭"}
     c.update(kw)

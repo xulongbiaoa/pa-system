@@ -34,6 +34,32 @@ def test_crosses_and_trample_flag():
     assert bands[0]["crosses"] == 3 and bands[0]["trampled"] is True
 
 
+def test_chained_anchors_split_by_span_cap():
+    # 2026-10-31 粒度修复：台阶式锚链（步长 ≤tol）旧实现并成一条巨带；
+    # 跨度上限 2×seg_avg=4.0，锚 100→106 的链必须断成 ≥2 条带
+    anchors = [S(100.0 + 0.9 * i) for i in range(8)]  # 100.0 … 106.3
+    bars = [B(103.0) for _ in range(6)]
+    bands = build_fortress_bands(bars, anchors, seg_avg=2.0)
+    assert len(bands) >= 2
+    for b in bands:
+        assert b["hi"] - b["lo"] <= 4.0 + 1e-9 or b["far_undefined"]
+
+
+def test_decaying_needs_a_close_cross():
+    # 2026-10-31 衰减口径：被测 ≥4 次但从未被收盘穿过 = 要塞本色，不是衰减
+    # 收盘簇钉出带 [99.6, 100.3]，五根收盘全在带内 → 穿越 0 次
+    bars = [B(c, pad=0.6) for c in [99.6, 100.3, 99.7, 100.2, 99.6]]
+    bands = build_fortress_bands(bars, [S(100.0)], seg_avg=2.0)
+    b = bands[0]
+    assert b["tests"] >= 4 and b["crosses"] == 0
+    assert b["decaying"] is False and b["trampled"] is False
+    # 孤锚单线 100：五根影线都够到线（测 ≥4），收盘只越线一次 → 衰减
+    bars2 = [B(c, pad=2.5) for c in [98.0, 98.5, 102.0, 102.5, 101.8]]
+    b2 = build_fortress_bands(bars2, [S(100.0)], seg_avg=2.0)[0]
+    assert b2["tests"] >= 4 and b2["crosses"] == 1
+    assert b2["decaying"] is True and b2["trampled"] is False
+
+
 def test_trend_age_sequence_and_ema_distance():
     bars = [B(100.0) for _ in range(49)] + [B(102.0)]
     legs = [

@@ -133,10 +133,9 @@
         ],
         "description": "结构化前提失效：生命周期内任一根收盘越过 level（side 指失效侧）即按收盘价出场，回放强制执行；void_if 文字说明与此并存，冲突时以结构化为准"
        },
-       "second_bar_confirmed": {
-        "type": "boolean",
-        "default": false,
-        "description": "入场方式声明：触发后已见第二根确认（判断层声明、裁决层 S2 查验）；非感知量，不许事后补填"
+       "cap_reason": {
+        "type": "string",
+        "description": "封顶结构说明：首目标毛 RR 取不到设计目标 2:1 时必填，点名挡住目标的是哪条结构（要塞/MM/摆动极值）；缺失且毛 RR < 2:1 时 gate 以 H8 拒（2026-10-31）"
        }
       },
       "required": [
@@ -144,6 +143,7 @@
        "stop",
        "targets",
        "void_if",
+       "void",
        "risk_frac"
       ],
       "type": [

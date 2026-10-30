@@ -6,19 +6,39 @@
 far_undefined（远边未定，不得当作完整要塞用）。
 尝试计数：某带被 K 线区间到达 = 测 1 次；收盘越过带的远边 = 穿 1 次
 （穿越以收盘计，盘中刺穿只记到达——尝试计数 v2.1–v2.4 口径）。
+
+粒度修复（2026-10-31 审计处置）：旧聚类是单链 chaining——锚价以
+≤tol 的台阶一路相连就能并成跨度任意大的「巨带」。140 段语料实测
+带宽/段均幅 p90=2.26、p99=4.81、>3× 占 5.8%：一条宽 3 倍均幅的
+「带」是区域不是价位，污染 R2 落点判定、事件采样与 flags 相关性。
+修法：簇跨度上限 = 2 × 段均幅（4×tol），新锚加入会超限即另起一簇；
+局部密度分组不变，只剪链式并带。修后同语料复测见 changelog。
+
+衰减口径（同日再修）：decaying 旧定义 tests≥4 在语料里 140/140 段
+都有带命中、规范计划触发率 88%——「被测 ≥4 次」是要塞的证据而非
+衰减。改 tests≥4 且 crosses≥1 后复测仍 81%，crosses≥2 仍 63%：
+180 根尺度上计数聚合表达不了「排斥力在变弱」（那是最近几次测试的
+反应问题，需要逐测反应记录）。故 decaying 只保留为**描述字段**
+（decaying = tests≥4 且 crosses≥1），gate 自 2026-10-31 起不再据它
+减半（S3 删除）；trampled（crosses≥3）是用户体系里有定义的踩踏
+状态，S2 继续消费。逐测反应衰减检测器要另立项，不许拿计数凑。
 """
 
 from .gaps import trimmed_avg_range
 from .precision import r6
 
+MAX_BAND_SPAN = 2.0  # 簇跨度上限（× 段均幅）
+
 
 def build_fortress_bands(bars, swings, seg_avg=None):
     seg_avg = seg_avg or trimmed_avg_range(bars)
     tol = 0.5 * seg_avg if seg_avg else 0.0
+    max_span = MAX_BAND_SPAN * seg_avg if seg_avg else 0.0
     anchors = sorted(s["anchor"] for s in swings)
     clusters = []
     for a in anchors:
-        if clusters and a - clusters[-1][-1] <= tol:
+        if (clusters and a - clusters[-1][-1] <= tol
+                and a - clusters[-1][0] <= max_span):
             clusters[-1].append(a)
         else:
             clusters.append([a])
@@ -52,7 +72,7 @@ def build_fortress_bands(bars, swings, seg_avg=None):
                 "far_undefined": far_undefined,
                 "tests": tests,
                 "crosses": crosses,
-                "decaying": tests >= 4,
+                "decaying": tests >= 4 and crosses >= 1,
                 "trampled": crosses >= 3,
             }
         )

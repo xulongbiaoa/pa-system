@@ -96,3 +96,29 @@
 - 同一单在不同报告出现（ds23 见于 gold-run 与外部对账）只计一次。
 - 结论方向只转述文件原话的定性（如「不可识别」「不下结论」「不过线」），
   本台账不新增判断。
+
+## 五、审计后处置附记（2026-10-31 二批，用户指令「现在修」）
+
+本节为汇编后的状态更正，不改上文审计时点的原始记录：
+
+- §二 #13（flags 无生产者）：S2 已接线且语料可达（规范计划触发
+  约 41–50%）；S1 整体删除（判据自始不存在，不再以 PENDING 保留）；
+  S3 删除（decaying 计数口径触发率 63–88%、无区分力，字段降为
+  描述量）。软规则现只剩 S2 一条。
+- §二 #33（回放不执行前提失效）：已修——validate 强制 qualified
+  计划带结构化 void，回放执行之（eval/tests/test_void_replay.py）。
+  存量旧判读的纯文字 void_if 仍不执行，属档案口径，不追溯。
+- §二 #34（second_bar_confirmed 自声明）：已处置——字段整体删除
+  （schema/flags/prompt 同步），其对 S2 的减半豁免一并取消。
+- §二 #35（examples 无 split 字段）：**原记录不成立，更正**——复核
+  实测 41 份样本全部带 split（dev 31 / val 10），由 build_examples.py
+  按源目录盖戳、构造保证正确，recall 已按池过滤；已补回归测试
+  （judge/tests/test_examples_split.py）锁定。
+- §二 新增 #36：campaign_run 组装 plan 时漏并 side/setup/context
+  （pilot/event 两 runner 均有此步），对比实验计分时 KeyError，
+  已修（2026-10-31 对比批）。
+- §一 #16（S1–S3 实证）：处置后状态以本节第一条为准；S2 的绩效
+  仍未检验（无官方成交样本触发过），此点不变。
+- 同批另落地：H8 设计目标说明义务（cap_reason）、priors 先验注入
+  判读提示、要塞带聚类跨度上限 2×段均幅（带宽 >3× 占比 5.8%→0%）、
+  router/prompt 反「默认等跟进」触发纪律。详见 changelog 同日节。

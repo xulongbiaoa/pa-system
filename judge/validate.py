@@ -89,6 +89,13 @@ def validate_judgment(j):
                 for k in ("entry", "stop", "targets", "void_if", "risk_frac"):
                     if k not in p:
                         errs.append(f"plan 缺字段 {k}")
+                # 结构化 void 必备（2026-10-31 审计处置）：回放只执行
+                # 结构化 void，自由文本 void_if 不出场——只写文字版等于
+                # 前提破无人管（红线 5 半执行）。qualified 计划缺 void
+                # 直接判格式不合格。
+                if "void" not in p:
+                    errs.append("plan 缺结构化 void（前提失效必须可执行，"
+                                "自由文本 void_if 不算）")
                 v = p.get("void")
                 if v is not None:
                     if not isinstance(v, dict) or not isinstance(v.get("level"), (int, float)):
