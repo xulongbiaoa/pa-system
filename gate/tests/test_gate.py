@@ -49,8 +49,63 @@ def test_h2_stop_inside_structure_reject():
 
 
 def test_h4_cutoff_reject():
-    r = adjudicate(_plan(), _pack(), bars_left=5)
+    # H4 只约束 trainer 局内；annotation（标注/试点）下决策点即「当下」，不截止
+    r = adjudicate(_plan(), _pack(), bars_left=5, mode="trainer")
     assert any(h["rule"] == "H4" for h in r["hard_hits"])
+
+
+def test_h4_not_applied_in_annotation():
+    r = adjudicate(_plan(), _pack(), bars_left=5, mode="annotation")
+    assert not any(h["rule"] == "H4" for h in r["hard_hits"])
+    assert r["verdict"] == "pass"
+
+
+def test_h3_risk_frac_one_pct_is_the_cap():
+    # core 红线 3：单笔风险 1%。1.0% 放行，1.1% 拒绝（原上限 1.5% 已收窄）
+    assert adjudicate(_plan(risk_frac=0.01), _pack(), bars_left=50)["verdict"] == "pass"
+    r = adjudicate(_plan(risk_frac=0.011), _pack(), bars_left=50)
+    assert any(h["rule"] == "H3" for h in r["hard_hits"])
+
+
+def test_h1_uses_first_target_not_last():
+    # 首目标净 RR 不足 1.5，靠加一个远目标不能过关（与回放结算同口径）
+    r = adjudicate(_plan(targets=[105.0, 130.0]), _pack(), bars_left=50)
+    assert any(h["rule"] == "H1" for h in r["hard_hits"])
+    assert r["rr_by_target"][0] < 1.5 < r["rr_by_target"][-1]
+
+
+def test_soft_rule_uses_last_target_rr():
+    # S1 阈值 2.5 按末级口径标定：首目标 1.6 / 末级 3.3 → 不降仓
+    r = adjudicate(_plan(targets=[110.0, 130.0]), _pack(), bars_left=50,
+                   flags={"parabolic": True})
+    assert r["verdict"] == "pass" and r["risk_mult"] == 1.0
+    assert not r["soft_hits"]
+
+
+def test_h6_skipped_notes_when_ledger_missing():
+    # 不传台账时不许静默：结果里必须写明 H6 未生效
+    r = adjudicate(_plan(), _pack(), bars_left=50)
+    assert r["verdict"] == "pass"
+    assert any("H6" in n for n in r["notes"])
+
+
+def test_h6_requires_context_enum():
+    ledger = {("A1", "上升"): {"n": 3, "wins": 0}}
+    r = adjudicate(_plan(context="下降趋势里的回调多"), _pack(), bars_left=50,
+                   ledger=ledger)
+    assert not any(h["rule"] == "H6" for h in r["hard_hits"])
+    assert any("context" in n for n in r["notes"])
+
+
+def test_h2_round_level_reject_any_price_scale():
+    # 关口判据按价格量级取步长：1.58 这类价格也有整数关口（0.05 一档），
+    # 原来的 round(stop) 判据对非整数报价资产恒不命中（死代码）
+    p = _pack()
+    p["seg_avg_range"] = 0.4
+    base = _plan(side="short", entry=11.5, stop=12.0, targets=[10.0])
+    assert any(h["rule"] == "H2" for h in adjudicate(base, p, bars_left=50)["hard_hits"])
+    off = _plan(side="short", entry=11.5, stop=11.91, targets=[10.0])
+    assert not any(h["rule"] == "H2" for h in adjudicate(off, p, bars_left=50)["hard_hits"])
 
 
 def test_h5_undefined_feature_reject():

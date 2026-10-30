@@ -1,8 +1,8 @@
 """阶段 5 试点 runner：判断 JSON → 校验 → 裁决 → 回放 → 报告。
 
 判断以决策点（bar 180）一次性给出：入场价按计划 entry 在第 180 根起
-的未来段上回放，第一目标出场。bars_left 按未来窗 300 根计，H4 截止在
-本试点不触发（试点只验管线与单点判断，不验窗内择时）。
+的未来段上回放，第一目标出场。裁决用 mode="annotation"（决策点即「当下」，
+core 红线 4 定版口径），H4 截止不参与；回放窗口固定 300 根（生命周期口径）。
 """
 
 import json
@@ -20,6 +20,25 @@ from replay import simulate_trade, summarize  # noqa: E402
 DS = os.path.join(os.path.dirname(__file__), "datasets", "dev")
 JD = os.path.join(os.path.dirname(__file__), "pilot", "judgments")
 DECISION = 180
+LIFECYCLE = 300  # core 生命周期口径：决策点后 300 根，到期按第 300 根收盘出场
+LEDGER_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "knowledge", "ledger", "mode_stats.json"
+)
+
+
+def load_ledger(path=LEDGER_PATH):
+    """模式台账：落盘格式 {setup: {语境: {n, wins}}}，转成 (setup, 语境) 键。
+
+    文件不存在时返回空台账——裁决结果里 H6 会显式标「未生效」，不静默跳过。
+    """
+    if not os.path.exists(path):
+        return {}
+    raw = json.load(open(path))
+    out = {}
+    for setup, by_ctx in raw.items():
+        for ctx, st in by_ctx.items():
+            out[(setup, ctx)] = {"n": st.get("n", 0), "wins": st.get("wins", 0)}
+    return out
 
 
 def load_segment(seg_id):
@@ -29,12 +48,15 @@ def load_segment(seg_id):
 
 def run(judgments_dir=JD):
     cfg = load_config()
+    ledger = load_ledger()
     report = {
         "judged": 0,
         "format_fail": 0,
         "no_trade": 0,
         "gate_reject": 0,
         "gate_reject_rules": {},
+        "gate_notes": {},
+        "h6_active": bool(ledger),
         "trades": [],
     }
     if not os.path.isdir(judgments_dir):
@@ -65,12 +87,18 @@ def run(judgments_dir=JD):
         ]
         pack = build_feature_pack(bars, anchors, cfg)
         plan = dict(c["plan"])
+        # context 必须是语境枚举（上升/下降/震荡），取自感知层趋势标签；
+        # 原先把假设 statement 的自由文本塞进来，H6 的 (setup, 语境) 台账键
+        # 永远查不中，停牌规则等于没接线（2026-10-30 修正）。
         plan.update({"side": c["side"], "setup": c["setup"],
-                     "context": (j["hypotheses"][0]["statement"] if j["hypotheses"] else "")})
+                     "context": pack["trend"]["label"]})
         verdict = adjudicate(
-            plan, pack, bars_left=len(seg["bars"]) - DECISION,
+            plan, pack, bars_left=LIFECYCLE,
             feature_refs=c.get("feature_refs", []),
+            ledger=ledger, mode="annotation",
         )
+        for note in verdict.get("notes", []):
+            report["gate_notes"][note] = report["gate_notes"].get(note, 0) + 1
         if verdict["verdict"] == "reject":
             report["gate_reject"] += 1
             for h in verdict["hard_hits"]:
@@ -78,12 +106,15 @@ def run(judgments_dir=JD):
                     report["gate_reject_rules"].get(h["rule"], 0) + 1
                 )
             continue
+        # 生命周期锚在决策点：只取决策点后 300 根，到期按第 300 根收盘出场
+        future = seg["bars"][DECISION:DECISION + LIFECYCLE]
         t = simulate_trade(
-            seg["bars"][DECISION:], c["side"], plan["entry"], plan["stop"],
+            future, c["side"], plan["entry"], plan["stop"],
             plan["targets"][0],
         )
         if t:
-            t.update({"segment": seg_id, "setup": c["setup"]})
+            t.update({"segment": seg_id, "setup": c["setup"],
+                      "bars_after": len(future)})
             report["trades"].append(t)
     report["summary"] = summarize(report["trades"])
     report["no_trade_rate"] = (

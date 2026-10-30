@@ -4,6 +4,8 @@
  "no_trade": 10,
  "gate_reject": 0,
  "gate_reject_rules": {},
+ "gate_notes": {},
+ "h6_active": false,
  "trades": [],
  "summary": {
   "n": 0

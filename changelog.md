@@ -63,3 +63,17 @@ gate/risk_rules.py：硬规则 H1 净RR<1.5 / H2 止损结构内或压整数位 
 ## 2026-10-30 · 阶段 5 试点首跑（dev 前 10 段）
 
 助理按判断契约出 10 份判断 JSON（eval/pilot/judgments/），pilot_run 全链跑通：格式失败 0、空仓 10、裁决 0、成交 0。与外部复核标注对照 10/10 结论与原因一致。报告 eval/reports/stage5-pilot-v0.1.md 明示：本轮只验通空仓路径，0 成交不下任何期望结论；前 10 段按文件名排序以震荡为主，须扩判 dev 余 21 段再看出手率。
+
+## 2026-10-30 · 裁决层与 core 对齐（代码复核 P0 三修）+ 金标准回归落地
+
+复核（review-out/pa-system-代码复核.md）指出的「代码与 core 不一致」按 P0 优先修完，并先把护栏建起来再改门槛：
+
+- **P0-1 H3 风险上限 1.5% → 1%**：core 红线 3 为「单笔风险 1%」，代码沿用方案原文的「1%~1.5%」未随冻结口径收窄。新增断言：risk_frac=0.01 放行、0.011 拒绝。
+- **P0-2 H1 改按首目标计价**：回放按 targets[0] 结算，门槛却取末级目标——等于「加一个远目标就能过 1.5」，是「目标改近」的反向利用。软规则 S1–S3 的阈值（2.5/2.0）仍按末级口径标定，故另设 rr_soft 保留原标定；阈值重标定另案。
+- **P0-3 H4 只约束 trainer**：adjudicate 增 mode 参数（默认 annotation），core 红线 4 定版口径（决策点即「当下」）落地为代码分支；pilot_run 显式传 annotation。
+- **H2 整数关口判据修死代码**：原 abs(stop-round(stop))<0.02*seg_avg 只对整数报价资产成立（1.58 类价格 round 到 2，差 0.42 永不命中）。改为按价格量级取关口步长（mag/20），容差 5% 个步长——紧口径，只抓「几乎正好压在关口上」。
+- **H6 停牌规则接线**：试点原先把假设 statement 自由文本当 context，与 (setup, 语境) 台账键永不匹配，规则静默失效。现 context 必须为 上升/下降/震荡 枚举、pilot_run 取感知层 trend.label，台账由 knowledge/ledger/mode_stats.json 载入（缺文件返回空台账）；裁决结果新增 notes 字段，H6 未生效必须写明原因，不许静默。
+- **回放窗口显式化**：pilot_run 从「切到数据末尾」改为决策点后固定 300 根（生命周期口径），报告记 bars_after 便于核对。
+- **金标准回归测试 eval/tests/test_gold_regression.py（9 个）**：冻结集完整性/只读哈希（knowledge/gold/MANIFEST.sha256）、决策点后 300 根、30 段特征包可构建、两张冻结候选单必须过裁决（hard 零命中）、两张结局 R/出场原因/出场根号必须复现（ds23 −1.0314、DOT +2.9262）、空仓段不得补 plan、配比与 INDEX 一致、setup 覆盖清点（实际仅 A1×5 / A2×4 / B1×2 / B3×1，B2 与 C1 零样本——不得当「已验证」）。
+
+测试累计 41 → 57 全过。未修（P1/P2 另案）：eval/baselines.py 的 WARM/END=30/170 废弃截止与「跑到段末」、attempts≥2 门槛与 A1 两腿结构冲突、route_cards 缺 C1 分支、features.net_rr 两分支同体、legs.count_entry_attempts 首测语义。
