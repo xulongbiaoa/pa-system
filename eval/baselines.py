@@ -41,11 +41,16 @@ def _bump(funnel, key):
 
 
 def simple_baseline(seg, min_attempts=2, decision=DECISION, lifecycle=LIFECYCLE,
-                    funnel=None, first_only=True):
+                    funnel=None, first_only=True, rr=1.5):
     """返回该段的至多一笔交易。funnel 传 dict 则原地累加漏斗计数。
 
     first_only=False 时不提前返回，把整段扫完——漏斗统计必须扫全程，否则
     一旦在第一个信号处返回，后面每一环的分母都不一样，没法比较。
+
+    rr：目标距离（R 的倍数），默认 1.5 是这条基线定版时的口径。改 rr 只改
+    出场目标，不改入场条件，所以**交易笔数不变、只有结局变**——这正是做
+    「目标从 1.5R 换到 2R 值不值」对照时需要的性质（2026-10-30 用户定
+    「盈亏比 2:1」后补此参数）。
     """
     cfg = load_config()
     bars = seg["bars"]
@@ -80,12 +85,12 @@ def simple_baseline(seg, min_attempts=2, decision=DECISION, lifecycle=LIFECYCLE,
             extreme = min(b["l"] for b in bars[j : i + 1])
             stop = extreme - 0.1 * seg_avg
             entry = c
-            target = entry + 1.5 * (entry - stop)
+            target = entry + rr * (entry - stop)
         else:
             extreme = max(b["h"] for b in bars[j : i + 1])
             stop = extreme + 0.1 * seg_avg
             entry = c
-            target = entry - 1.5 * (stop - entry)
+            target = entry - rr * (stop - entry)
         res = simulate_trade(bars[i + 1 : i + 1 + lifecycle], side, entry, stop, target)
         if res:
             _bump(funnel, "signals")

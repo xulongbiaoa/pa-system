@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from baselines import LIFECYCLE, simple_baseline  # noqa: E402
 from perception.features import build_feature_pack, load_config  # noqa: E402
+from replay import simulate_trade  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 SPLITS = ("dev", "val", "test")
@@ -60,15 +61,18 @@ def load_pool(splits=SPLITS):
     return segs
 
 
-def scan_segment(seg, min_attempts=2, lifecycle=LIFECYCLE, cfg=None):
+def scan_segment(seg, min_attempts=2, lifecycle=LIFECYCLE, cfg=None, rr=1.5):
     """逐根扫描一段，返回**去重叠**后的交易（含 setup / context / order_type）。
 
     去重叠规则：上一笔的离场根之后才接受下一个信号。这样每笔交易的结局窗
     互不重叠，n 才能当独立样本数用。
+
+    rr 透传给 simple_baseline（目标距离，R 的倍数）：改 rr 不改入场条件，
+    所以笔数不变、只有结局变，可直接做「目标 1.5R vs 2R」的对照。
     """
     cfg = cfg or load_config()
     hits = simple_baseline(seg, min_attempts=min_attempts, lifecycle=lifecycle,
-                           first_only=False)
+                           first_only=False, rr=rr)
     out, last_exit = [], -1
     for t in hits:
         if t["entry_bar"] < last_exit:
@@ -130,18 +134,61 @@ def _stats(trades):
     }
 
 
+def compare_targets(segs, entries, mults=(1.0, 1.5, 2.0, 2.5, 3.0), cfg=None,
+                    lifecycle=LIFECYCLE):
+    """配对比较：固定同一批入场点，只换目标距离，看均 R 怎么变。
+
+    配对而不是各自重扫，是因为改目标会改离场根、进而改去重叠窗口，两次扫描
+    的笔数会不同（实测 11 笔 vs 9 笔），那样比较里混进了样本差异。配对后
+    样本完全一致，只差目标这一个变量。
+
+    用户 2026-10-30 定「盈亏比 2:1」（= 毛 RR 2.0），这张表就是回答「2R 值不值」。
+    """
+    cfg = cfg or load_config()
+    by_id = {s["id"]: s for s in segs}
+    rows = []
+    for mult in mults:
+        rs = []
+        for t in entries:
+            risk = abs(t["entry"] - t["stop"])
+            side = t["side"]
+            target = (t["entry"] + mult * risk if side == "long"
+                      else t["entry"] - mult * risk)
+            bars = by_id[t["segment"]]["bars"][t["entry_bar"] + 1:]
+            res = simulate_trade(bars[:lifecycle], side, t["entry"], t["stop"], target)
+            if res:
+                rs.append(res["r"])
+        if not rs:
+            rows.append({"rr": mult, "n": 0})
+            continue
+        wins = [r for r in rs if r > 0]
+        losses = [-r for r in rs if r <= 0]
+        b = (sum(wins) / len(wins)) / (sum(losses) / len(losses)) if wins and losses else None
+        rows.append({
+            "rr": mult, "n": len(rs),
+            "win_rate": round(len(wins) / len(rs), 4),
+            "mean_r": round(sum(rs) / len(rs), 4),
+            "sum_r": round(sum(rs), 4),
+            "b": None if b is None else round(b, 4),
+        })
+    return rows
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="逐根扫描 + 去重叠 + 样本预算")
     ap.add_argument("--write", action="store_true", help="把基线扫描结果落盘")
     ap.add_argument("--min-attempts", type=int, default=2)
+    ap.add_argument("--rr", type=float, default=1.5, help="目标距离（R 的倍数）")
+    ap.add_argument("--compare-targets", action="store_true",
+                    help="同一批入场点配对比较不同目标倍数（默认以 --rr 那批入场为准）")
     args = ap.parse_args(argv)
     segs = load_pool()
     cfg = load_config()
     raw = sum(len(simple_baseline(s, min_attempts=args.min_attempts,
-                                  first_only=False)) for s in segs)
-    trades = scan_pool(segs, min_attempts=args.min_attempts, cfg=cfg)
-    print("段数 %d ｜ 原始信号 %d ｜ 去重叠后 %d（压缩 %.1f 倍）" % (
-        len(segs), raw, len(trades), raw / max(len(trades), 1)))
+                                  first_only=False, rr=args.rr)) for s in segs)
+    trades = scan_pool(segs, min_attempts=args.min_attempts, cfg=cfg, rr=args.rr)
+    print("段数 %d ｜ 原始信号 %d ｜ 去重叠后 %d（压缩 %.1f 倍）｜ 目标 %.1fR" % (
+        len(segs), raw, len(trades), raw / max(len(trades), 1), args.rr))
     print("整体:", _stats(trades))
     for setup in sorted({t["setup"] for t in trades}):
         sub = [t for t in trades if t["setup"] == setup]
@@ -155,10 +202,20 @@ def main(argv=None):
         b["segments_needed_per_cell"], b["bars_needed_per_cell"]))
     print("注意：基线不做语境过滤（实测有 A1 多单落在「下降」标签语境里），"
           "它的 by_context 分层只能当参照，不能直接喂 H6 停牌判断。")
+    if args.compare_targets:
+        print("\n配对比较（同一批 %d 笔入场，只换目标）:" % len(trades))
+        print("%6s %5s %8s %8s %8s %7s" % ("目标R", "笔数", "胜率", "均R", "合计R", "b"))
+        for row in compare_targets(segs, trades, cfg=cfg):
+            if not row["n"]:
+                print("%6.1f %5d        —" % (row["rr"], 0))
+                continue
+            print("%6.1f %5d %7.1f%% %8.3f %8.2f %7s" % (
+                row["rr"], row["n"], 100 * row["win_rate"], row["mean_r"],
+                row["sum_r"], "%.2f" % row["b"] if row["b"] else "-"))
     if args.write:
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump({"source": "baseline", "note": "机械基线扫描，非 AI 判断层样本",
-                   "trades": trades, "budget": b},
+                   "rr": args.rr, "trades": trades, "budget": b},
                   open(OUT, "w"), ensure_ascii=False, indent=1)
         print("written:", OUT)
     return trades

@@ -207,3 +207,34 @@ def test_short_entry_raised_cannot_inflate_rr():
     assert inflated["verdict"] == "reject"      # 承诺 RR 5.4 被现价口径压回 1.43
     assert inflated["rr_by_target"][0] > 3.0
     assert inflated["rr_gate"][0] < 1.5
+
+
+# --- 设计目标 RR（用户 2026-10-30 定「盈亏比 2:1」= 毛 RR 2.0）-------------
+
+
+def test_reports_gap_to_design_target():
+    # 盈亏比 2:1：entry 100、止损 93.87（风险 6.13）、目标 112.26（回报 12.26）
+    r = adjudicate(_plan(targets=[112.26]), _pack(), bars_left=50)
+    assert r["target_rr"] == 2.0
+    assert r["rr_gross"] == 2.0
+    assert r["rr_gap_to_target"] == 0.0
+    assert r["rr_gate"][0] < 2.0        # 净 RR 必然低于毛 RR（费用）
+    assert r["verdict"] == "pass"
+
+
+def test_design_target_does_not_veto_below_target():
+    # 毛 1.6（低于设计目标）但净 RR 仍过 1.5 地板 → 放行，只报差距
+    r = adjudicate(_plan(targets=[109.808]), _pack(), bars_left=50)
+    assert r["verdict"] == "pass"
+    assert r["rr_gap_to_target"] < 0
+    assert not any(h["rule"] == "H1" for h in r["hard_hits"])
+
+
+def test_soft_rules_degenerate_at_design_target():
+    # 已知行为（非缺陷，锁住以便将来重标定时看得见）：设计目标定在毛 2.0 后，
+    # S1 门槛 2.5 与 S3 门槛 2.0 对**每一个**合格的 2:1 单都成立，两个条件
+    # 实际变成恒真——即「抛物线就减半」「衰减就减半」，RR 那半句是死代码。
+    r = adjudicate(_plan(targets=[112.26]), _pack(), bars_left=50,
+                   flags={"parabolic": True, "decaying": True})
+    rules = {s["rule"] for s in r["soft_hits"]}
+    assert rules == {"S1", "S3"} and r["risk_mult"] == 0.25

@@ -25,6 +25,14 @@ def _rr(entry, stop, target, fees, limit_in=False):
     return _net_rr(entry, stop, target, None, fees, limit_in=limit_in)
 
 
+def _rr_gross(entry, stop, target):
+    """毛 RR（未扣费），只用于和设计目标比差距——用户说的「盈亏比 2:1」
+    是毛口径（赢 2R 亏 1R），拿净 RR 去比会让每个合格的 2:1 单都显示差
+    0.03，属于自找的误读。"""
+    risk = abs(entry - stop)
+    return round(abs(target - entry) / risk, 4) if risk > 0 else None
+
+
 def _round_step(price):
     """该价位上「整数关口」的密度：按数量级取 mag/20。
 
@@ -56,6 +64,7 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     2026-10-30 定版：入场截止只约束 trainer 局内）。"""
     cfg = load_config()
     fees = cfg["fees"]
+    target_rr = cfg.get("target_rr")  # 设计目标（毛口径），None = 未声明
     flags = flags or {}
     hard, soft = [], []
     notes = []
@@ -63,6 +72,8 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         _rr(plan["entry"], plan["stop"], t, fees, plan.get("limit_in", False))
         for t in plan["targets"]
     ]
+    rr_gross = (_rr_gross(plan["entry"], plan["stop"], plan["targets"][0])
+                if plan.get("targets") else None)
     # 现价口径（2026-10-30 修正）：H1 只认「不优于现价的入场价」算出来的 RR。
     #
     # 原口径只看计划自己的 entry，于是把入场价往有利方向挪一点就能无界放大
@@ -182,6 +193,13 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         "rr_by_target_at_decision": rr_at_decision,  # 按现价重算的
         "rr_gate": rr_gate,                    # element-wise min，H1/S1–S3 实际用的
         "decision_price": px,
+        # 设计目标（用户 2026-10-30 定「盈亏比 2:1」= 毛 RR 2.0）：只报差距，不否决。
+        # 红线 1 的 1.5 是**地板**，不是目标；目标进这里是为了让「离自己想做的
+        # 单子差多远」在每份裁决里可见，而不是等人工去比。毛口径对毛口径比。
+        "target_rr": target_rr,
+        "rr_gross": rr_gross,
+        "rr_gap_to_target": None if (rr_gross is None or target_rr is None)
+        else round(rr_gross - target_rr, 4),
         "size_hint": size_hint,
         "notes": notes,
     }
