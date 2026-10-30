@@ -31,10 +31,19 @@ def validate_judgment(j):
         if k not in j:
             errs.append(f"缺字段 {k}")
     hyps = j.get("hypotheses") or []
+    if isinstance(hyps, dict):
+        # 生成方把 hypotheses 写成 {main: ..., backup: ...} 对象式（A/B 实验
+        # 实测两例）——校验器的职责是报错，不是崩溃（原先在此 AttributeError
+        # 把整段打分打断）。其余非 list 形状同理。
+        errs.append("hypotheses 必须是数组（主假设在前），不是对象")
+        hyps = []
     if not (1 <= len(hyps) <= 3):
         errs.append("hypotheses 须 1–3 个")
     ids = set()
     for h in hyps:
+        if not isinstance(h, dict):
+            errs.append("hypothesis 必须是对象")
+            continue
         for k in ("id", "statement", "holds_if", "void_if", "takeover_if", "menu"):
             if k not in h:
                 errs.append(f"hypothesis 缺字段 {k}")
