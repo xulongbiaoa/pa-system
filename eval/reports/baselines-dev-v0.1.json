@@ -1,0 +1,58 @@
+{
+ "split": "dev",
+ "segments": 31,
+ "baselines": {
+  "simple": {
+   "n": 2,
+   "win_rate": 1.0,
+   "mean_r": 1.4516,
+   "median_r": 1.4516,
+   "mean_r_ci95": [
+    1.4371,
+    1.4661
+   ],
+   "max_consec_losses": 0,
+   "proven_edge": false,
+   "note": "样本不足（n=2<30），不下结论",
+   "fee_x2": {
+    "n": 2,
+    "win_rate": 1.0,
+    "mean_r": 1.4032,
+    "median_r": 1.4032,
+    "mean_r_ci95": [
+     1.3743,
+     1.4322
+    ],
+    "max_consec_losses": 0,
+    "proven_edge": false,
+    "note": "样本不足（n=2<30），不下结论"
+   }
+  },
+  "random": {
+   "n": 31,
+   "win_rate": 0.3548,
+   "mean_r": -0.2386,
+   "median_r": -1.0273,
+   "mean_r_ci95": [
+    -0.6417,
+    0.1771
+   ],
+   "max_consec_losses": 7,
+   "proven_edge": false,
+   "note": "尚未证明优势（CI 包含或低于 0）",
+   "fee_x2": {
+    "n": 31,
+    "win_rate": 0.3548,
+    "mean_r": -0.3643,
+    "median_r": -1.0547,
+    "mean_r_ci95": [
+     -0.7672,
+     0.0508
+    ],
+    "max_consec_losses": 7,
+    "proven_edge": false,
+    "note": "尚未证明优势（CI 包含或低于 0）"
+   }
+  }
+ }
+}

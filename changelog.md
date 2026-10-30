@@ -35,3 +35,7 @@ swings（收盘折线拐点、双尺度）/ legs（单腿口径 + H/L 尝试计�
 ## 2026-10-30 · 阶段 3 契约与粘贴式（首版）
 
 judge/schema.json（判断契约：hypotheses 用主/备+接管条件、无数字权重；candidates 必须带 feature_refs；无候选时 no_trade_reason 必填枚举）与 reflection_schema.json（new_rule_proposed 恒 false）。judge/validate.py 轻量校验器（结构 + 两条裁定强制：数字权重键出现即拒、反思不许提新规）。judge/prompt_builder.py 为 A 档粘贴拼装（core+router+命中卡≤3+召回样本+特征包+120 根 OHLC 表）。测试：感知 10 + 判断 5，全过。
+
+## 2026-10-30 · 阶段 4 裁决层 + 回放 + 基线（首版）
+
+gate/risk_rules.py：硬规则 H1 净RR<1.5 / H2 止损结构内或压整数位 / H3 风险>1.5% / H4 距窗末<10 根 / H5 引用未定特征 / H6 模式停牌（样本≥3 且 0 胜）；软规则 S1 抛物线 / S2 踩踏 / S3 衰减边缘只降仓（×0.5）不拒绝。eval/replay.py：同根止损优先、费用入净 R、bootstrap CI，且样本 <30 强制「不下结论」（防 n=2 假显著）。dev 集基线首跑：简单基线（EMA 回调 H2+1.5R）31 段只触发 2 笔——触发率过低，基线本身待查（检测口径过严或该形态在本池稀少，如实存档不美化）；随机基线 31 笔期望 −0.313R、CI 含 0，符合「无优势 + 费用拖累」的健全性预期。测试累计 24 全过。
