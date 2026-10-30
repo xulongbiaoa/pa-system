@@ -1,7 +1,9 @@
 """裁决层：AI 提议，代码否决。只能否决或降仓，不能改计划、不能放宽。
 
 硬规则（违反即拒绝）：H1 净 RR、H2 止损结构外、H3 单笔风险上限、
-H4 入场截止、H5 引用完整性（引用了置信「未定」的特征）、H6 模式停牌。
+H4 入场截止、H5 引用完整性（引用了置信「未定」的特征）、H6 模式停牌、
+H7 条件矩阵（契约 v2：必需/否决逐项执法，G1 另查矩阵完整性、
+R2 同源组数与最强反证）。
 软规则（降仓不拒绝）：S1 抛物线高潮折扣、S2 踩踏继承、S3 衰减边缘。
 每次裁决返回命中的规则编号与数值明细，写入日志供改规证据统计。
 """
@@ -209,6 +211,42 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
             notes.append(
                 f"H6 未生效：台账无 {plan['setup']}×{context} 样本（n={n_cell}）"
             )
+    # H7 条件矩阵（契约 v2，2026-10-30 落地）：带 conditions 的计划逐项
+    # 执法；G1 强制带矩阵。原则（应用建设方案 §3.2）：必需项全 met 才
+    # 放行、任一否决 met 即拒、关键否决 unknown 同样拒；增强项只加成色，
+    # 不能抵必需缺失或否决触发。G1 的 R2 另查同源组数——前高/区间上沿/
+    # 阻力同出一高点只算一组证据，「多证据」不许同源凑数。
+    conds = plan.get("conditions")
+    if plan.get("setup") == "G1" or conds:
+        if not conds:
+            hard.append({"rule": "H7", "detail": "G1 候选缺 conditions 条件矩阵"})
+            conds = []
+        by_id = {}
+        for cd in conds:
+            if isinstance(cd, dict) and cd.get("rule_id"):
+                by_id[cd["rule_id"]] = cd
+            if not isinstance(cd, dict):
+                continue
+            role, status = cd.get("role"), cd.get("status")
+            if role == "required" and status != "met":
+                hard.append({"rule": "H7", "detail":
+                             f"必需条件 {cd.get('rule_id')} 状态 {status} ≠ met"})
+            if role == "veto" and status == "met":
+                hard.append({"rule": "H7", "detail":
+                             f"否决条件 {cd.get('rule_id')} 已触发"})
+            if role == "veto" and status == "unknown":
+                hard.append({"rule": "H7", "detail":
+                             f"否决条件 {cd.get('rule_id')} 未定，不可放行"})
+        if plan.get("setup") == "G1":
+            for rid in ("R1", "R2", "R3", "V1", "V2", "V3"):
+                if rid not in by_id:
+                    hard.append({"rule": "H7", "detail": f"G1 矩阵缺条件 {rid}"})
+            r2 = by_id.get("R2")
+            if r2 is not None and len(set(r2.get("groups") or [])) < 2:
+                hard.append({"rule": "H7", "detail":
+                             "R2 落点叠加同源组 <2（同源证据不算第二锚）"})
+            if not (plan.get("strongest_countercase") or "").strip():
+                hard.append({"rule": "H7", "detail": "G1 候选缺 strongest_countercase"})
     # 软规则：降仓。
     # 2026-10-30 去掉 S1/S3 的 RR 条件：设计目标定为盈亏比 2:1（净 RR ≈ 1.95）
     # 后，S1 的 `< 2.5` 与 S3 的 `< 2.0` 对**每一个**合格计划都恒成立，条件

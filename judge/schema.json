@@ -6,6 +6,56 @@
    "items": {
     "additionalProperties": false,
     "properties": {
+     "conditions": {
+      "description": "条件矩阵（G1 必备，其余 setup 可选）：role 与 rule_id 由 setup 卡定义，判断层只申报状态、裁决层 H7 执法；groups 为证据同源组，证据计数按组去重，同源不许数成多证据",
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "evidence_refs": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "groups": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "note": {
+         "type": "string"
+        },
+        "role": {
+         "enum": [
+          "required",
+          "enhancing",
+          "veto"
+         ]
+        },
+        "rule_id": {
+         "type": "string"
+        },
+        "status": {
+         "enum": [
+          "met",
+          "not_met",
+          "unknown",
+          "not_applicable"
+         ]
+        }
+       },
+       "required": [
+        "rule_id",
+        "role",
+        "status",
+        "evidence_refs",
+        "groups"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
      "feature_refs": {
       "items": {
        "type": "string"
@@ -94,7 +144,8 @@
        "B3",
        "A1",
        "A2",
-       "C1"
+       "C1",
+       "G1"
       ],
       "type": "string"
      },
@@ -103,6 +154,10 @@
        "long",
        "short"
       ],
+      "type": "string"
+     },
+     "strongest_countercase": {
+      "description": "最强反证一句话：什么事实最可能让这单错（G1 必备，反证优先）",
       "type": "string"
      }
     },

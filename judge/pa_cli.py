@@ -72,6 +72,10 @@ def main():
         c = cands[0]
         pack, bars = pack_at(seg, decision)
         plan = dict(c["plan"])
+        # 条件矩阵透传（契约 v2）：H7 要看到 candidate 的 conditions 与
+        # 最强反证，只传 plan 本体则 G1 恒因「缺矩阵」被拒、规则假死。
+        plan.update({"conditions": c.get("conditions"),
+                     "strongest_countercase": c.get("strongest_countercase")})
         # context 取自感知层趋势标签：H6 的台账键是 (setup, 语境枚举)，
         # 不传 context 则 H6 恒不生效（原实现漏了这一步，2026-10-30 复核）。
         plan.update({"side": c["side"], "setup": c["setup"],

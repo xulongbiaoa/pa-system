@@ -5,7 +5,13 @@
 - 反思输出的 new_rule_proposed 必须为 false（改规走独立提案流程）。
 """
 
-SETUPS = {"B1", "B2", "B3", "A1", "A2", "C1"}
+SETUPS = {"B1", "B2", "B3", "A1", "A2", "C1", "G1"}
+COND_ROLES = {"required", "enhancing", "veto"}
+COND_STATUS = {"met", "not_met", "unknown", "not_applicable"}
+# G1 条件矩阵的必需/否决项（定义在 knowledge/setups/G1-confluence-gap.md，
+# 校验器与裁决层 H7 共用同一份名单，改卡必须同步改这里）
+G1_REQUIRED = ("R1", "R2", "R3")
+G1_VETO = ("V1", "V2", "V3")
 NO_TRADE = {"无命中", "位置不对", "成色不合格", "背景不明", "感知未定"}
 BANNED_KEYS = {"weight", "weights", "probability", "prob"}
 
@@ -66,6 +72,7 @@ def validate_judgment(j):
             errs.append("candidate.side 必须是 long/short")
         if not c.get("feature_refs"):
             errs.append("candidate 必须引用至少一个特征字段")
+        _validate_conditions(c, errs)
         if c.get("qualified"):
             p = c.get("plan")
             if not p:
@@ -83,6 +90,39 @@ def validate_judgment(j):
     if not (j.get("candidates")) and j.get("no_trade_reason") not in NO_TRADE:
         errs.append("无候选时 no_trade_reason 必须是枚举值")
     return errs
+
+
+def _validate_conditions(c, errs):
+    conds = c.get("conditions")
+    if conds is None:
+        if c.get("setup") == "G1" and c.get("qualified"):
+            errs.append("G1 合格候选必须带 conditions 条件矩阵")
+        return
+    if not isinstance(conds, list):
+        errs.append("conditions 必须是数组")
+        return
+    for cd in conds:
+        if not isinstance(cd, dict):
+            errs.append("condition 必须是对象")
+            continue
+        for k in ("rule_id", "role", "status", "evidence_refs", "groups"):
+            if k not in cd:
+                errs.append(f"condition 缺字段 {k}")
+        if cd.get("role") not in COND_ROLES:
+            errs.append(f"condition.role 必须是 required/enhancing/veto：{cd.get('rule_id')}")
+        if cd.get("status") not in COND_STATUS:
+            errs.append(f"condition.status 不在枚举内：{cd.get('rule_id')}")
+        if cd.get("status") == "met" and not cd.get("evidence_refs"):
+            errs.append(f"condition {cd.get('rule_id')} 声明 met 必须带 evidence_refs")
+        if not isinstance(cd.get("groups"), list):
+            errs.append(f"condition {cd.get('rule_id')} 的 groups 必须是数组（证据同源组）")
+    if c.get("setup") == "G1" and c.get("qualified"):
+        ids = {cd.get("rule_id") for cd in conds if isinstance(cd, dict)}
+        for rid in G1_REQUIRED + G1_VETO:
+            if rid not in ids:
+                errs.append(f"G1 候选缺条件 {rid}（矩阵不完整）")
+        if not (c.get("strongest_countercase") or "").strip():
+            errs.append("G1 合格候选必须写 strongest_countercase（最强反证）")
 
 
 def validate_reflection(r):

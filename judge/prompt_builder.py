@@ -134,6 +134,12 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
     cards, reasons = route_cards(pack)
     for c in cards:
         parts.append(_read(os.path.join(KB, "setups", c + ".md")))
+    # G1 证据组合卡（研究级）：账本有敞开缺口才附加，不占 3 张菜单名额；
+    # 无敞开缺口时 R1 无从谈起，加载只会诱导硬凑（2026-10-30 接线）。
+    if (pack.get("gaps") or {}).get("open"):
+        parts.append(_read(os.path.join(KB, "setups", "G1-confluence-gap.md")))
+        cards = cards + ["G1-confluence-gap"]
+        reasons.append("账本有敞开缺口 → 附加 G1 证据组合卡（研究级）")
     parts.append("## 本次路由依据（机器按特征包判定，卡已按此装载）\n"
                  + "；".join(reasons)
                  + "\n卡内门槛（三件套、MM、腿数）感知层未算，须你自行认定；"
@@ -188,7 +194,12 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "takeover_if/menu）一个不许少，menu 是 setup 数组；假设不许带数字权重。"
         "有合格候选时 candidates 每项含 setup/side/qualified/reason/feature_refs 与 "
         "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/void/"
-        "second_bar_confirmed）。无合格候选时 candidates=[] 且 no_trade_reason 必填"
+        "second_bar_confirmed）。若随附 G1 卡且引用 G1：该候选必须另带 "
+        "conditions 条件矩阵（R1/R2/R3 必需、V1/V2/V3 否决、E1/E2 增强，"
+        "逐项写 rule_id/role/status/evidence_refs/groups，声明 met 必带证据"
+        "引用，同源证据只算一组）与 strongest_countercase（最强反证一句）；"
+        "G1 证据不齐只能挂起（pending_conditions）或空仓，不许降标准凑齐。"
+        "无合格候选时 candidates=[] 且 no_trade_reason 必填"
         "枚举（无命中/位置不对/成色不合格/背景不明/感知未定）。空仓是合法输出。"
     )
     return "\n\n".join(parts)

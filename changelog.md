@@ -16,6 +16,22 @@
 judge/prompt_builder 已同步；特征规格卡改性为「给眼睛的检查清单 +
 必备数字附件」，考场仍为阿布原图、考的是图读判断。
 
+## 2026-10-30 深夜 · 条件矩阵契约 v2 + G1 证据卡（用户定方向：多证据入场）
+
+用户拍板方向「多证据入场增加胜率」，旗舰组合与先後由助理定：先落
+契约层，旗舰用用户自己的高胜率公式（2026-10-26），不用外部方案的
+三推组合（感知层尚无三推检测器，且公式与缺口优先体系同源）。
+- judge/schema.json + validate.py：candidates 增加 conditions 条件
+  矩阵（rule_id/role/status/evidence_refs/groups）与 strongest_
+  countercase；setup 枚举加 G1；G1 合格候选缺矩阵/缺反证即格式错。
+- gate H7：必需非 met 拒、否决 met 拒、否决 unknown 拒；G1 另查
+  矩阵完整性、R2 同源组 ≥2（同源证据不算第二锚）、反证必填。
+  增强项不抵必需缺失——防「证据凑数」与 P 虚报（旧批死因）。
+- knowledge/setups/G1-confluence-gap.md：研究卡未定版，不进生产
+  菜单；晋升须 dev/val 消融对照样本外支持后另行定版。
+- prompt_builder：账本有敞开缺口才附加 G1 卡（不占 3 张菜单名额）；
+  brooks_recall 加 G1 标签（缺口/测量）。
+
 ## 被取消 / 废止的规则（防回潮）
 
 - 几何缺口带模型（v1.x trainer：相邻跳空 + 三根不重叠虚空带 + ★key 分级）——废止。缺口按定义 v0.2 的单线账本：被套库存，不是几何形状。

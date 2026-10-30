@@ -18,6 +18,7 @@ SETUP_TAGS = {
     "A1-m2b": ["H2/L2", "回调"],
     "A2-m2s": ["H2/L2", "回调"],
     "C1-mtr": ["MTR", "反转"],
+    "G1-confluence-gap": ["缺口", "测量"],
 }
 
 _CACHE = None
