@@ -16,6 +16,8 @@ from gate.risk_rules import adjudicate  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import build_feature_pack, load_config  # noqa: E402
 from replay import simulate_plan, summarize  # noqa: E402
+import ledger as ledger_store  # noqa: E402
+from ledger import gate_view  # noqa: E402
 
 DS = os.path.join(os.path.dirname(__file__), "datasets", "dev")
 JD = os.path.join(os.path.dirname(__file__), "pilot", "judgments")
@@ -27,18 +29,11 @@ LEDGER_PATH = os.path.join(
 
 
 def load_ledger(path=LEDGER_PATH):
-    """模式台账：落盘格式 {setup: {语境: {n, wins}}}，转成 (setup, 语境) 键。
+    """模式台账：落盘格式见 eval/ledger.py（v1：all / by_context / by_order_type）。
 
     文件不存在时返回空台账——裁决结果里 H6 会显式标「未生效」，不静默跳过。
     """
-    if not os.path.exists(path):
-        return {}
-    raw = json.load(open(path))
-    out = {}
-    for setup, by_ctx in raw.items():
-        for ctx, st in by_ctx.items():
-            out[(setup, ctx)] = {"n": st.get("n", 0), "wins": st.get("wins", 0)}
-    return out
+    return gate_view(ledger_store.load(path))
 
 
 def load_segment(seg_id):

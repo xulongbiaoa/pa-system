@@ -162,13 +162,16 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         risk_mult *= 0.5
     # 仓位建议（只建议，不否决；上限仍是 H3 的 RISK_FRAC_MAX）
     # 台账格子带 b（已实现净盈亏比）才给凯利；缺 b 就退回计划首目标 RR 并标注。
+    # 格子里 n/wins 是 setup×语境（H6 口径），b_n/b_wins 是 setup 全池（凯利
+    # 口径）——凯利的 p 与 b 必须同总体，不许拿 A 总体的 b 配 B 总体的 p。
     size_hint = None
     if ledger is not None and context in CONTEXTS and plan.get("setup"):
         cell = ledger.get((plan["setup"], context))
         if cell:
             b = cell.get("b") or rr_main
-            size_hint = suggest(cell.get("wins", 0), cell.get("n", 0), b,
-                                cap=RISK_FRAC_MAX)
+            size_hint = suggest(cell.get("b_wins", cell.get("wins", 0)),
+                                cell.get("b_n", cell.get("n", 0)),
+                                b, cap=RISK_FRAC_MAX)
             size_hint["b_source"] = "ledger" if cell.get("b") else "plan_first_target"
     return {
         "verdict": "reject" if hard else "pass",
