@@ -1,0 +1,63 @@
+{
+ "n_gold": 30,
+ "n_judged": 29,
+ "format_fail": 1,
+ "ledger_present": false,
+ "verdict_agree": 28,
+ "reason_agree": 17,
+ "reason_compared": 27,
+ "setup_agree": 1,
+ "setup_compared": 1,
+ "side_agree": 1,
+ "gate_reject": 0,
+ "gate_reject_rules": {},
+ "gate_notes": {
+  "H6 未生效：台账无 B3×下降 样本（n=0）": 1
+ },
+ "unfilled": 0,
+ "unfilled_segments": [],
+ "trades": [
+  {
+   "r": -1.0313918918918918,
+   "exit_price": 11.8,
+   "exit_bar": 23,
+   "exit_reason": "stop",
+   "win": false,
+   "order_type": "market",
+   "filled": true,
+   "segment": "ds23",
+   "setup": "B3"
+  }
+ ],
+ "mismatches": [
+  {
+   "segment": "bn-DOTUSDT-4h-1767513600000",
+   "kind": "verdict",
+   "gold": "candidate/A2",
+   "ai": "no_trade/成色不合格"
+  },
+  {
+   "segment": "ds16",
+   "kind": "format",
+   "detail": [
+    "hypothesis 缺字段 menu"
+   ]
+  }
+ ],
+ "verdict_agree_rate": 0.9655,
+ "reason_agree_rate": 0.6296,
+ "summary": {
+  "n": 1,
+  "win_rate": 0.0,
+  "mean_r": -1.0314,
+  "median_r": -1.0314,
+  "mean_r_ci95": [
+   -1.0314,
+   -1.0314
+  ],
+  "max_consec_losses": 1,
+  "proven_edge": false,
+  "note": "样本不足（n=1<30），不下结论"
+ },
+ "no_trade_rate_ai": 0.9655
+}
