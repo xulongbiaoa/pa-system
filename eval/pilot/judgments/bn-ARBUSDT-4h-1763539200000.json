@@ -1,0 +1,21 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "下降趋势未走完：缺口全套多头压顶（0.19–0.2351），反弹自 0.1718 起仅第一腿",
+   "holds_if": "反弹在 0.19 缺口/EMA 一带受阻并走出第二腿下行触发",
+   "void_if": "收盘站上 0.2019 前高",
+   "takeover_if": "站上 0.2019 且回踩守住则下降面降级、转区间审",
+   "menu": [
+    "A2"
+   ]
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "反弹第二腿到达 0.1888–0.19 一带后收阴线再按 A2 审"
+ ],
+ "uncertainty": []
+}

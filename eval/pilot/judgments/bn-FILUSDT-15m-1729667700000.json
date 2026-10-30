@@ -1,0 +1,21 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "下降趋势：反弹两腿已到 3.756/3.748 后转下，末根大实体阴线收 3.701 贴前低 3.696",
+   "holds_if": "破 3.696 后向 3.663/3.652 带下行",
+   "void_if": "收盘站回 3.748 上方",
+   "takeover_if": "站回 3.748 则 A2 作废、转区间审",
+   "menu": [
+    "A2"
+   ]
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "入场已贴前低、下方目标空间被吃光；等反抽 3.74 一带再按 A2 审"
+ ],
+ "uncertainty": []
+}

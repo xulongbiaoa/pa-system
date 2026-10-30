@@ -1,0 +1,19 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "震荡：5.16–7.56 宽幅区间内往返，现价 6.41 居中偏下、无方向优势",
+   "holds_if": "价格继续在 5.16–7.56 间往返且不到边缘触发",
+   "void_if": "收盘破 5.16 或站上 7.56",
+   "takeover_if": "收盘破位并带跟进时由突破面接管",
+   "menu": []
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "到 5.16 下沿或 7.56 上沿出现核心三族触发再审"
+ ],
+ "uncertainty": []
+}

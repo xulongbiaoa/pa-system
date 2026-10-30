@@ -1,0 +1,19 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "震荡：2.89–3.0 一带往返，上方 3.0–3.28 八条缺口全套多头压顶",
+   "holds_if": "上行在 2.983–3.0 受阻回落",
+   "void_if": "收盘带跟进站上 3.0 并回补 3.05 缺口",
+   "takeover_if": "站稳 3.0 上方则转解套行情审",
+   "menu": []
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "到 3.0 上沿受阻收阴或回 2.90 下沿守住出现触发再审"
+ ],
+ "uncertainty": []
+}

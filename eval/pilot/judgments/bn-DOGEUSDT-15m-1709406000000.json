@@ -1,0 +1,22 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "突破当根：收盘 0.17178 贴前高 0.17179，下方缺口全套空头（回踩有垫）",
+   "holds_if": "突破后回踩 0.1639–0.1699 守住并走第二腿",
+   "void_if": "收盘跌回 0.156 下方",
+   "takeover_if": "收回 0.1639 下方且跟进则按突破失败翻面审",
+   "menu": [
+    "A1",
+    "B2"
+   ]
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "等回踩第二腿触发再审；突破当根不开仓（本地规则）"
+ ],
+ "uncertainty": []
+}

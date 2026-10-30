@@ -1,0 +1,19 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "震荡：238–250 区间，现价 244.2 居中，两侧空间均不足",
+   "holds_if": "区间内往返延续",
+   "void_if": "收盘带跟进破 238 或站上 250",
+   "takeover_if": "破位带跟进由突破面接管",
+   "menu": []
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "到任一边缘且出现触发再审"
+ ],
+ "uncertainty": []
+}

@@ -1,0 +1,19 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "震荡：27.25–27.95 极窄横盘（约 2.5%），现价居中",
+   "holds_if": "横盘延续",
+   "void_if": "收盘带跟进离开 27.25–27.95",
+   "takeover_if": "破位带跟进由突破面接管",
+   "menu": []
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "区间高度扣费后不足 1.5 净 RR，破位回踩再审"
+ ],
+ "uncertainty": []
+}

@@ -1,0 +1,21 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "上升趋势：16→27.07 主升后回踩 22.88（回吐 38%），现价 25.04 已自低点反弹 9.4%",
+   "holds_if": "回踩结束、向 27.07 与上方目标序列推进",
+   "void_if": "收盘破 22.88",
+   "takeover_if": "破 22.88 则趋势腿失效、转翻面审",
+   "menu": [
+    "A1"
+   ]
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "A1 命中但入场距回踩低点过远、按序列计净 RR 不足；等再回踩 23.3–24 一带出第二腿再审"
+ ],
+ "uncertainty": []
+}

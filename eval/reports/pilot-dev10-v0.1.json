@@ -1,12 +1,12 @@
 {
- "judged": 0,
+ "judged": 10,
  "format_fail": 0,
- "no_trade": 0,
+ "no_trade": 10,
  "gate_reject": 0,
  "gate_reject_rules": {},
  "trades": [],
  "summary": {
   "n": 0
  },
- "no_trade_rate": null
+ "no_trade_rate": 1.0
 }

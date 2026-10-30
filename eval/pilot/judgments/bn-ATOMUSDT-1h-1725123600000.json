@@ -1,0 +1,19 @@
+{
+ "primary": "H1",
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "震荡：3.64–3.98 窄区间，现价 3.692 贴下沿但无核心三族触发",
+   "holds_if": "区间不破且边缘出现合格触发",
+   "void_if": "收盘带跟进破 3.64 或站上 3.98",
+   "takeover_if": "破位带跟进由突破面接管",
+   "menu": []
+  }
+ ],
+ "candidates": [],
+ "no_trade_reason": "位置不对",
+ "pending_conditions": [
+  "边缘出现第二腿触发再审；区间内剥头皮属观察项不执行"
+ ],
+ "uncertainty": []
+}
