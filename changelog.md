@@ -31,3 +31,7 @@ swings（收盘折线拐点、双尺度）/ legs（单腿口径 + H/L 尝试计�
 ## 2026-10-30 · 阶段 1 数据与样本（首批）
 
 数据切分：trainer 池 50 组按周期分层、固定模式 3:1:1 切 dev 31 / val 10 / test 9，同组只进一个集合，每段 480 根（30 预热 + 150 决策窗 + 300 未来），INDEX.json 带 sha256 可校验（eval/build_datasets.py 可复现）。标注样本首批 41 段（dev+val）为机器草稿（感知层特征包 + 初筛结论 candidate 26 / no_trade 15），全部标 DRAFT-待用户复核；金标准集须用户亲自复核后另行冻结，草稿不得直接当标注真值用。
+
+## 2026-10-30 · 阶段 3 契约与粘贴式（首版）
+
+judge/schema.json（判断契约：hypotheses 用主/备+接管条件、无数字权重；candidates 必须带 feature_refs；无候选时 no_trade_reason 必填枚举）与 reflection_schema.json（new_rule_proposed 恒 false）。judge/validate.py 轻量校验器（结构 + 两条裁定强制：数字权重键出现即拒、反思不许提新规）。judge/prompt_builder.py 为 A 档粘贴拼装（core+router+命中卡≤3+召回样本+特征包+120 根 OHLC 表）。测试：感知 10 + 判断 5，全过。
