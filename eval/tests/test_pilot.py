@@ -22,7 +22,7 @@ def test_pipeline_end_to_end(tmp_path):
     jd.mkdir()
     # 1) no_trade 判断
     seg1 = json.load(open(os.path.join(DS, "ds03.json")))
-    j1 = {"primary": "H1", "hypotheses": _hyp(), "candidates": [],
+    j1 = {"context": "上升", "primary": "H1", "hypotheses": _hyp(), "candidates": [],
           "no_trade_reason": "位置不对", "pending_conditions": [], "uncertainty": []}
     (jd / "ds03.json").write_text(json.dumps(j1))
     # 2) 候选判断：按 ds04 决策点特征包机械构造一个能过裁决的计划
@@ -33,7 +33,7 @@ def test_pipeline_end_to_end(tmp_path):
     lows = [s["anchor"] for s in pack["swings"]["major"] if s["kind"] == "L" and s["anchor"] < entry]
     stop = (max(lows) if lows else entry * 0.98) - 0.13 * pack["seg_avg_range"]
     risk = entry - stop
-    j2 = {"primary": "H1", "hypotheses": _hyp(),
+    j2 = {"context": "上升", "primary": "H1", "hypotheses": _hyp(),
           "candidates": [{"setup": "A1", "side": "long", "qualified": True,
                           "reason": "管线验证用", "feature_refs": ["trend.label"],
                           "plan": {"entry": entry, "stop": stop,

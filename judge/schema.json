@@ -189,9 +189,18 @@
     "type": "string"
    },
    "type": "array"
+  },
+  "context": {
+   "enum": [
+    "上升",
+    "下降",
+    "震荡"
+   ],
+   "description": "判断层对本段语境的定性（与主假设一致）；金标准对照的语境轴"
   }
  },
  "required": [
+  "context",
   "primary",
   "hypotheses",
   "candidates",

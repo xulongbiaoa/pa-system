@@ -12,6 +12,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
 
 def _valid_judgment():
     return {
+        "context": "上升",
         "primary": "H1",
         "hypotheses": [
             {
@@ -76,7 +77,7 @@ def test_prompt_assembly_on_dev_segment():
     cfg = load_config()
     pack = build_feature_pack(bars, [], cfg)
     text = build_prompt(pack, bars)
-    assert "交易者等式" in text and "只输出 JSON" in text
+    assert "交易者等式" in text and "只输出一个 JSON 对象" in text
     assert "weight" not in text.split("## 任务")[0].lower() or True
     cards, reasons = route_cards(pack)
     assert 1 <= len(cards) <= 3

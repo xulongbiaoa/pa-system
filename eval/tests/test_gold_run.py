@@ -15,7 +15,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
 
 def _j_candidate(setup, side, entry, stop, targets):
     return {
-        "primary": "H1",
+        "context": "震荡", "primary": "H1",
         "hypotheses": [{"id": "H1", "statement": "下降趋势内逆势突破失败",
                         "holds_if": "收回位内且不再新高", "void_if": "收盘站回上沿",
                         "takeover_if": "三根内重新站上则转顺势多", "menu": ["B3"]}],
@@ -32,7 +32,7 @@ def _j_candidate(setup, side, entry, stop, targets):
 
 def _j_no_trade(reason):
     return {
-        "primary": "H1",
+        "context": "震荡", "primary": "H1",
         "hypotheses": [{"id": "H1", "statement": "无方向优势",
                         "holds_if": "继续区间往返", "void_if": "收盘破位",
                         "takeover_if": "破位带跟进则交突破面", "menu": []}],
@@ -91,7 +91,7 @@ def test_unjudged_segments_are_not_failures():
 def test_format_failure_counted_separately():
     d = tempfile.mkdtemp(dir=os.path.dirname(__file__))
     try:
-        _write(d, "ds23", {"primary": "H1", "hypotheses": [], "candidates": [],
+        _write(d, "ds23", {"context": "震荡", "primary": "H1", "hypotheses": [], "candidates": [],
                            "uncertainty": []})
         rep = score(judgments_dir=d)
         assert rep["format_fail"] == 1 and rep["n_judged"] == 0

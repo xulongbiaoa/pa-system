@@ -27,9 +27,18 @@ def validate_judgment(j):
     errs = _scan_banned(j)
     if not isinstance(j, dict):
         return ["顶层必须是对象"]
-    for k in ("primary", "hypotheses", "candidates", "uncertainty"):
+    for k in ("context", "primary", "hypotheses", "candidates", "uncertainty"):
         if k not in j:
             errs.append(f"缺字段 {k}")
+    if j.get("context") is not None and j["context"] not in ("上升", "下降", "震荡"):
+        errs.append("context 必须是 上升/下降/震荡")
+    # 顶层只许契约字段：A/B 实验里生成方自创 market_purpose 等键 5 例，
+    # schema 的 additionalProperties=false 必须在轻量校验里也成立。
+    allowed = {"context", "primary", "hypotheses", "candidates",
+               "no_trade_reason", "pending_conditions", "uncertainty"}
+    for k in j:
+        if k not in allowed:
+            errs.append(f"顶层未知字段 {k}（契约外）")
     hyps = j.get("hypotheses") or []
     if isinstance(hyps, dict):
         # 生成方把 hypotheses 写成 {main: ..., backup: ...} 对象式（A/B 实验

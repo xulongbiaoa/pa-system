@@ -1,0 +1,277 @@
+# 常驻核心 core.md（每次判断必带；上限 2000 字）
+
+版本：随仓库 VERSION。细则查卡片与附册，本文件冲突时以本文件为准。
+
+## 交易者等式
+
+期望 = P × 回报 − (1−P) × 风险 − 费用。胜率锚在五成上下是常态，利润来自 R 的不对称：先保 R 的形状（止损在结构外、目标按序列取），P 只求不虚报，禁止一切偷胜率的姿势（抢跑、缩止损、目标改近、摸顶抄底）。
+
+设计目标盈亏比 **2:1**（赢 2R 亏 1R，毛口径；扣费后净 RR ≈ 1.95，用户 2026-10-30 定）。红线 1 的 1.5 是**地板不是目标**：1.5–2.0 之间的单子合法但不是想要的，画目标时应按 2:1 取，取不到 2:1 要说明是被哪条结构挡住（最近的要塞/目标位），不许默默改近目标凑合格。
+
+## 读图顺序（不许换序）
+
+1. 记账：缺口账本——敞开缺口在哪、套住谁、套深套时、双方解套位。
+2. 定性：市场三目的（突破套人 / 赴目标位 / 解套打平）+ 趋势 MM 第 0 查（未达 / 已达）。
+3. 画目标：双方目标位全画（MM 锚点、单腿口径）；顺势动作前先审计逆势方目标走完没。
+4. 找触发：只在预画的决胜点（要塞级支撑/阻力）上、只用核心三族 setup 扣扳机。
+5. Brooks 结构、形态、术语作第二层校验；单个形状不构成入场理由。
+
+## 五条红线（裁决层代码强制，本文件只声明）
+
+1. 净 RR < 1.5 否决（费用按净口径：入市价 0.05% / 限价 0.02% / 出场 0.05%）。
+2. 止损放结构外加缓冲，不压整数位与摆动极值；持仓中禁止缩止损、禁止改近目标。
+3. 单笔风险 1%；名义按现金倒算封顶。
+4. 入场截止（2026-10-30 修订，范围定版）：只约束 trainer 局内——局内窗口末尾前 10 根不开新仓（150 根窗口即 Bar 140），目的 = 保证已开仓单在局内仍有足够前向 K 线可评估，而不是限制在窗口末尾做决定。标注／试点不受此限：决策点即「当下」，决策点收盘价即合法入场时点；决策点之后 300 根为该单生命周期，只用于判胜负，不参与决策。配套三条：① 触发 K 必须已收盘且不晚于决策点，不得用决策点之后的数据补触发；② 入场价只能是决策点收盘价，或决策点当时写明的限价（成交与否按后续 K 线判），不得事后挑更好的历史价；③ 止损与目标在决策点写定，生命周期内不得改（缩止损、改近目标仍按红线处理）。
+5. 前提破（收盘越过前提线）即市价出场，不等止损。
+
+## 生命周期与评分口径（2026-10-30 定版）
+
+生命周期 300 根：走完既未触止损也未触目标的，按第 300 根收盘价平仓计入 PnL（时间止损；回放层现行实现与此一致），**不得标记「无结局」剔除**——剔除磨完的单子会系统性高估胜率（生存偏差，2026-10-30 用户定）。到期单以 exit_reason=window_end 单独标记，既不剔除、也看得出占比。生命周期按根数计、跨周期不可比（300 根在 15m 是 3 天、在 1d 是 300 天）：每段元数据必记周期，评分必须按周期分档汇报，跨周期汇总须注明污染风险。自然时间口径（固定 7 天）未定版：评估时可双算对照（回放层 bars_for_days），两种口径结论不一致时以分档结论为准，不许只报好看的那个。
+
+限价口径（2026-10-30 定）：① 成交从严——价格必须**穿越**限价才算成交（买单低点 < 限价、卖单高点 > 限价），仅触及不算；② 未成交单必须留档单独统计，不许丢弃（未成交率是样本选择偏差的度量：差一点没回来的可能是最好的单，砸穿才成交的往往是最差的）；③ 生命周期锚在决策点，成交晚不顺延窗口。
+
+## 假设格式
+
+主假设 + 备选 + 接管条件（什么事实出现就易主）。**不用数字权重**（假精确，用户 2026-10-30 裁定）。易主是带触发事实的事件，留痕。
+
+## 输出
+
+判断层只输出 schema 规定的 JSON：语境定性、命中的 setup 与成色（合格 / 不合格两档）、计划五格，或不做的原因（枚举）。每条判断必须引用特征包字段；特征置信为「未定」的不得作放行依据。
+
+## 空仓合法
+
+空仓是合法且常见的输出。不清楚不做：成色含糊的位置、信号、背景一律不做，不打折放行。判单只看逻辑链与纪律：逻辑完整、四关诚实通过的单子亏了也是好单；跳关、事后补逻辑的单子赢了也是坏单。
+
+
+# 路由卡 router.md（每次判断必带；上限 800 字）
+
+按特征包字段判语境，命中后只加载对应 setup 卡片（至多 3 张）。
+
+## 趋势（上升 / 下降）
+
+特征：趋势状态分数同向（HH+HL 或 LH+LL 序列成立）、缺口账本有同向敞开缺口（套住逆势方）、趋势 MM 状态 = 未达。
+加载：M2B / M2S（顺势唯一入场）；突破事件卡（只定方向与锚，不直接入场）。
+MM 已达 → 趋势标「成熟」：顺势菜单关闭，转高位/低位震荡审，翻面与 MTR 卡升权。
+
+## 交易区间
+
+特征：谁也套不住谁（账本无持续敞开缺口）、摆动序列无方向、价格在要塞带之间往返。
+加载：突破失败翻面卡（区间突破默认假，先审失败面）；区间边缘观察项不执行（复牌条件：核心三族满 20 笔计分样本）。
+
+## 反转候选
+
+特征：老趋势（年龄/腿数足）+ 两腿衰竭尝试 + 趋势线突破（TBTL）。
+加载：MTR 卡（门最严，三件套缺一即关）。
+
+## 空仓
+
+特征任一：语境判不出、关键特征置信 = 未定、决胜点不在测试区、无卡片命中。
+输出 no_trade_reason，不许硬凑候选。
+
+
+# B3 突破失败翻面
+
+出处：骨架 v1 突破事件族（原 A5 反手面）；本地两笔大胜单出自此面（+452.85 / +155.73，样本不足，只作倾向）。
+
+适用语境：突破已发生（含区间突破、决胜点突破）；回收窗口 1–3 根内裁定失败。
+
+位置要求：入场位 = 翻面位（被破沿口线）；翻面位第一次回踩优先审。
+
+触发条件：窗口内收盘收回位内 + 反向跟进。窗口第一根回调属于突破方，不算失败；窗口走满未收回 → 失败不成立。触发 K 须有方向实体（实体占比与 CLV 由特征包给出），盘中创反向新极值者降格审。
+
+止损规则：突破腿极值外侧 + 缓冲。
+
+目标序列：原区间/原结构对侧边缘 → 更深 MM；按序列逐级算净 RR。
+
+失效与降级：入场后价格再收回突破方向位外 → 前提破，市价出。
+
+常见误判：① 窗口没走满就抢翻面；② 目标只取翻面位近目标、丢掉序列（RR 关会否决，属计划问题不是形态问题）。
+
+
+# C1 MTR 主要趋势反转
+
+出处：Brooks 十大第 1 位；V22/V11/V21（自标波段胜率约 40%，靠 RR 不靠胜率；先验未验证）。
+
+适用语境：三件套缺一不开审——① 老趋势（趋势年龄与腿数足、远离 EMA 倍数大）；② 两腿衰竭尝试（逆势方两次尝试走远均失败）；③ TBTL：趋势线被破且回测失败。
+
+位置要求：入场落在原趋势极值区 / 要塞沿口，即决胜点本身；中部不审。
+
+触发条件：三件套齐 + 反转方向信号 K 合格级以上；全新全审，不许沿用旧审计。
+
+止损规则：原趋势极值外侧 + 缓冲（通常较宽，名义按风险倒算，装不下就不做）。
+
+目标序列：最小目标（原趋势回调极值）→ 反向 MM → 对侧要塞。
+
+失效与降级：价格收回原趋势方向并创新极值 → 前提破出场；三件套任一被后续 K 否掉，未入场候选直接作废不挂起。
+
+常见误判：① 只有趋势线破就当反转（破线只是刹车信号，不是掉头信号）；② 第一次衰竭尝试就抢（要两腿）；③ 用 MTR 的名义做区间中部逆势单。
+
+
+## 本次路由依据（机器按特征包判定，卡已按此装载）
+trend=震荡/边界；账本一致性=不适用（震荡）
+卡内门槛（三件套、MM、腿数）感知层未算，须你自行认定；认定不了就写进 uncertainty 并空仓。
+
+## 特征包（感知层输出，只许引用其中的字段）
+```json
+{"bars": 180, "last_close": 118339.99, "swings": {"minor": [{"bar": 3, "kind": "L", "close": 118133.28, "anchor": 118082.99}, {"bar": 8, "kind": "H", "close": 119135.92, "anchor": 119160.18}, {"bar": 20, "kind": "L", "close": 117472.17, "anchor": 117471.67}, {"bar": 21, "kind": "H", "close": 117977.99, "anchor": 117978.86}, {"bar": 25, "kind": "L", "close": 117640.23, "anchor": 117592.15}, {"bar": 30, "kind": "H", "close": 118770.94, "anchor": 118804.83}, {"bar": 31, "kind": "L", "close": 118440.76, "anchor": 118440.75}, {"bar": 33, "kind": "H", "close": 119073.45, "anchor": 119073.46}, {"bar": 37, "kind": "L", "close": 118453.41, "anchor": 118333.6}, {"bar": 39, "kind": "H", "close": 118904.99, "anchor": 118947.55}, {"bar": 41, "kind": "L", "close": 118656.18, "anchor": 118500.0}, {"bar": 44, "kind": "H", "close": 119685.5, "anchor": 119735.67}, {"bar": 46, "kind": "L", "close": 119580.0, "anchor": 119480.0}, {"bar": 47, "kind": "H", "close": 119807.02, "anchor": 119880.13}, {"bar": 51, "kind": "L", "close": 118780.0, "anchor": 118383.97}, {"bar": 56, "kind": "H", "close": 120899.36, "anchor": 120998.71}, {"bar": 67, "kind": "L", "close": 119053.53, "anchor": 119020.48}, {"bar": 73, "kind": "H", "close": 120365.75, "anchor": 120785.49}, {"bar": 75, "kind": "L", "close": 120103.91, "anchor": 119918.05}, {"bar": 77, "kind": "H", "close": 120287.18, "anchor": 120399.04}, {"bar": 80, "kind": "L", "close": 120060.15, "anchor": 120000.0}, {"bar": 81, "kind": "H", "close": 120329.19, "anchor": 120329.19}, {"bar": 83, "kind": "L", "close": 119885.99, "anchor": 119750.0}, {"bar": 87, "kind": "H", "close": 120550.33, "anchor": 120635.97}, {"bar": 89, "kind": "L", "close": 120280.01, "anchor": 120280.0}, {"bar": 90, "kind": "H", "close": 120589.95, "anchor": 120614.97}, {"bar": 101, "kind": "L", "close": 118452.5, "anchor": 118395.0}, {"bar": 106, "kind": "H", "close": 118875.01, "anchor": 118974.99}, {"bar": 107, "kind": "L", "close": 118671.97, "anchor": 118652.69}, {"bar": 110, "kind": "H", "close": 119250.72, "anchor": 119259.98}, {"bar": 112, "kind": "L", "close": 118897.99, "anchor": 118772.4}, {"bar": 118, "kind": "H", "close": 119442.44, "anchor": 119531.48}, {"bar": 121, "kind": "L", "close": 118660.0, "anchor": 118500.0}, {"bar": 123, "kind": "H", "close": 118993.5, "anchor": 119242.63}, {"bar": 129, "kind": "L", "close": 117663.99, "anchor": 117480.0}, {"bar": 130, "kind": "H", "close": 117860.25, "anchor": 118021.71}, {"bar": 134, "kind": "L", "close": 117553.42, "anchor": 117509.02}, {"bar": 136, "kind": "H", "close": 117924.01, "anchor": 117996.49}, {"bar": 139, "kind": "L", "close": 117409.19, "anchor": 117360.0}, {"bar": 140, "kind": "H", "close": 117680.37, "anchor": 117680.37}, {"bar": 142, "kind": "L", "close": 117310.72, "anchor": 117235.0}, {"bar": 144, "kind": "H", "close": 117800.01, "anchor": 117874.0}, {"bar": 148, "kind": "L", "close": 116991.61, "anchor": 116936.71}, {"bar": 151, "kind": "H", "close": 117841.35, "anchor": 117847.34}, {"bar": 155, "kind": "L", "close": 117614.69, "anchor": 117402.25}, {"bar": 156, "kind": "H", "close": 117884.96, "anchor": 117962.09}, {"bar": 159, "kind": "L", "close": 117665.25, "anchor": 117455.94}, {"bar": 164, "kind": "H", "close": 117959.25, "anchor": 117960.29}, {"bar": 166, "kind": "L", "close": 117739.7, "anchor": 117714.85}, {"bar": 170, "kind": "H", "close": 118036.73, "anchor": 118109.95}, {"bar": 172, "kind": "L", "close": 117986.38, "anchor": 117960.0}], "major": [{"bar": 8, "kind": "H", "close": 119135.92, "anchor": 119160.18}, {"bar": 20, "kind": "L", "close": 117472.17, "anchor": 117471.67}, {"bar": 33, "kind": "H", "close": 119073.45, "anchor": 119073.46}, {"bar": 37, "kind": "L", "close": 118453.41, "anchor": 118333.6}, {"bar": 47, "kind": "H", "close": 119807.02, "anchor": 119880.13}, {"bar": 51, "kind": "L", "close": 118780.0, "anchor": 118383.97}, {"bar": 56, "kind": "H", "close": 120899.36, "anchor": 120998.71}, {"bar": 67, "kind": "L", "close": 119053.53, "anchor": 119020.48}, {"bar": 73, "kind": "H", "close": 120365.75, "anchor": 120785.49}, {"bar": 83, "kind": "L", "close": 119885.99, "anchor": 119750.0}, {"bar": 90, "kind": "H", "close": 120589.95, "anchor": 120614.97}, {"bar": 101, "kind": "L", "close": 118452.5, "anchor": 118395.0}, {"bar": 118, "kind": "H", "close": 119442.44, "anchor": 119531.48}, {"bar": 148, "kind": "L", "close": 116991.61, "anchor": 116936.71}, {"bar": 156, "kind": "H", "close": 117884.96, "anchor": 117962.09}, {"bar": 166, "kind": "L", "close": 117739.7, "anchor": 117714.85}]}, "legs_major": [{"from_bar": 8, "to_bar": 20, "dir": "down", "start": 119160.18, "end": 117471.67, "height": 1688.5099999999948}, {"from_bar": 20, "to_bar": 33, "dir": "up", "start": 117471.67, "end": 119073.46, "height": 1601.7900000000081}, {"from_bar": 33, "to_bar": 37, "dir": "down", "start": 119073.46, "end": 118333.6, "height": 739.8600000000006}, {"from_bar": 37, "to_bar": 47, "dir": "up", "start": 118333.6, "end": 119880.13, "height": 1546.5299999999988}, {"from_bar": 47, "to_bar": 51, "dir": "down", "start": 119880.13, "end": 118383.97, "height": 1496.1600000000035}, {"from_bar": 51, "to_bar": 56, "dir": "up", "start": 118383.97, "end": 120998.71, "height": 2614.7400000000052}, {"from_bar": 56, "to_bar": 67, "dir": "down", "start": 120998.71, "end": 119020.48, "height": 1978.2300000000105}, {"from_bar": 67, "to_bar": 73, "dir": "up", "start": 119020.48, "end": 120785.49, "height": 1765.0100000000093}, {"from_bar": 73, "to_bar": 83, "dir": "down", "start": 120785.49, "end": 119750.0, "height": 1035.4900000000052}, {"from_bar": 83, "to_bar": 90, "dir": "up", "start": 119750.0, "end": 120614.97, "height": 864.9700000000012}, {"from_bar": 90, "to_bar": 101, "dir": "down", "start": 120614.97, "end": 118395.0, "height": 2219.970000000001}, {"from_bar": 101, "to_bar": 118, "dir": "up", "start": 118395.0, "end": 119531.48, "height": 1136.479999999996}, {"from_bar": 118, "to_bar": 148, "dir": "down", "start": 119531.48, "end": 116936.71, "height": 2594.7699999999895}, {"from_bar": 148, "to_bar": 156, "dir": "up", "start": 116936.71, "end": 117962.09, "height": 1025.37999999999}, {"from_bar": 156, "to_bar": 166, "dir": "down", "start": 117962.09, "end": 117714.85, "height": 247.2399999999907}], "trend": {"label": "震荡", "score": 0, "confidence": "边界", "window": 180, "gap_consistency": {"verdict": "不适用（震荡）", "trapped_short": 1, "trapped_long": 4}, "recent": {"label": "未定", "score": 0, "confidence": "未定", "window": 60}}, "ema": {"period": 20, "value": 118069.654922, "slope3": 88.43187, "ride_ratio_20": 0.95, "confidence": "确定"}, "last_bar": {"body_pct": 0.1415, "clv": 0.6108, "overlap_prev": 0.6946, "range": 123.38999999999942}, "seg_avg_range": 148.737368, "pullback": {"depth_ratio": 0.3952, "bars": 8, "dir_against": "up", "expired": false, "legs": 2, "two_legs": true}, "gaps": {"open": [{"price": 120088.88, "source": "origin", "trapped": "long", "opened_at": 96, "closed_at": null, "status": "open", "depth": 3276.12, "attempts": 0, "duration": 83}, {"price": 119862.01, "source": "origin", "trapped": "long", "opened_at": 98, "closed_at": null, "status": "open", "depth": 3049.25, "attempts": 0, "duration": 81}, {"price": 119442.44, "source": "origin", "trapped": "long", "opened_at": 119, "closed_at": null, "status": "open", "depth": 2629.68, "attempts": 0, "duration": 60}, {"price": 119044.0, "source": "origin", "trapped": "long", "opened_at": 124, "closed_at": null, "status": "open", "depth": 2231.24, "attempts": 0, "duration": 55}, {"price": 117368.01, "source": "origin", "trapped": "short", "opened_at": 151, "closed_at": null, "status": "open", "depth": 1003.41, "attempts": 1, "duration": 28}], "closed": [{"price": 117932.73, "source": "origin", "trapped": "short", "opened_at": 1, "closed_at": 19, "status": "closed", "depth": 1259.27, "attempts": 0, "duration": 18}, {"price": 117962.09, "source": "swing-major", "trapped": "short", "opened_at": 2, "closed_at": 19, "status": "closed", "depth": 1229.91, "attempts": 0, "duration": 17}, {"price": 118242.26, "source": "origin", "trapped": "short", "opened_at": 7, "closed_at": 14, "status": "closed", "depth": 949.74, "attempts": 0, "duration": 7}, {"price": 118333.6, "source": "swing-major", "trapped": "short", "opened_at": 8, "closed_at": 13, "status": "closed", "depth": 858.4, "attempts": 0, "duration": 5}, {"price": 118383.97, "source": "swing-major", "trapped": "short", "opened_at": 8, "closed_at": 13, "status": "closed", "depth": 808.03, "attempts": 0, "duration": 5}, {"price": 118395.0, "source": "swing-major", "trapped": "short", "opened_at": 8, "closed_at": 13, "status": "closed", "depth": 797.0, "attempts": 0, "duration": 5}, {"price": 118473.37, "source": "origin", "trapped": "short", "opened_at": 8, "closed_at": 13, "status": "closed", "depth": 718.63, "attempts": 0, "duration": 5}, {"price": 117854.12, "source": "origin", "trapped": "long", "opened_at": 20, "closed_at": 21, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 117453.57, "source": "origin", "trapped": "short", "opened_at": 21, "closed_at": 125, "status": "closed", "depth": 3545.14, "attempts": 0, "duration": 104}, {"price": 118029.7, "source": "origin", "trapped": "long", "opened_at": 25, "closed_at": 26, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 117520.6, "source": "origin", "trapped": "short", "opened_at": 26, "closed_at": 125, "status": "closed", "depth": 3478.11, "attempts": 0, "duration": 99}, {"price": 118513.82, "source": "origin", "trapped": "short", "opened_at": 33, "closed_at": 35, "status": "closed", "depth": 559.64, "attempts": 0, "duration": 2}, {"price": 118601.48, "source": "origin", "trapped": "short", "opened_at": 42, "closed_at": 51, "status": "closed", "depth": 1278.65, "attempts": 0, "duration": 9}, {"price": 119160.18, "source": "swing-major", "trapped": "short", "opened_at": 43, "closed_at": 50, "status": "closed", "depth": 719.95, "attempts": 0, "duration": 7}, {"price": 119073.46, "source": "swing-major", "trapped": "short", "opened_at": 43, "closed_at": 50, "status": "closed", "depth": 806.67, "attempts": 0, "duration": 7}, {"price": 119020.48, "source": "swing-major", "trapped": "short", "opened_at": 43, "closed_at": 50, "status": "closed", "depth": 859.65, "attempts": 0, "duration": 7}, {"price": 119211.94, "source": "origin", "trapped": "short", "opened_at": 44, "closed_at": 50, "status": "closed", "depth": 668.19, "attempts": 0, "duration": 6}, {"price": 119531.48, "source": "swing-major", "trapped": "short", "opened_at": 45, "closed_at": 46, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 119512.43, "source": "origin", "trapped": "long", "opened_at": 50, "closed_at": 55, "status": "closed", "depth": 1128.46, "attempts": 0, "duration": 5}, {"price": 119431.93, "source": "origin", "trapped": "short", "opened_at": 55, "closed_at": 65, "status": "closed", "depth": 1566.78, "attempts": 0, "duration": 10}, {"price": 119880.13, "source": "swing-major", "trapped": "short", "opened_at": 56, "closed_at": 62, "status": "closed", "depth": 1035.62, "attempts": 0, "duration": 6}, {"price": 119750.0, "source": "swing-major", "trapped": "short", "opened_at": 56, "closed_at": 62, "status": "closed", "depth": 1165.75, "attempts": 0, "duration": 6}, {"price": 120065.99, "source": "origin", "trapped": "short", "opened_at": 56, "closed_at": 57, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 119644.21, "source": "origin", "trapped": "short", "opened_at": 71, "closed_at": 96, "status": "closed", "depth": 1176.5, "attempts": 0, "duration": 25}, {"price": 119114.88, "source": "origin", "trapped": "long", "opened_at": 101, "closed_at": 110, "status": "closed", "depth": 701.51, "attempts": 0, "duration": 9}, {"price": 117761.56, "source": "origin", "trapped": "short", "opened_at": 126, "closed_at": 127, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 118265.96, "source": "origin", "trapped": "long", "opened_at": 127, "closed_at": 174, "status": "closed", "depth": 1453.2, "attempts": 0, "duration": 47}, {"price": 117471.67, "source": "swing-major", "trapped": "long", "opened_at": 143, "closed_at": 144, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}, {"price": 117351.19, "source": "origin", "trapped": "short", "opened_at": 144, "closed_at": 146, "status": "closed", "depth": 448.81, "attempts": 0, "duration": 2}, {"price": 117714.85, "source": "swing-major", "trapped": "long", "opened_at": 155, "closed_at": 156, "status": "closed", "depth": 0.0, "attempts": 0, "duration": 1}], "confidence": "确定"}, "fortress": {"bands": [{"lo": 116936.71, "hi": 116936.71, "anchors": 2, "far_undefined": true, "tests": 2, "crosses": 0, "decaying": false, "trampled": false}, {"lo": 117235.0, "hi": 117235.0, "anchors": 1, "far_undefined": true, "tests": 5, "crosses": 2, "decaying": true, "trampled": false}, {"lo": 117310.72, "hi": 117553.42, "anchors": 7, "far_undefined": false, "tests": 25, "crosses": 2, "decaying": true, "trampled": false}, {"lo": 117552.86, "hi": 117665.25, "anchors": 1, "far_undefined": false, "tests": 30, "crosses": 8, "decaying": true, "trampled": true}, {"lo": 117607.57, "hi": 117783.8, "anchors": 3, "far_undefined": false, "tests": 40, "crosses": 8, "decaying": true, "trampled": true}, {"lo": 117783.8, "hi": 117932.73, "anchors": 2, "far_undefined": false, "tests": 42, "crosses": 10, "decaying": true, "trampled": true}, {"lo": 117896.07, "hi": 118173.29, "anchors": 9, "far_undefined": false, "tests": 46, "crosses": 4, "decaying": true, "trampled": true}, {"lo": 118262.99, "hi": 118563.3, "anchors": 9, "far_undefined": false, "tests": 43, "crosses": 4, "decaying": true, "trampled": true}, {"lo": 118632.94, "hi": 118706.4, "anchors": 1, "far_undefined": false, "tests": 29, "crosses": 10, "decaying": true, "trampled": true}, {"lo": 118706.4, "hi": 118875.01, "anchors": 2, "far_undefined": false, "tests": 33, "crosses": 12, "decaying": true, "trampled": true}, {"lo": 118875.01, "hi": 119135.92, "anchors": 6, "far_undefined": false, "tests": 35, "crosses": 6, "decaying": true, "trampled": true}, {"lo": 119096.43, "hi": 119221.62, "anchors": 2, "far_undefined": false, "tests": 24, "crosses": 10, "decaying": true, "trampled": true}, {"lo": 119171.34, "hi": 119301.87, "anchors": 2, "far_undefined": false, "tests": 22, "crosses": 8, "decaying": true, "trampled": true}, {"lo": 119412.11, "hi": 119580.0, "anchors": 3, "far_undefined": false, "tests": 19, "crosses": 6, "decaying": true, "trampled": true}, {"lo": 119676.79, "hi": 119807.02, "anchors": 3, "far_undefined": false, "tests": 17, "crosses": 6, "decaying": true, "trampled": true}, {"lo": 119807.02, "hi": 119885.99, "anchors": 3, "far_undefined": false, "tests": 13, "crosses": 4, "decaying": true, "trampled": true}, {"lo": 120000.0, "hi": 120000.0, "anchors": 1, "far_undefined": true, "tests": 10, "crosses": 6, "decaying": true, "trampled": true}, {"lo": 120223.09, "hi": 120435.55, "anchors": 3, "far_undefined": false, "tests": 30, "crosses": 4, "decaying": true, "trampled": true}, {"lo": 120540.87, "hi": 120605.57, "anchors": 3, "far_undefined": false, "tests": 10, "crosses": 2, "decaying": true, "trampled": false}, {"lo": 120785.49, "hi": 120785.49, "anchors": 2, "far_undefined": true, "tests": 4, "crosses": 2, "decaying": true, "trampled": false}, {"lo": 120998.71, "hi": 120998.71, "anchors": 2, "far_undefined": true, "tests": 1, "crosses": 0, "decaying": false, "trampled": false}], "confidence": "确定"}, "trend_age": {"bars": 23, "legs": 1, "ema_distance_units": 0.2636, "confidence": "确定"}, "mm": {"candidates": [{"base": 117471.67, "kind": "leg_end_continuation", "leg": {"from_bar": 8, "to_bar": 20, "dir": "down"}, "target": 115783.16}, {"base": 119073.46, "kind": "pullback_base", "leg": {"from_bar": 8, "to_bar": 20, "dir": "down"}, "target": 117384.95}], "confidence": "边界"}}
+```
+
+## 参考样本（草稿标注，只作语境类比）
+```json
+[{"id": "ex-bn-APTUSDT-1d-1707004800000", "context": "震荡", "draft_verdict": "no_trade", "trend": {"label": "震荡", "score": 0, "confidence": "边界"}, "open_gaps": 3}, {"id": "ex-bn-AVAXUSDT-15m-1726945200000", "context": "上升", "draft_verdict": "candidate", "trend": {"label": "上升", "score": 2, "confidence": "确定"}, "open_gaps": 1}, {"id": "ex-bn-ARBUSDT-4h-1763539200000", "context": "下降", "draft_verdict": "candidate", "trend": {"label": "下降", "score": -2, "confidence": "确定"}, "open_gaps": 4}]
+```
+
+## 阿布原册讲义（案例召回，出处可溯）
+以下为 Brooks 本人课件原文，与本段无关的页请忽略；引用他的结论时注明出处页。
+
+### [v1 术语 · slide 4]（标签：缺口,MM,双顶底,反转,MTR,突破,区间,回调,EMA）
+•   AIL   =Always In Long                          • L    = Low
+•   AIS   =Always In Short                         • LH = Lower High
+•   B     = Buy                                    • LL   = Lower Low
+•   BLSHS = Buy Low, Sell High, Scalp              • MA = Moving Average
+•   BO    = Breakout                               • MAG = Moving Average Gap bar                  k
+•   C     = Close                                  • MM = Measured Move
+
+### [v21 反转 · slide 13]（标签：反转,MTR,突破,区间）
+Major Reversal: Start of New Trend from Opposite Trend or TR
+                                        TR
+                          Swing trades                      Once bear trend resumes,
+                          Bear trend to bull trend          traders expect that next reversal attempt
+                          Bull trend to bear trend          might be strong enough to succeed
+                          Breakout of Trading Range         Next reversal has 40% chance of being major
+
+## 最近 K 线（OHLC 数值表）
+```
+idx,o,h,l,c
+0,120435.55,120693.35,120050.0,120081.99
+1,120081.99,120269.7,120081.99,120168.87
+2,120168.87,120337.52,119485.71,119766.71
+3,119766.7,119879.35,119582.09,119731.3
+4,119731.29,119879.35,119446.66,119616.05
+5,119616.05,119663.26,119250.03,119364.07
+6,119364.07,119475.12,119170.52,119177.56
+7,119177.56,119369.36,119020.48,119053.53
+8,119053.54,119600.88,119053.54,119501.0
+9,119501.01,119748.43,119501.0,119741.14
+10,119741.13,119786.52,119512.79,119739.06
+11,119739.06,120484.73,119644.21,120272.01
+12,120272.01,120434.35,120014.26,120169.99
+13,120169.99,120785.49,120036.24,120365.75
+14,120365.75,120461.58,120249.47,120336.88
+15,120336.88,120350.58,119918.05,120103.91
+16,120103.91,120302.9,119869.97,120223.57
+17,120223.53,120399.04,120124.47,120287.18
+18,120287.17,120287.18,120079.14,120096.43
+19,120096.42,120151.89,119949.28,120107.3
+20,120107.3,120225.0,120000.0,120060.15
+21,120060.16,120329.19,120010.06,120329.19
+22,120329.19,120478.83,120177.4,120223.09
+23,120223.08,120223.09,119750.0,119885.99
+24,119885.99,120077.13,119836.72,120077.12
+25,120077.12,120318.64,120077.12,120261.57
+26,120261.57,120486.29,120261.57,120403.4
+27,120403.4,120635.97,120210.02,120550.33
+28,120550.33,120611.13,120387.98,120540.87
+29,120540.88,120556.71,120280.0,120280.01
+30,120280.01,120614.97,120280.0,120589.95
+31,120589.94,120820.71,120263.2,120409.41
+32,120409.41,120409.42,120151.96,120151.97
+33,120151.97,120290.59,120075.04,120257.14
+34,120257.15,120455.81,120251.0,120251.0
+35,120251.0,120386.27,120010.0,120088.87
+36,120088.87,120088.88,119625.0,119652.0
+37,119652.0,119853.15,119642.52,119842.48
+38,119842.47,119862.01,119287.72,119339.51
+39,119339.51,119469.21,119182.17,119221.62
+40,119221.63,119387.74,119072.39,119114.89
+41,119114.88,119114.88,118395.0,118452.5
+42,118452.5,118699.38,118413.37,118642.01
+43,118642.02,118883.41,118442.84,118839.97
+44,118839.98,118839.98,118550.0,118647.37
+45,118647.38,118892.92,118647.38,118811.53
+46,118811.53,118974.99,118803.04,118875.01
+47,118875.01,118918.57,118652.69,118671.97
+48,118671.97,118890.9,118502.7,118787.58
+49,118787.59,118917.52,118754.12,118917.52
+50,118917.51,119259.98,118890.42,119250.72
+51,119250.72,119281.93,118984.32,118984.33
+52,118984.33,119036.6,118772.4,118897.99
+53,118898.0,119112.0,118776.74,119096.43
+54,119096.42,119196.45,119042.3,119171.34
+55,119171.35,119307.69,119171.34,119301.87
+56,119301.87,119344.11,119145.84,119204.0
+57,119204.01,119472.71,119204.01,119412.11
+58,119412.12,119531.48,119380.0,119442.44
+59,119442.43,119442.44,118865.12,118865.13
+60,118865.13,118917.81,118651.14,118800.01
+61,118800.0,118891.02,118500.0,118660.0
+62,118660.01,118861.43,118620.46,118773.38
+63,118773.38,119242.63,118704.43,118993.5
+64,118993.49,119044.0,117751.0,117950.25
+65,117950.25,118108.0,117315.69,117761.56
+66,117761.56,118390.72,117761.56,118139.99
+67,118139.99,118265.96,117750.26,117750.27
+68,117750.26,117930.92,117501.91,117760.0
+69,117760.0,117951.45,117480.0,117663.99
+70,117663.99,118021.71,117510.92,117860.25
+71,117860.24,118054.92,117695.23,117695.23
+72,117695.23,117823.04,117530.68,117607.57
+73,117607.57,118012.73,117479.92,117905.2
+74,117905.19,117918.06,117509.02,117553.42
+75,117553.41,117652.62,117377.0,117587.27
+76,117587.27,117996.49,117560.12,117924.01
+77,117924.0,117973.52,117588.68,117601.88
+78,117601.99,117708.86,117494.41,117600.01
+79,117600.01,117615.82,117360.0,117409.19
+80,117409.2,117680.37,117357.7,117680.37
+81,117680.37,117723.11,117522.62,117552.86
+82,117552.87,117618.86,117235.0,117310.72
+83,117310.72,117400.01,117120.53,117351.18
+84,117351.19,117874.0,117351.19,117800.01
+85,117800.0,117800.0,117426.05,117490.22
+86,117490.21,117494.39,117299.12,117374.76
+87,117374.75,117404.0,117125.3,117162.91
+88,117162.92,117246.85,116936.71,116991.61
+89,116991.61,117063.29,116812.76,117009.06
+90,117009.07,117539.51,117009.06,117405.0
+91,117404.99,117847.34,117368.01,117841.35
+92,117841.35,117875.0,117682.47,117719.92
+93,117719.93,117855.0,117719.93,117801.99
+94,117802.0,117879.9,117587.19,117676.82
+95,117676.81,117680.0,117402.25,117614.69
+96,117614.69,117962.09,117600.01,117884.96
+97,117884.95,117932.13,117783.79,117783.8
+98,117783.8,117817.76,117606.66,117683.71
+99,117683.71,117708.64,117455.94,117665.25
+100,117665.25,117884.29,117643.8,117820.01
+101,117820.01,117900.0,117800.0,117862.0
+102,117862.0,118021.62,117837.82,117924.84
+103,117924.84,117947.65,117838.09,117928.88
+104,117928.88,117960.29,117870.73,117959.25
+105,117959.26,118028.86,117860.79,117905.21
+106,117905.21,117936.38,117714.85,117739.7
+107,117739.7,117896.07,117613.35,117896.07
+108,117896.07,118010.6,117880.0,117979.99
+109,117979.99,118077.05,117926.23,118029.8
+110,118029.79,118109.95,117964.0,118036.73
+111,118036.74,118086.86,117935.0,118033.63
+112,118033.63,118092.23,117960.0,117986.38
+113,117986.37,118216.0,117986.37,118142.74
+114,118142.74,118297.72,118134.84,118201.03
+115,118201.04,118216.54,118123.6,118209.16
+116,118209.15,118297.73,118190.16,118252.73
+117,118252.74,118371.42,118219.27,118300.01
+118,118300.01,118332.98,118200.0,118322.54
+119,118322.53,118364.0,118240.61,118339.99
+```
+
+## 任务（输出格式是硬契约，先看骨架再判断）
+只输出一个 JSON 对象，不要任何解释文字、不要代码围栏。顶层只许 context / primary / hypotheses / candidates / no_trade_reason / pending_conditions / uncertainty 七个字段，多一个键即作废。骨架：
+```json
+{"context": "上升|下降|震荡", "primary": "H1",
+ "hypotheses": [
+  {"id": "H1", "statement": "主假设一句话", "holds_if": "...", "void_if": "...", "takeover_if": "...", "menu": ["A1"]},
+  {"id": "H2", "statement": "备选一句话", "holds_if": "...", "void_if": "...", "takeover_if": "...", "menu": []}],
+ "candidates": [], "no_trade_reason": "无命中", "uncertainty": ["..."]}
+```
+硬规则：hypotheses 必须是数组（不是 {main, backup} 对象）；primary 必填且等于主假设的 id；hypothesis 六字段（id/statement/holds_if/void_if/takeover_if/menu）一个不许少，menu 是 setup 数组；假设不许带数字权重。有合格候选时 candidates 每项含 setup/side/qualified/reason/feature_refs 与 plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/void/second_bar_confirmed）。无合格候选时 candidates=[] 且 no_trade_reason 必填枚举（无命中/位置不对/成色不合格/背景不明/感知未定）。空仓是合法输出。

@@ -30,6 +30,14 @@ def test_recall_deterministic():
            [(x["book"], x["slide"]) for x in b]
 
 
+def test_prompt_task_section_has_skeleton():
+    pack = {"trend": {"label": "上升", "confidence": "确定",
+                      "gap_consistency": {"verdict": "一致"}}}
+    bars = [{"o": 1, "h": 1, "l": 1, "c": 1, "t": i} for i in range(5)]
+    prompt = build_prompt(pack, bars)
+    assert "\"primary\": \"H1\"" in prompt and "hypotheses 必须是数组" in prompt
+
+
 def test_prompt_contains_brooks_section():
     pack = {"trend": {"label": "上升", "confidence": "确定",
                       "gap_consistency": {"verdict": "一致"}}}

@@ -168,8 +168,25 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
                      + json.dumps(prev_hypotheses, ensure_ascii=False) + "\n```")
     parts.append("## 最近 K 线（OHLC 数值表）\n```\n" + bars_table(bars[-120:]) + "\n```")
     parts.append(
-        "## 任务\n按 judge/schema.json 输出判断 JSON（只输出 JSON，不要解释文字）。"
-        "假设用主/备 + 接管条件，不许给数字权重。无合格候选时 candidates 为空数组、"
-        "no_trade_reason 必填枚举。空仓是合法输出。"
+        "## 任务（输出格式是硬契约，先看骨架再判断）\n"
+        "只输出一个 JSON 对象，不要任何解释文字、不要代码围栏。顶层只许 "
+        "context / primary / hypotheses / candidates / no_trade_reason / "
+        "pending_conditions / uncertainty 七个字段，多一个键即作废。骨架：\n"
+        "```json\n"
+        "{\"context\": \"上升|下降|震荡\", \"primary\": \"H1\",\n"
+        " \"hypotheses\": [\n"
+        "  {\"id\": \"H1\", \"statement\": \"主假设一句话\", \"holds_if\": \"...\", "
+        "\"void_if\": \"...\", \"takeover_if\": \"...\", \"menu\": [\"A1\"]},\n"
+        "  {\"id\": \"H2\", \"statement\": \"备选一句话\", \"holds_if\": \"...\", "
+        "\"void_if\": \"...\", \"takeover_if\": \"...\", \"menu\": []}],\n"
+        " \"candidates\": [], \"no_trade_reason\": \"无命中\", \"uncertainty\": [\"...\"]}\n"
+        "```\n"
+        "硬规则：hypotheses 必须是数组（不是 {main, backup} 对象）；primary 必填且"
+        "等于主假设的 id；hypothesis 六字段（id/statement/holds_if/void_if/"
+        "takeover_if/menu）一个不许少，menu 是 setup 数组；假设不许带数字权重。"
+        "有合格候选时 candidates 每项含 setup/side/qualified/reason/feature_refs 与 "
+        "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/void/"
+        "second_bar_confirmed）。无合格候选时 candidates=[] 且 no_trade_reason 必填"
+        "枚举（无命中/位置不对/成色不合格/背景不明/感知未定）。空仓是合法输出。"
     )
     return "\n\n".join(parts)
