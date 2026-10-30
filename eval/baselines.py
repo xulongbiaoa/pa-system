@@ -7,6 +7,8 @@
    随机决定。每段一笔。
 """
 
+import hashlib
+
 import numpy as np
 
 from perception.features import ema_series, load_config
@@ -68,7 +70,9 @@ def simple_baseline(seg):
 
 def random_baseline(seg, seed=42):
     bars = seg["bars"]
-    rng = np.random.default_rng(seed + abs(hash(seg["id"])) % 10000)
+    # 种子必须跨进程稳定（Python 的 hash() 带随机盐，会破坏回放可复现）
+    seg_seed = int(hashlib.md5(seg["id"].encode()).hexdigest()[:8], 16) % 10000
+    rng = np.random.default_rng(seed + seg_seed)
     i = int(rng.integers(WARM, END))
     side = "long" if rng.random() < 0.5 else "short"
     seg_avg = trimmed_avg_range(bars[: i + 1])

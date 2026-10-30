@@ -30,26 +30,26 @@
   },
   "random": {
    "n": 31,
-   "win_rate": 0.3548,
-   "mean_r": -0.2386,
-   "median_r": -1.0273,
+   "win_rate": 0.4516,
+   "mean_r": 0.0036,
+   "median_r": -1.0143,
    "mean_r_ci95": [
-    -0.6417,
-    0.1771
+    -0.4175,
+    0.4333
    ],
-   "max_consec_losses": 7,
+   "max_consec_losses": 4,
    "proven_edge": false,
    "note": "尚未证明优势（CI 包含或低于 0）",
    "fee_x2": {
     "n": 31,
-    "win_rate": 0.3548,
-    "mean_r": -0.3643,
-    "median_r": -1.0547,
+    "win_rate": 0.4516,
+    "mean_r": -0.1218,
+    "median_r": -1.0285,
     "mean_r_ci95": [
-     -0.7672,
-     0.0508
+     -0.5459,
+     0.2941
     ],
-    "max_consec_losses": 7,
+    "max_consec_losses": 4,
     "proven_edge": false,
     "note": "尚未证明优势（CI 包含或低于 0）"
    }
