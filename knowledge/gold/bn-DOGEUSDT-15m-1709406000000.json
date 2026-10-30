@@ -1,0 +1,28 @@
+{
+ "segment": "bn-DOGEUSDT-15m-1709406000000",
+ "context": "震荡",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "主假设：0.133–0.172 区间上沿刚被触及、突破未确认；备选：0.172 假破后回落至 0.1639；接管条件：三根内收盘收回 0.1699 下方则转 B3。",
+ "key_evidence": [
+  "trend=震荡/0/边界，ema=0.16526、slope3=+0.0015，价格 0.17178 在 EMA 上方 3.9%",
+  "openGaps 七条 0.13542–0.16241 全为 short 被套，缺口账本偏多",
+  "174–179 六根连续阳线（174 实体 85%、179 实体 62%）把价格从 0.1624 推到 0.172，创窗口新高 0.172（前高 150H 0.17179）",
+  "179 收 0.17178、clv=0.94，属突破当根；B1 不产生入场，此处追多即尖峰追单"
+ ],
+ "confidence_note": "突破成立但无回踩，等回踩 0.1639–0.1699 再按 A1/B2 审。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

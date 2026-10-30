@@ -1,0 +1,28 @@
+{
+ "segment": "ds22",
+ "context": "上升",
+ "verdict": "no_trade",
+ "setup": "A1",
+ "side": "long",
+ "qualified": false,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "成色不合格",
+ "primary_hypothesis": "主假设：22.67→36.16 的上升腿已进入成熟段、顺势菜单应关闭；备选：28.5 一带止跌后重新组织；接管条件：收盘收复 30.09（EMA）上方并走出第二腿才重启 A1。",
+ "key_evidence": [
+  "trend=上升/+2/确定，但 ema=30.09、slope3=-0.22（转平），价格 27.93 已跌破 EMA 6.9%",
+  "openGaps 十条 16.26–26.77 全为 short 被套，缺口账本仍偏多，但均距现价 4% 以上",
+  "165H 36.16 → 179L 27.81 回撤 8.35，占 143L 22.67→165H 36.16 腿高 13.49 的 62%，超 50% 降级线",
+  "179 为 92% 实体阴线、clv=0.04，收 27.93 同时跌破 167L 28.51 前低，上升结构已被破坏，A1 的「顺向实体收盘」不成立"
+ ],
+ "confidence_note": "A1 命中但成色不合格：回吐 62% + 破前低 + 阴线收在最低。趋势已转「成熟/待翻面」，顺势菜单关闭。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "AVAXUSDT",
+  "interval": "1d",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

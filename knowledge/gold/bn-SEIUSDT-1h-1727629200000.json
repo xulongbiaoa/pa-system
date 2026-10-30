@@ -1,0 +1,28 @@
+{
+ "segment": "bn-SEIUSDT-1h-1727629200000",
+ "context": "上升",
+ "verdict": "no_trade",
+ "setup": "A1",
+ "side": "long",
+ "qualified": false,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "成色不合格",
+ "primary_hypothesis": "主假设：0.3991 起的上升趋势未走完、0.4317（EMA）是回踩点；备选：0.451 为阶段高点、转 0.4275–0.451 区间；接管条件：收盘跌破 0.4275 则上升面降级。",
+ "key_evidence": [
+  "trend=上升/+2/确定，ema=0.43171、slope3=+0.0024，ride_ratio_20=1.0",
+  "openGaps：0.476/0.473 long 被套在上方，0.4063/0.4162 short 被套在下方，多空交错",
+  "165H 0.4425 被 175H 0.451 越过（HH），但 175→177 回撤至 0.4371，占 172L 0.4275→175H 0.451 的 59%，超 50% 降级线",
+  "179 实体仅 8%、clv=0.35，无 A1 所需阳线实体；价格 0.439 距 EMA 1.7%，回踩也未真正到位"
+ ],
+ "confidence_note": "A1 命中但回吐 59% + 信号 K 无实体，成色不合格，空仓。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "SEIUSDT",
+  "interval": "1h",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

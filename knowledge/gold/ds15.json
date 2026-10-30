@@ -1,0 +1,28 @@
+{
+ "segment": "ds15",
+ "context": "下降",
+ "verdict": "no_trade",
+ "setup": "A2",
+ "side": "short",
+ "qualified": false,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "成色不合格",
+ "primary_hypothesis": "主假设：179.85 起的下跌趋势未走完、136 一带是反弹上限；备选：112 起的宽幅震荡尚未结束；接管条件：收盘站上 136.5 上方则下降面作废。",
+ "key_evidence": [
+  "trend=下降/-2/确定，ema=136.73、slope3=-2.54，价格 127.6 在 EMA 下方 6.7%",
+  "openGaps：179.47 long 被套（@162、depth 67.5）敞开，空头账本成立",
+  "169L 115.47 → 174H 136.53 的反弹正好落在 ema=136.73 一带，179 阴线 82% 实体收 127.6、clv=0.10，A2 的位置与触发都成立",
+  "但止损须放 178H 136.08 外侧（+缓冲 ≈136.8），风险 9.2 ≈ 入场价 7.2%；最小目标 115.47 仅 12.1，净 RR≈1.3 < 1.5"
+ ],
+ "confidence_note": "A2 位置对、触发对，唯一否决项是净 RR 不足（止损太宽）。若要救这一单只能缩止损，而缩止损是红线，故不做。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "val",
+  "symbol": "SOLUSDT",
+  "interval": "1d",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

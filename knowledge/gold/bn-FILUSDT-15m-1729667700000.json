@@ -1,0 +1,28 @@
+{
+ "segment": "bn-FILUSDT-15m-1729667700000",
+ "context": "下降",
+ "verdict": "no_trade",
+ "setup": "A2",
+ "side": "short",
+ "qualified": false,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "成色不合格",
+ "primary_hypothesis": "主假设：3.77 起的下降趋势未走完、3.7188（EMA）是空点；备选：3.65 探底后转区间；接管条件：收盘站上 3.733 上方则下降面降级。",
+ "key_evidence": [
+  "trend=下降/-2/确定，ema=3.7188、slope3=-0.0028，价格 3.701 在 EMA 下方",
+  "openGaps：3.742 long（@165）与 3.719 long（@179）被套，3.638 short 被套在下方",
+  "171L 3.696 → 176H 3.729 两腿反弹正好触 ema=3.7188，179 以 83% 实体阴线收 3.701、clv=0.00，A2 位置与触发成立",
+  "但最小目标（反弹前低）3.696 距入场仅 0.005，止损须放 3.729 外侧（≈3.733，风险 0.032），净 RR≈0.16"
+ ],
+ "confidence_note": "A2 形态成立但入场已贴反弹前低，目标空间仅 0.13%。此类单需等反弹到 3.74 以上再空。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "FILUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

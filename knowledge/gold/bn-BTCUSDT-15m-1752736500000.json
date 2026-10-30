@@ -1,0 +1,28 @@
+{
+ "segment": "bn-BTCUSDT-15m-1752736500000",
+ "context": "震荡",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "主假设：116940–120820 区间内往返、价格在区间上沿附近无优势；备选：上方 119040 起的被套多头缺口压制反弹；接管条件：收盘站上 120090 或跌破 116940 才定方向。",
+ "key_evidence": [
+  "trend=震荡/0/边界，ema=118070、slope3=+88.4，价格 118340 仅高于 EMA 0.2%",
+  "openGaps：120090/119860/119440/119040 四条 long 被套（depth 2.2e3–3.3e3）全敞开，上方供给明确",
+  "148L 116940 → 156H 117960 → 166L 117710 → 179 收 118340，为区间内第 3 次上攻，仍在 118371 前高下方",
+  "179 实体仅 14%、clv=0.81，无突破力度"
+ ],
+ "confidence_note": "区间上沿、上方缺口压制，追多无空间；等 119040 缺口回补后收阴再考虑空。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

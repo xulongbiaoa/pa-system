@@ -1,0 +1,28 @@
+{
+ "segment": "bn-AVAXUSDT-15m-1726945200000",
+ "context": "上升",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "主假设：27.25 起的上升段未走完、27.48（EMA）是回踩点；备选：27.25–27.74 窄幅横盘延续；接管条件：收盘破 27.25 或站上 27.74 才定方向。",
+ "key_evidence": [
+  "trend=上升/+2/确定，ema=27.481、slope3=+0.03，价格 27.57 仅高于 EMA 0.3%，ride_ratio_20=0.45",
+  "openGaps 仅一条 27.95 long 被套（@133、depth 0.71），无持续套牢盘",
+  "150L 27.25 与 160L 27.25 同低、129H 28.18 后 173H 27.74 为 LH，实际是 27.25–27.74 的 0.5 元窄幅区间",
+  "179 实体仅 21%、且为阴线（o27.61>c27.57），A1 的顺向实体收盘不成立"
+ ],
+ "confidence_note": "区间高度 1.8%，扣费后不可能满足 1.5 净 RR，空仓。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "AVAXUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

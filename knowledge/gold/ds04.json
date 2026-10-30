@@ -1,0 +1,28 @@
+{
+ "segment": "ds04",
+ "context": "震荡",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "主假设：0.2642–0.2704 区间内往返、无一方被套住，等待边缘再定方向；备选：下降趋势在 0.2642 二次探底后转上；接管条件：收盘站上 0.2704 或跌破 0.2642 才易主。",
+ "key_evidence": [
+  "trend 标下降/-2 但近 40 根为 0.2642–0.2704 横盘，146H 0.26985 与 161H 0.26948 构成 LH、157L 0.26549 与 169L 0.26421 构成 LL，方向互相矛盾",
+  "openGaps 三条深度仅 0.01 量级（0.25361/0.26212 short，0.26953 long），无持续敞开的同向套牢盘，router 的趋势前提不成立",
+  "价格 0.26717 与 ema=0.26655 几乎重合，处区间中位，非决胜点",
+  "179 为 60% 实体阳线收 0.26717、clv=0.69，但上方 0.26953 仍有被套多头，不构成 A1 的「第二腿回踩 + 顺向实体」组合"
+ ],
+ "confidence_note": "震荡中位、两侧各约 1.2% 空间，做多做空都过不了净 RR 1.5，空仓。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "dev",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

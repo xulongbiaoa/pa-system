@@ -1,0 +1,28 @@
+{
+ "segment": "ds06",
+ "context": "震荡",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "主假设：1.808–1.864 区间内震荡、价格回到 EMA 中位无优势；备选：166 起的抬高低点结构若破 1.864 则转上升；接管条件：收盘越过 1.864 或跌破 1.808 才定方向。",
+ "key_evidence": [
+  "trend 标下降/-2，但 openGaps 六条 1.686–1.822 全部 trapped=short（被套的是空头，价在其上方），与「下降」前提的缺口方向相反",
+  "majorSw：151H 1.864 与 175H 1.864 同高、136L 1.827 与 166L 1.808 递低，摆动序列无方向",
+  "价格 1.835 与 ema=1.8392 重合，处区间中位",
+  "175 大阳到 1.864 后 176–178 连续回吐（178 收 1.832、clv=0.22），179 仅 31% 实体阳线，无 A1 所需第二腿回踩结构"
+ ],
+ "confidence_note": "特征标签与缺口账本冲突，已按摆动序列无方向判震荡；不做。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "val",
+  "symbol": "NEARUSDT",
+  "interval": "15m",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}

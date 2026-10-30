@@ -1,0 +1,28 @@
+{
+ "segment": "ds18",
+ "context": "上升",
+ "verdict": "no_trade",
+ "setup": null,
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "无命中",
+ "primary_hypothesis": "主假设：0.977 起的上升腿未走完、1.26 后的回踩是 H2 机会；备选：1.26 已是本段终点、转区间；接管条件：收盘跌破 1.105（169 缺口位）则上升面作废。",
+ "key_evidence": [
+  "trend 标下降/-2，但 openGaps 六条 0.968–1.105 全为 short 被套、价格站在全部缺口上方，与「下降」前提相反",
+  "152L 0.961 → 174H 1.26 为 HH+HL 序列，ema=1.1283 被价格踩在下方、ride_ratio_20=1.0",
+  "175–179 回踩 1.26→1.155（回撤 37%，未过 50%），落点在 ema=1.1283 上方",
+  "179 为 35% 实体小阴、clv=0.35，无 A1 要求的阳线实体收盘，第二腿也未走出"
+ ],
+ "confidence_note": "特征标签与结构/缺口账本冲突，已按结构判上升。位置合格但无触发，属「待第二腿」，不抢跑。",
+ "gold": {
+  "frozen_at": "2026-10-30",
+  "split": "val",
+  "symbol": "NEARUSDT",
+  "interval": "1h",
+  "source": "外部 AI 盲审（用户转交）+ 用户 2026-10-30 定版",
+  "outcome": null
+ }
+}
