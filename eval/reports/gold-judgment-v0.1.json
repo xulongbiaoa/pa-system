@@ -1,0 +1,24 @@
+{
+ "n_gold": 30,
+ "n_judged": 0,
+ "format_fail": 0,
+ "verdict_agree": 0,
+ "reason_agree": 0,
+ "reason_compared": 0,
+ "setup_agree": 0,
+ "setup_compared": 0,
+ "side_agree": 0,
+ "gate_reject": 0,
+ "gate_reject_rules": {},
+ "gate_notes": {},
+ "unfilled": 0,
+ "unfilled_segments": [],
+ "trades": [],
+ "mismatches": [],
+ "verdict_agree_rate": null,
+ "reason_agree_rate": null,
+ "summary": {
+  "n": 0
+ },
+ "no_trade_rate_ai": null
+}

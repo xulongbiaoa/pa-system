@@ -157,3 +157,53 @@ def test_replay_target_hit():
     bars = [{"o": 101, "h": 111, "l": 99, "c": 108, "v": 1}]
     t = simulate_trade(bars, "long", 100.0, 94.0, 110.0)
     assert t["exit_price"] == 110.0 and t["win"]
+
+
+# --- H1 现价口径（2026-10-30）：入场价优于现价时按现价重算 -------------------
+
+
+def _pack_px(px):
+    p = _pack()
+    p["last_close"] = px
+    return p
+
+
+def test_h1_rejects_favorable_entry_inflated_rr():
+    # 做多入场价压到 97（优于现价 100）→ 计划自身 RR 约 3.2 过门槛；
+    # 但按现价 100 算只有约 1.11 → 必须被 H1 拒
+    plan = _plan(entry=97.0, stop=93.87, targets=[107.0])
+    loose = adjudicate(plan, _pack(), bars_left=50)
+    assert loose["verdict"] == "pass"          # 无现价字段时行为不变
+    tight = adjudicate(plan, _pack_px(100.0), bars_left=50)
+    assert tight["verdict"] == "reject"
+    assert any(h["rule"] == "H1" for h in tight["hard_hits"])
+    assert tight["rr_gate"][0] < tight["rr_by_target"][0]
+    assert tight["decision_price"] == 100.0
+
+
+def test_h1_keeps_plan_rr_when_entry_worse_than_price():
+    # 追单（做多入场 102 > 现价 100）：不奖励，按计划自己的（更差的）RR 计
+    plan = _plan(entry=102.0, stop=93.87, targets=[115.0])
+    r = adjudicate(plan, _pack_px(100.0), bars_left=50)
+    assert r["rr_gate"][0] == r["rr_by_target"][0]
+    assert r["rr_by_target_at_decision"][0] > r["rr_gate"][0]
+
+
+def test_market_order_unaffected_by_decision_price():
+    plan = _plan(entry=100.0, stop=93.87, targets=[110.0])
+    r = adjudicate(plan, _pack_px(100.0), bars_left=50)
+    assert r["rr_gate"] == r["rr_by_target"]
+    assert not any("现价" in n for n in r["notes"])
+
+
+def test_short_entry_raised_cannot_inflate_rr():
+    # ds23 式：做空入场价从现价 11.43 抬到 11.659（风险分母 0.37→0.141）
+    base = {"side": "short", "stop": 11.8, "targets": [10.9],
+            "risk_frac": 0.01, "setup": "B3", "context": "下降"}
+    pack = _pack()
+    pack["last_close"] = 11.43
+    pack["swings"] = {"major": [{"bar": 5, "kind": "H", "close": 12.0, "anchor": 12.1}]}
+    inflated = adjudicate({**base, "entry": 11.659}, pack, bars_left=50)
+    assert inflated["verdict"] == "reject"      # 承诺 RR 5.4 被现价口径压回 1.43
+    assert inflated["rr_by_target"][0] > 3.0
+    assert inflated["rr_gate"][0] < 1.5

@@ -58,18 +58,46 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     fees = cfg["fees"]
     flags = flags or {}
     hard, soft = [], []
+    notes = []
     rr_by_target = [
         _rr(plan["entry"], plan["stop"], t, fees, plan.get("limit_in", False))
         for t in plan["targets"]
     ]
+    # 现价口径（2026-10-30 修正）：H1 只认「不优于现价的入场价」算出来的 RR。
+    #
+    # 原口径只看计划自己的 entry，于是把入场价往有利方向挪一点就能无界放大
+    # 承诺净 RR——做空入场价抬 2%，风险分母 (stop−entry) 缩小，RR 从 2.59 涨
+    # 到 7.98，H1/H2/H3 全过；但止损时 R ≈ −1 − 费用/风险，风险越小 |R| 越大，
+    # 实现 R 从 −1.031 反而恶化到 −1.083。**承诺 RR 与实际亏损方向相反**，
+    # 这是与「加远目标过门槛」同族的分母侧利用。
+    #
+    # 修法取 element-wise min：计划入场价优于现价时按现价重算（该价必然可达），
+    # 劣于现价时保留计划口径（不奖励追单）。零新常数；市价单 entry≈现价，
+    # 行为不变。代价：合法的「卖反弹」限价单拿不到更好的 RR，1.5 的门槛含义
+    # 变成「按现价可达」——这是裁决层「只能否决或降仓」的应有偏向。
+    px = pack.get("last_close")
+    rr_at_decision = None
+    if px:
+        rr_at_decision = [
+            _rr(px, plan["stop"], t, fees, plan.get("limit_in", False))
+            for t in plan["targets"]
+        ]
+    rr_gate = rr_by_target
+    if rr_at_decision:
+        rr_gate = [min(a, b) for a, b in zip(rr_by_target, rr_at_decision)]
+        if rr_gate[0] != rr_by_target[0]:
+            notes.append(
+                f"H1 按现价 {px} 计价：计划入场价 {plan['entry']} 优于现价，"
+                f"净RR {rr_by_target[0]} → {rr_gate[0]}"
+            )
     # H1 按**首目标**计价：回放（eval/replay.simulate_trade）就按 targets[0]
     # 结算，门槛必须与结算同口径。原先取末级目标，等于「加一个远目标就能
     # 过 1.5 门槛」，是「目标改近」的反向利用（2026-10-30 修正）。
-    rr_main = rr_by_target[0] if rr_by_target else None
+    rr_main = rr_gate[0] if rr_gate else None
     # 软规则另用末级目标的 RR：S1–S3 的阈值（2.5 / 2.0）是按末级口径标的，
     # 直接换首目标会让它们几乎恒成立。此处保持原标定，阈值重标定另案。
-    rr_soft = rr_by_target[-1] if rr_by_target else None
-    # H1 净 RR（按首目标计价，与回放结算同口径）
+    rr_soft = rr_gate[-1] if rr_gate else None
+    # H1 净 RR（按首目标 + 现价口径，与回放结算同口径）
     if rr_main is None or rr_main < RR_MIN:
         hard.append({"rule": "H1", "detail": f"净RR={rr_main} < {RR_MIN}（首目标）"})
     # H2 止损在结构外：止损须越过入场最近一侧的摆动极值（大小级别合并看；
@@ -112,7 +140,6 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # H6 模式停牌
     # 台账键是 (setup, 语境)，语境必须是枚举 上升/下降/震荡——否则永远查不中，
     # 规则静默失效（试点原先把假设 statement 自由文本塞进 context，即此坑）。
-    notes = []
     context = plan.get("context")
     if ledger is None:
         notes.append("H6 未生效：未提供台账")
@@ -148,7 +175,10 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         "hard_hits": hard,
         "soft_hits": soft,
         "risk_mult": risk_mult,
-        "rr_by_target": rr_by_target,
+        "rr_by_target": rr_by_target,          # 计划自己入场价算的（留档，不改语义）
+        "rr_by_target_at_decision": rr_at_decision,  # 按现价重算的
+        "rr_gate": rr_gate,                    # element-wise min，H1/S1–S3 实际用的
+        "decision_price": px,
         "size_hint": size_hint,
         "notes": notes,
     }
