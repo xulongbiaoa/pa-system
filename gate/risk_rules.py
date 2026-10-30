@@ -10,6 +10,8 @@ import math
 
 from perception.features import load_config, net_rr as _net_rr
 
+from .sizing import suggest
+
 RR_MIN = 1.5
 RISK_FRAC_MAX = 0.01  # core 红线 3「单笔风险 1%」；原为 0.015，源自方案原文
 # 的「1% 到 1.5%」，未跟冻结口径收窄（2026-10-30 对齐）
@@ -131,11 +133,22 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     if flags.get("decaying") and (rr_soft or 0) < 2.0:
         soft.append({"rule": "S3", "detail": "衰减边缘且净RR<2.0，仓位减半"})
         risk_mult *= 0.5
+    # 仓位建议（只建议，不否决；上限仍是 H3 的 RISK_FRAC_MAX）
+    # 台账格子带 b（已实现净盈亏比）才给凯利；缺 b 就退回计划首目标 RR 并标注。
+    size_hint = None
+    if ledger is not None and context in CONTEXTS and plan.get("setup"):
+        cell = ledger.get((plan["setup"], context))
+        if cell:
+            b = cell.get("b") or rr_main
+            size_hint = suggest(cell.get("wins", 0), cell.get("n", 0), b,
+                                cap=RISK_FRAC_MAX)
+            size_hint["b_source"] = "ledger" if cell.get("b") else "plan_first_target"
     return {
         "verdict": "reject" if hard else "pass",
         "hard_hits": hard,
         "soft_hits": soft,
         "risk_mult": risk_mult,
         "rr_by_target": rr_by_target,
+        "size_hint": size_hint,
         "notes": notes,
     }

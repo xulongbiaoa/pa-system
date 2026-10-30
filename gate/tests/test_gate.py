@@ -97,6 +97,26 @@ def test_h6_requires_context_enum():
     assert any("context" in n for n in r["notes"])
 
 
+def test_size_hint_never_exceeds_risk_cap():
+    """凯利建议只能降不能升：上限是 H3，建议值必须 ≤ 1%。"""
+    from gate.risk_rules import RISK_FRAC_MAX
+    ledger = {("A1", "上升"): {"n": 400, "wins": 340, "b": 3.0}}  # 极端优势
+    r = adjudicate(_plan(), _pack(), bars_left=50, ledger=ledger)
+    h = r["size_hint"]
+    assert h is not None and h["binding"] == "cap"
+    assert h["f_applied"] == RISK_FRAC_MAX and h["b_source"] == "ledger"
+
+
+def test_size_hint_zero_when_evidence_thin():
+    ledger = {("A1", "上升"): {"n": 2, "wins": 1, "b": 2.84}}
+    h = adjudicate(_plan(), _pack(), bars_left=50, ledger=ledger)["size_hint"]
+    assert h["f_applied"] == 0.0 and h["binding"] == "evidence"
+
+
+def test_no_size_hint_without_ledger_cell():
+    assert adjudicate(_plan(), _pack(), bars_left=50)["size_hint"] is None
+
+
 def test_h2_round_level_reject_any_price_scale():
     # 关口判据按价格量级取步长：1.58 这类价格也有整数关口（0.05 一档），
     # 原来的 round(stop) 判据对非整数报价资产恒不命中（死代码）
