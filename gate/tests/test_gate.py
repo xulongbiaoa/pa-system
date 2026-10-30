@@ -74,12 +74,14 @@ def test_h1_uses_first_target_not_last():
     assert r["rr_by_target"][0] < 1.5 < r["rr_by_target"][-1]
 
 
-def test_soft_rule_uses_last_target_rr():
-    # S1 阈值 2.5 按末级口径标定：首目标 1.6 / 末级 3.3 → 不降仓
+def test_soft_rule_no_longer_depends_on_target_choice():
+    # 旧行为：S1 按**末级目标** RR 判断（首目标 1.6 / 末级 3.3 → 不降仓），
+    # 于是「多写一个远目标」就能免掉降仓。2026-10-30 去掉 RR 条件后该漏洞
+    # 一并消失：加不加远目标都降仓。
     r = adjudicate(_plan(targets=[110.0, 130.0]), _pack(), bars_left=50,
                    flags={"parabolic": True})
-    assert r["verdict"] == "pass" and r["risk_mult"] == 1.0
-    assert not r["soft_hits"]
+    assert r["risk_mult"] == 0.5
+    assert any(s["rule"] == "S1" for s in r["soft_hits"])
 
 
 def test_h6_skipped_notes_when_ledger_missing():
@@ -230,11 +232,43 @@ def test_design_target_does_not_veto_below_target():
     assert not any(h["rule"] == "H1" for h in r["hard_hits"])
 
 
-def test_soft_rules_degenerate_at_design_target():
-    # 已知行为（非缺陷，锁住以便将来重标定时看得见）：设计目标定在毛 2.0 后，
-    # S1 门槛 2.5 与 S3 门槛 2.0 对**每一个**合格的 2:1 单都成立，两个条件
-    # 实际变成恒真——即「抛物线就减半」「衰减就减半」，RR 那半句是死代码。
+def test_soft_rules_unconditional_after_design_target():
+    # 设计目标定为盈亏比 2:1 后，S1 的 <2.5 与 S3 的 <2.0 对每个合格计划都
+    # 恒成立，条件已是死代码——2026-10-30 直接去掉，改为无条件减仓。
     r = adjudicate(_plan(targets=[112.26]), _pack(), bars_left=50,
                    flags={"parabolic": True, "decaying": True})
     rules = {s["rule"] for s in r["soft_hits"]}
     assert rules == {"S1", "S3"} and r["risk_mult"] == 0.25
+
+
+def test_soft_rules_now_also_catch_high_rr_plans():
+    # 去掉 RR 条件后是**收紧**：净 RR 2.87 的计划原先逃过 S1，现在也要减半
+    r = adjudicate(_plan(targets=[118.0]), _pack(), bars_left=50,
+                   flags={"parabolic": True})
+    assert r["rr_gate"][-1] > 2.5
+    assert any(s["rule"] == "S1" for s in r["soft_hits"])
+    assert r["risk_mult"] == 0.5
+
+
+# --- 毛目标与净地板的量纲：地板不能高过设计目标能给的净 RR -------------------
+
+
+def test_design_target_net_shrinks_with_tight_stop():
+    from gate.risk_rules import net_rr_of_design_target
+    vals = [net_rr_of_design_target(f) for f in (0.002, 0.005, 0.01, 0.05)]
+    assert vals == sorted(vals)                 # 止损越宽，净 RR 越高
+    assert net_rr_of_design_target(0.01) < 2.0  # 毛 2:1 的净 RR 永远低于 2
+
+
+def test_floor_must_stay_below_design_target_net():
+    # 护栏：红线地板若抬到 2.0 净，所有合格的毛 2:1 单都会被自己拒掉
+    from gate.risk_rules import RR_MIN, min_stop_frac_for_floor, net_rr_of_design_target
+    assert RR_MIN < net_rr_of_design_target(0.01)
+    assert min_stop_frac_for_floor(2.0) is None
+
+
+def test_min_stop_frac_for_floor():
+    # 毛 2:1 要过 1.5 净地板，止损至少占价约 0.5%（解析解 0.501%）
+    from gate.risk_rules import min_stop_frac_for_floor
+    f = min_stop_frac_for_floor(1.5)
+    assert 0.0049 < f < 0.0052

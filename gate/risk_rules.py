@@ -33,6 +33,46 @@ def _rr_gross(entry, stop, target):
     return round(abs(target - entry) / risk, 4) if risk > 0 else None
 
 
+def net_rr_of_design_target(stop_frac=0.01, cfg=None, limit_in=False):
+    """设计目标（毛 2:1）在给定止损宽度下的**净** RR。
+
+    毛 RR 是设计目标，红线 1 是净 RR 地板，两者不同量纲。费用按价格收，
+    所以止损越窄，费用占风险的比例越大，净 RR 越低：
+
+        止损占价 0.5% → 净 1.499   1.0% → 1.726   5.0% → 1.940
+
+    这意味着两件事：① 地板不能抬到 2.0 净（会把所有合格的 2:1 单拒掉，
+    实测 9/9）；② 做 2:1 的止损不能窄于约 0.5% 的价格，否则费用本身就
+    把单子压到地板以下——这不是规则问题，是费用算术。
+    """
+    cfg = cfg or load_config()
+    target_rr = cfg.get("target_rr")
+    if not target_rr:
+        return None
+    risk = float(stop_frac)
+    entry, stop = 1.0, 1.0 - risk
+    target = entry + target_rr * risk
+    return _net_rr(entry, stop, target, None, cfg["fees"], limit_in=limit_in)
+
+
+def min_stop_frac_for_floor(rr_min=RR_MIN, cfg=None, hi=0.5):
+    """反解：毛 2:1 的止损至少要占价格多少，净 RR 才过得去 rr_min。
+
+    二分而非解析解——解析解依赖费用只按价格线性收这个假设，一旦费率结构
+    变成固定佣金就不成立；二分对任何费用结构都成立。
+    """
+    lo = 1e-6
+    if (net_rr_of_design_target(hi, cfg) or 0) < rr_min:
+        return None  # 止损再宽也过不了（地板高过毛目标能给的净 RR）
+    for _ in range(80):
+        mid = (lo + hi) / 2
+        if (net_rr_of_design_target(mid, cfg) or 0) < rr_min:
+            lo = mid
+        else:
+            hi = mid
+    return round(hi, 6)
+
+
 def _round_step(price):
     """该价位上「整数关口」的密度：按数量级取 mag/20。
 
@@ -105,9 +145,6 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # 结算，门槛必须与结算同口径。原先取末级目标，等于「加一个远目标就能
     # 过 1.5 门槛」，是「目标改近」的反向利用（2026-10-30 修正）。
     rr_main = rr_gate[0] if rr_gate else None
-    # 软规则另用末级目标的 RR：S1–S3 的阈值（2.5 / 2.0）是按末级口径标的，
-    # 直接换首目标会让它们几乎恒成立。此处保持原标定，阈值重标定另案。
-    rr_soft = rr_gate[-1] if rr_gate else None
     # H1 净 RR（按首目标 + 现价口径，与回放结算同口径）
     if rr_main is None or rr_main < RR_MIN:
         hard.append({"rule": "H1", "detail": f"净RR={rr_main} < {RR_MIN}（首目标）"})
@@ -160,16 +197,23 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         st = ledger.get((plan["setup"], context))
         if st and st.get("n", 0) >= 3 and st.get("wins", 0) == 0:
             hard.append({"rule": "H6", "detail": f"{plan['setup']}×{context} 样本{st['n']} 0胜，停牌"})
-    # 软规则：降仓（用末级目标 RR，保持 S1–S3 原标定口径）
+    # 软规则：降仓。
+    # 2026-10-30 去掉 S1/S3 的 RR 条件：设计目标定为盈亏比 2:1（净 RR ≈ 1.95）
+    # 后，S1 的 `< 2.5` 与 S3 的 `< 2.0` 对**每一个**合格计划都恒成立，条件
+    # 实际是死代码，只剩「抛物线就减半」「衰减就减半」在起作用。与其留一个
+    # 永远为真的条件让人以为还有闸门，不如写明它是无条件减仓。
+    # 注意这是**收紧**：净 RR ≥ 2.5 的计划原先逃过 S1，现在也要减半。方向与
+    # 「裁决层只能否决或降仓」一致，故无需另案；若要改回有条件，须先证明
+    # 高 RR 能豁免抛物线风险，那是放宽，要证据。
     risk_mult = 1.0
-    if flags.get("parabolic") and (rr_soft or 0) < 2.5:
-        soft.append({"rule": "S1", "detail": "抛物线高潮后首次恢复，净RR<2.5，仓位减半"})
+    if flags.get("parabolic"):
+        soft.append({"rule": "S1", "detail": "抛物线高潮后首次恢复，仓位减半"})
         risk_mult *= 0.5
     if flags.get("trample") and not flags.get("second_bar_confirmed"):
         soft.append({"rule": "S2", "detail": "踩踏继承区未见第二根确认，仓位减半"})
         risk_mult *= 0.5
-    if flags.get("decaying") and (rr_soft or 0) < 2.0:
-        soft.append({"rule": "S3", "detail": "衰减边缘且净RR<2.0，仓位减半"})
+    if flags.get("decaying"):
+        soft.append({"rule": "S3", "detail": "衰减边缘，仓位减半"})
         risk_mult *= 0.5
     # 仓位建议（只建议，不否决；上限仍是 H3 的 RISK_FRAC_MAX）
     # 台账格子带 b（已实现净盈亏比）才给凯利；缺 b 就退回计划首目标 RR 并标注。
