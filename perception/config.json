@@ -1,0 +1,1 @@
+{"ema_period":20,"fees":{"limit_in":0.0002,"market_in":0.0005,"out":0.0005},"gap_buffer_frac":0.25,"strong_break_body_min":0.6,"strong_break_range_mult":1.3,"swing_window_major":5,"swing_window_minor":2}
