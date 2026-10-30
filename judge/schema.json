@@ -241,9 +241,45 @@
    ]
   },
   "pending_conditions": {
-   "description": "候选挂起时写明重新合格的条件",
+   "description": "挂起候选的结构化记录：哪个 setup、缺哪几项、等什么到达（新判断必须用对象形式）",
    "items": {
-    "type": "string"
+    "anyOf": [
+     {
+      "type": "string",
+      "description": "旧格式（历史判断），新判断禁用"
+     },
+     {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "setup",
+       "missing"
+      ],
+      "properties": {
+       "setup": {
+        "enum": [
+         "B1",
+         "B2",
+         "B3",
+         "A1",
+         "A2",
+         "C1",
+         "G1"
+        ]
+       },
+       "missing": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        },
+        "minItems": 1
+       },
+       "watch": {
+        "type": "string"
+       }
+      }
+     }
+    ]
    },
    "type": "array"
   },

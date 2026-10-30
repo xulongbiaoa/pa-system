@@ -100,3 +100,16 @@ def test_dimension_missing_errors():
     del conds[0]["dimension"]
     errs = validate_judgment(_judgment(_cand(conditions=conds)))
     assert any("dimension" in e for e in errs)
+
+
+def test_pending_structured_ok_and_bad():
+    j = _judgment(_cand())
+    j["pending_conditions"] = [{"setup": "G1", "missing": ["R3 到达行为"],
+                                 "watch": "等回踩 0.3391 出现顺势强 K"}]
+    assert validate_judgment(j) == []
+    j["pending_conditions"] = [{"setup": "G1", "missing": []}]
+    assert any("missing" in e for e in validate_judgment(j))
+    j["pending_conditions"] = [{"setup": "XX", "missing": ["x"]}]
+    assert any("setup 非法" in e for e in validate_judgment(j))
+    j["pending_conditions"] = ["旧格式字符串"]  # 存量容忍
+    assert validate_judgment(j) == []

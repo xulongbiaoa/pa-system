@@ -97,6 +97,15 @@ def validate_judgment(j):
                         errs.append("plan.void.side 必须是 above/below")
     if not (j.get("candidates")) and j.get("no_trade_reason") not in NO_TRADE:
         errs.append("无候选时 no_trade_reason 必须是枚举值")
+    # pending_conditions 结构化（2026-10-30 职责归位）：字符串是旧格式、
+    # 容忍存量；对象形式必须带合法 setup 与非空 missing，否则近失信息
+    # 等于白写。
+    for pc in j.get("pending_conditions") or []:
+        if isinstance(pc, dict):
+            if pc.get("setup") not in SETUPS:
+                errs.append(f"pending_conditions 的 setup 非法：{pc.get('setup')}")
+            if not (isinstance(pc.get("missing"), list) and pc["missing"]):
+                errs.append("pending_conditions 对象必须带非空 missing 数组")
     return errs
 
 
