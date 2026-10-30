@@ -116,7 +116,13 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
     map_anchors = map_anchors or []
     closes = [b["c"] for b in bars]
     minor = find_swings(bars, cfg["swing_window_minor"])
-    major = find_swings(bars, cfg["swing_window_major"])
+    # 尺度适配 v1（2026-10-30，官网盲测扫窗实验）：major 窗口是相对量。
+    # 固定 5 在 81 根日盘窗上让晨间主腿整段消失（首腿迟到 bar 30）、
+    # 10-27 标签误判下降；窗 3 时晨腿出现（起点 7751.5 ≈ 答案 7752）、
+    # 10-27 标签转震荡与答案一致。480 根生产段仍用 config 的 5——
+    # 证据只覆盖短窗，故只给短窗（<150 根）降到 3，长窗不动。
+    major_window = 3 if len(bars) < 150 else cfg["swing_window_major"]
+    major = find_swings(bars, major_window)
     legs = legs_from_swings(major)
     emas = ema_series(closes, cfg["ema_period"])
     ema_now = emas[-1] if emas else None
