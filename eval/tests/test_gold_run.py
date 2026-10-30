@@ -8,6 +8,13 @@ import os
 import shutil
 import tempfile
 
+import pytest
+
+# 2026-10-30：knowledge/gold 已按用户指令整目录删除（commit b093e18）、
+# 由 gold-book 取代，本套件的夹具随之退役；打分逻辑保留待 gold-book
+# 判断跑批时复用，故整模块 skip 而非删除。
+pytest.skip("旧 gold 已删除（b093e18），夹具退役", allow_module_level=True)
+
 from gold_run import score
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
