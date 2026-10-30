@@ -19,6 +19,15 @@ def test_tiny_price_precision_not_zeroed():
     assert pack["seg_avg_range"] > 0
 
 
+def test_pack_carries_last_close():
+    # 决策点价格必须进特征包：缺它则 entry 无基准可校验（见 features.py 注释）
+    closes = [100 + i for i in range(30)]
+    bars = [{"t": i, "o": c, "h": c + 1, "l": c - 1, "c": c, "v": 1}
+            for i, c in enumerate(closes)]
+    pack = build_feature_pack(bars, [])
+    assert pack["last_close"] == 129
+
+
 def test_pullback_dir_against_follows_trend():
     # 上升趋势末端出现回调腿：dir_against 必须是 down（逆势方向）
     closes = [100 + i for i in range(30)] + [128, 126, 124]

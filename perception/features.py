@@ -169,6 +169,11 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
             }
     return {
         "bars": len(bars),
+        # 决策点价格（2026-10-30 补）：特征包原先**没有任何绝对价位**——
+        # swings 带 anchor、ema 带 value，唯独「现在价格在哪」缺字段。后果是
+        # 判断层写 entry 时无机器可读基准、裁决层无法校验入场价与现价的关系
+        # （实测：把做空入场价抬高 2%，净 RR 从 2.59 涨到 7.98，H1/H2/H3 全过）。
+        "last_close": None if not closes else r6(closes[-1]),
         "swings": {"minor": minor, "major": major},
         "legs_major": legs,
         "trend": trend,
