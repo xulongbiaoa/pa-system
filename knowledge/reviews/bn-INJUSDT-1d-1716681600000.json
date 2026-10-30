@@ -1,0 +1,17 @@
+{
+ "segment": "bn-INJUSDT-1d-1716681600000",
+ "context": "上升",
+ "verdict": "no_trade",
+ "setup": "A1",
+ "side": null,
+ "qualified": null,
+ "entry": null,
+ "stop": null,
+ "targets": [],
+ "no_trade_reason": "位置不对",
+ "primary_hypothesis": "",
+ "key_evidence": [
+  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+ ],
+ "confidence_note": "自复核报告转录；annotations.jsonl 未随附，待补"
+}

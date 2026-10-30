@@ -10,7 +10,28 @@ import os
 from .fortress import build_fortress_bands, trend_age
 from .gaps import build_ledger, trimmed_avg_range
 from .legs import legs_from_swings
+from .precision import r6
 from .swings import find_swings
+
+
+def gap_consistency(score, open_gaps):
+    """趋势标签与缺口账本的一致性：套空头 = 上行压力，套多头 = 下行压力。
+    标签方向与压力方向相反 = 冲突（标签可能已过期，判断层须警觉）。"""
+    ts = sum(1 for g in open_gaps if g["trapped"] == "short")
+    tl = sum(1 for g in open_gaps if g["trapped"] == "long")
+    if not open_gaps:
+        verdict = "无敞开缺口"
+    elif score == 0:
+        verdict = "不适用（震荡）"
+    else:
+        pressure = 1 if ts > tl else -1 if tl > ts else 0
+        if pressure == 0:
+            verdict = "混合"
+        elif (score > 0) == (pressure > 0):
+            verdict = "一致"
+        else:
+            verdict = "冲突"
+    return {"verdict": verdict, "trapped_short": ts, "trapped_long": tl}
 
 _CFG = None
 
@@ -106,34 +127,51 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
         if pairs:
             ride = round(sum(1 for c, e in pairs if c > e) / len(pairs), 4)
     ledger = build_ledger(bars, map_anchors, cfg)
+    trend = trend_state(major)
+    open_gaps = [g for g in ledger if g["status"] == "open"]
+    trend["window"] = len(bars)
+    trend["gap_consistency"] = gap_consistency(trend["score"], open_gaps)
+    # 回调口径（2026-10-30 按外部复核意见修正）：参照方向 = 趋势标签方向
+    # （±2 时），标签不定才退回最后一条腿的方向。dir_against = 最近一条
+    # 逆势腿的方向；depth_ratio ≥ 1 = 回吐已超过被回吐腿，标 expired。
     pullback = None
     if legs:
-        last = legs[-1]
-        prev_same = next((l for l in reversed(legs[:-1]) if l["dir"] == last["dir"]), None)
-        if prev_same and last["dir"] != prev_same["dir"]:
-            pass
-        # 回调 = 与前一条同向前进腿方向相反的最近腿
-        adv = next((l for l in reversed(legs) if l["dir"] != last["dir"]), None)
-        if last["height"] and adv and adv["height"]:
+        if trend["score"] >= 2:
+            ref = "up"
+        elif trend["score"] <= -2:
+            ref = "down"
+        else:
+            ref = legs[-1]["dir"]
+        pb = next((l for l in reversed(legs) if l["dir"] != ref), None)
+        adv = None
+        if pb:
+            adv = next(
+                (l for l in reversed(legs)
+                 if l["dir"] == ref and l["to_bar"] <= pb["from_bar"]),
+                None,
+            )
+        if pb and adv and adv["height"]:
+            ratio = pb["height"] / adv["height"]
             pullback = {
-                "depth_ratio": round(last["height"] / adv["height"], 4),
-                "bars": last["to_bar"] - last["from_bar"],
-                "dir_against": last["dir"],
+                "depth_ratio": round(ratio, 4),
+                "bars": pb["to_bar"] - pb["from_bar"],
+                "dir_against": pb["dir"],
+                "expired": ratio >= 1.0,
             }
     return {
         "bars": len(bars),
         "swings": {"minor": minor, "major": major},
         "legs_major": legs,
-        "trend": trend_state(major),
+        "trend": trend,
         "ema": {
             "period": cfg["ema_period"],
-            "value": None if ema_now is None else round(ema_now, 6),
-            "slope3": None if ema_now is None else round(ema_now - ema_prev, 6),
+            "value": None if ema_now is None else r6(ema_now),
+            "slope3": None if ema_now is None else r6(ema_now - ema_prev),
             "ride_ratio_20": ride,
             "confidence": "确定" if ema_now is not None else "未定",
         },
         "last_bar": bar_stats(bars[-1], bars[-2] if len(bars) > 1 else None),
-        "seg_avg_range": round(trimmed_avg_range(bars), 6),
+        "seg_avg_range": r6(trimmed_avg_range(bars)),
         "pullback": pullback,
         "gaps": {
             "open": [g for g in ledger if g["status"] == "open"],

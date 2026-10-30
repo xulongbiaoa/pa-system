@@ -9,6 +9,7 @@ far_undefined（远边未定，不得当作完整要塞用）。
 """
 
 from .gaps import trimmed_avg_range
+from .precision import r6
 
 
 def build_fortress_bands(bars, swings, seg_avg=None):
@@ -45,8 +46,8 @@ def build_fortress_bands(bars, swings, seg_avg=None):
                 prev = side
         bands.append(
             {
-                "lo": round(lo, 6),
-                "hi": round(hi, 6),
+                "lo": r6(lo),
+                "hi": r6(hi),
                 "anchors": len(cl),
                 "far_undefined": far_undefined,
                 "tests": tests,

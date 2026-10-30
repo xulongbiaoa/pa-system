@@ -1,0 +1,19 @@
+{
+ "segment": "bn-DOTUSDT-4h-1767513600000",
+ "context": "下降",
+ "verdict": "candidate",
+ "setup": "A2",
+ "side": "short",
+ "qualified": true,
+ "entry": 1.538,
+ "stop": 1.585,
+ "targets": [
+  1.399
+ ],
+ "no_trade_reason": null,
+ "primary_hypothesis": "1.896 起下降趋势未走完、1.576 为反弹上限，A2 已触发",
+ "key_evidence": [
+  "外部 AI 盲审报告逐段表（2026-10-30，用户转交）"
+ ],
+ "confidence_note": "外部复核报告（2026-10-30）放行单之一；计划数值自报告正文转录，annotations.jsonl 未随附"
+}

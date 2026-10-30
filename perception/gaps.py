@@ -1,3 +1,4 @@
+from .precision import r6
 """缺口账本（定义 v0.2 定版口径）。
 
 缺口 = 有人被套、没出来的地方。一条缺口 = 一条锚线，只记单线。
@@ -144,7 +145,7 @@ def build_ledger(bars, map_anchors, cfg):
     for a in map_anchors:
         rec = _run_anchor(bars, float(a["price"]), a.get("source", "map"))
         if rec:
-            rec["depth"] = round(rec["depth"], 6)
+            rec["depth"] = r6(rec["depth"])
             out.append(rec)
     # 起点锚：强突破 K（振幅与实体达标）收盘越过任一地图锚时，在其背向
     # 极值立一条起点缺口。
@@ -174,7 +175,7 @@ def build_ledger(bars, map_anchors, cfg):
         seen_origin.add(origin_price)
         rec = _run_anchor(bars, origin_price, "origin", birth_hint=i)
         if rec:
-            rec["depth"] = round(rec["depth"], 6)
+            rec["depth"] = r6(rec["depth"])
             out.append(rec)
     out.sort(key=lambda r: r["opened_at"])
     return out
