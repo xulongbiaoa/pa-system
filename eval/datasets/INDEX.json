@@ -1,0 +1,418 @@
+{
+ "splits": {
+  "dev": [
+   {
+    "id": "ds21",
+    "symbol": "ADAUSDT",
+    "interval": "15m",
+    "t_start": 1759348800000,
+    "t_end": 1759779900000,
+    "sha256": "1fbdea21c9e73951"
+   },
+   {
+    "id": "bn-AVAXUSDT-15m-1726945200000",
+    "symbol": "AVAXUSDT",
+    "interval": "15m",
+    "t_start": 1726945200000,
+    "t_end": 1727376300000,
+    "sha256": "996256ca9ca467fc"
+   },
+   {
+    "id": "bn-BNBUSDT-15m-1699815600000",
+    "symbol": "BNBUSDT",
+    "interval": "15m",
+    "t_start": 1699815600000,
+    "t_end": 1700246700000,
+    "sha256": "5b466a2b695273cf"
+   },
+   {
+    "id": "bn-BTCUSDT-15m-1752736500000",
+    "symbol": "BTCUSDT",
+    "interval": "15m",
+    "t_start": 1752736500000,
+    "t_end": 1753167600000,
+    "sha256": "8d00e0c9db295079"
+   },
+   {
+    "id": "bn-DOGEUSDT-15m-1709406000000",
+    "symbol": "DOGEUSDT",
+    "interval": "15m",
+    "t_start": 1709406000000,
+    "t_end": 1709837100000,
+    "sha256": "8c81345f09b6ad9c"
+   },
+   {
+    "id": "ds04",
+    "symbol": "DOGEUSDT",
+    "interval": "15m",
+    "t_start": 1759644000000,
+    "t_end": 1760075100000,
+    "sha256": "7ec140471d630d42"
+   },
+   {
+    "id": "bn-FILUSDT-15m-1729667700000",
+    "symbol": "FILUSDT",
+    "interval": "15m",
+    "t_start": 1729667700000,
+    "t_end": 1730098800000,
+    "sha256": "35e968a6feea07f7"
+   },
+   {
+    "id": "bn-FILUSDT-15m-1747162800000",
+    "symbol": "FILUSDT",
+    "interval": "15m",
+    "t_start": 1747162800000,
+    "t_end": 1747593900000,
+    "sha256": "cafa6181467b150e"
+   },
+   {
+    "id": "bn-LINKUSDT-15m-1764270000000",
+    "symbol": "LINKUSDT",
+    "interval": "15m",
+    "t_start": 1764270000000,
+    "t_end": 1764701100000,
+    "sha256": "da2684052970865b"
+   },
+   {
+    "id": "bn-SOLUSDT-15m-1755284400000",
+    "symbol": "SOLUSDT",
+    "interval": "15m",
+    "t_start": 1755284400000,
+    "t_end": 1755715500000,
+    "sha256": "70f7895b8fa6cee1"
+   },
+   {
+    "id": "ds12",
+    "symbol": "SUIUSDT",
+    "interval": "15m",
+    "t_start": 1716409800000,
+    "t_end": 1716840900000,
+    "sha256": "02c1bb7719554fdb"
+   },
+   {
+    "id": "bn-SUIUSDT-15m-1762455600000",
+    "symbol": "SUIUSDT",
+    "interval": "15m",
+    "t_start": 1762455600000,
+    "t_end": 1762886700000,
+    "sha256": "5b5c7d084629678e"
+   },
+   {
+    "id": "bn-XRPUSDT-15m-1723143600000",
+    "symbol": "XRPUSDT",
+    "interval": "15m",
+    "t_start": 1723143600000,
+    "t_end": 1723574700000,
+    "sha256": "1ca3f8cae407d4a4"
+   },
+   {
+    "id": "bn-APTUSDT-1d-1707004800000",
+    "symbol": "APTUSDT",
+    "interval": "1d",
+    "t_start": 1707004800000,
+    "t_end": 1748390400000,
+    "sha256": "9dde9a93e5ae0a1a"
+   },
+   {
+    "id": "ds22",
+    "symbol": "AVAXUSDT",
+    "interval": "1d",
+    "t_start": 1744329600000,
+    "t_end": 1785715200000,
+    "sha256": "0339a15df46fd28a"
+   },
+   {
+    "id": "ds08",
+    "symbol": "BNBUSDT",
+    "interval": "1d",
+    "t_start": 1707436800000,
+    "t_end": 1748822400000,
+    "sha256": "d06abd2fbc89f20b"
+   },
+   {
+    "id": "bn-INJUSDT-1d-1716681600000",
+    "symbol": "INJUSDT",
+    "interval": "1d",
+    "t_start": 1716681600000,
+    "t_end": 1758067200000,
+    "sha256": "acaa026ebacb2925"
+   },
+   {
+    "id": "ds11",
+    "symbol": "LINKUSDT",
+    "interval": "1d",
+    "t_start": 1718755200000,
+    "t_end": 1760140800000,
+    "sha256": "a6b71887f04c14d4"
+   },
+   {
+    "id": "bn-LTCUSDT-1d-1722470400000",
+    "symbol": "LTCUSDT",
+    "interval": "1d",
+    "t_start": 1722470400000,
+    "t_end": 1763856000000,
+    "sha256": "b5f29cd0ce55bd42"
+   },
+   {
+    "id": "ds09",
+    "symbol": "ADAUSDT",
+    "interval": "1h",
+    "t_start": 1738155600000,
+    "t_end": 1739880000000,
+    "sha256": "2907408b101d890a"
+   },
+   {
+    "id": "bn-ATOMUSDT-1h-1725123600000",
+    "symbol": "ATOMUSDT",
+    "interval": "1h",
+    "t_start": 1725123600000,
+    "t_end": 1726848000000,
+    "sha256": "d1feb9fca92fa611"
+   },
+   {
+    "id": "ds13",
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "t_start": 1784386800000,
+    "t_end": 1786111200000,
+    "sha256": "fcf6f49a3a1df40d"
+   },
+   {
+    "id": "bn-SEIUSDT-1h-1727629200000",
+    "symbol": "SEIUSDT",
+    "interval": "1h",
+    "t_start": 1727629200000,
+    "t_end": 1729353600000,
+    "sha256": "55a1b139ef4dde64"
+   },
+   {
+    "id": "ds03",
+    "symbol": "SOLUSDT",
+    "interval": "1h",
+    "t_start": 1735804800000,
+    "t_end": 1737529200000,
+    "sha256": "eee276f3a58e873d"
+   },
+   {
+    "id": "ds24",
+    "symbol": "SUIUSDT",
+    "interval": "1h",
+    "t_start": 1788048000000,
+    "t_end": 1789772400000,
+    "sha256": "367a6a62baacbe7c"
+   },
+   {
+    "id": "bn-ARBUSDT-4h-1763539200000",
+    "symbol": "ARBUSDT",
+    "interval": "4h",
+    "t_start": 1763539200000,
+    "t_end": 1770436800000,
+    "sha256": "b0a50ecc107d74e2"
+   },
+   {
+    "id": "ds10",
+    "symbol": "AVAXUSDT",
+    "interval": "4h",
+    "t_start": 1725004800000,
+    "t_end": 1731902400000,
+    "sha256": "e5b1cf4d32435506"
+   },
+   {
+    "id": "ds16",
+    "symbol": "DOGEUSDT",
+    "interval": "4h",
+    "t_start": 1763294400000,
+    "t_end": 1770192000000,
+    "sha256": "73a762210e7b49e5"
+   },
+   {
+    "id": "ds23",
+    "symbol": "LINKUSDT",
+    "interval": "4h",
+    "t_start": 1724270400000,
+    "t_end": 1731168000000,
+    "sha256": "3f8d3c96e1f72fc8"
+   },
+   {
+    "id": "ds07",
+    "symbol": "PEPEUSDT",
+    "interval": "4h",
+    "t_start": 1713859200000,
+    "t_end": 1720756800000,
+    "sha256": "c13131b7ee7c7dea"
+   },
+   {
+    "id": "ds19",
+    "symbol": "PEPEUSDT",
+    "interval": "4h",
+    "t_start": 1757361600000,
+    "t_end": 1764259200000,
+    "sha256": "1ce9ce52a8e08388"
+   }
+  ],
+  "val": [
+   {
+    "id": "bn-BTCUSDT-15m-1693854000000",
+    "symbol": "BTCUSDT",
+    "interval": "15m",
+    "t_start": 1693854000000,
+    "t_end": 1694285100000,
+    "sha256": "4f9fc92b8ea965a5"
+   },
+   {
+    "id": "bn-ETHUSDT-15m-1717959600000",
+    "symbol": "ETHUSDT",
+    "interval": "15m",
+    "t_start": 1717959600000,
+    "t_end": 1718390700000,
+    "sha256": "8f3504b9ee9aaf43"
+   },
+   {
+    "id": "ds06",
+    "symbol": "NEARUSDT",
+    "interval": "15m",
+    "t_start": 1768248900000,
+    "t_end": 1768680000000,
+    "sha256": "e89c214ccb05992e"
+   },
+   {
+    "id": "bn-WIFUSDT-15m-1732906800000",
+    "symbol": "WIFUSDT",
+    "interval": "15m",
+    "t_start": 1732906800000,
+    "t_end": 1733337900000,
+    "sha256": "a48e087179a700d7"
+   },
+   {
+    "id": "ds20",
+    "symbol": "BNBUSDT",
+    "interval": "1d",
+    "t_start": 1722988800000,
+    "t_end": 1764374400000,
+    "sha256": "e3a343f173a43fee"
+   },
+   {
+    "id": "ds15",
+    "symbol": "SOLUSDT",
+    "interval": "1d",
+    "t_start": 1726963200000,
+    "t_end": 1768348800000,
+    "sha256": "e2d21e4b53d409c4"
+   },
+   {
+    "id": "ds18",
+    "symbol": "NEARUSDT",
+    "interval": "1h",
+    "t_start": 1771426800000,
+    "t_end": 1773151200000,
+    "sha256": "b5d828a3a2ef0e40"
+   },
+   {
+    "id": "bn-WIFUSDT-1h-1741712400000",
+    "symbol": "WIFUSDT",
+    "interval": "1h",
+    "t_start": 1741712400000,
+    "t_end": 1743436800000,
+    "sha256": "584be710f590bdfa"
+   },
+   {
+    "id": "bn-DOTUSDT-4h-1767513600000",
+    "symbol": "DOTUSDT",
+    "interval": "4h",
+    "t_start": 1767513600000,
+    "t_end": 1774411200000,
+    "sha256": "13b29572186bed98"
+   },
+   {
+    "id": "bn-TIAUSDT-4h-1742803200000",
+    "symbol": "TIAUSDT",
+    "interval": "4h",
+    "t_start": 1742803200000,
+    "t_end": 1749700800000,
+    "sha256": "20af09bd0876c016"
+   }
+  ],
+  "test": [
+   {
+    "id": "ds01",
+    "symbol": "BTCUSDT",
+    "interval": "15m",
+    "t_start": 1732061700000,
+    "t_end": 1732492800000,
+    "sha256": "66273f0a577c8390"
+   },
+   {
+    "id": "ds02",
+    "symbol": "ETHUSDT",
+    "interval": "15m",
+    "t_start": 1741988700000,
+    "t_end": 1742419800000,
+    "sha256": "19effad6c22c39b4"
+   },
+   {
+    "id": "bn-PEPEUSDT-15m-1738609200000",
+    "symbol": "PEPEUSDT",
+    "interval": "15m",
+    "t_start": 1738609200000,
+    "t_end": 1739040300000,
+    "sha256": "33070e62f5688122"
+   },
+   {
+    "id": "bn-WIFUSDT-15m-1751094900000",
+    "symbol": "WIFUSDT",
+    "interval": "15m",
+    "t_start": 1751094900000,
+    "t_end": 1751526000000,
+    "sha256": "848ab0feff5a198a"
+   },
+   {
+    "id": "bn-ETHUSDT-1d-1669334400000",
+    "symbol": "ETHUSDT",
+    "interval": "1d",
+    "t_start": 1669334400000,
+    "t_end": 1710720000000,
+    "sha256": "c87e425a38b0ca9e"
+   },
+   {
+    "id": "ds05",
+    "symbol": "XRPUSDT",
+    "interval": "1d",
+    "t_start": 1714089600000,
+    "t_end": 1755475200000,
+    "sha256": "b484c8b0727eb2e8"
+   },
+   {
+    "id": "bn-OPUSDT-1h-1732381200000",
+    "symbol": "OPUSDT",
+    "interval": "1h",
+    "t_start": 1732381200000,
+    "t_end": 1734105600000,
+    "sha256": "532338b8e5ba59af"
+   },
+   {
+    "id": "ds17",
+    "symbol": "XRPUSDT",
+    "interval": "1h",
+    "t_start": 1706238000000,
+    "t_end": 1707962400000,
+    "sha256": "811d818d479cb478"
+   },
+   {
+    "id": "ds14",
+    "symbol": "ETHUSDT",
+    "interval": "4h",
+    "t_start": 1765900800000,
+    "t_end": 1772798400000,
+    "sha256": "277386f44a78838e"
+   }
+  ]
+ },
+ "pattern": [
+  "dev",
+  "dev",
+  "dev",
+  "val",
+  "test"
+ ],
+ "seg_len": 480
+}
