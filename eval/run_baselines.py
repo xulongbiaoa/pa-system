@@ -4,6 +4,10 @@
 并给出 min_attempts=1 的放宽档作敏感性对照（A1 的两腿结构允许「更高的
 第二腿低点」，而 attempts 计数器要求先做出**新低**才计第二次尝试，两者
 不是一回事——原基线只触发 2/31 段，原因就在这一环）。
+
+2026-10-30 晚 v0.2：简单基线的计量已按上段诊断换成结构腿数
+（count_pullback_legs），min_attempts 现语义 = 腿数下限；本报告取代
+baselines-dev-v0.1.json（v0.1 的 simple n=2 是错计量下的产物，只作存档）。
 """
 
 import json
@@ -19,7 +23,7 @@ from baselines import (  # noqa: E402
 from replay import simulate_trade, summarize  # noqa: E402
 
 DS = os.path.join(os.path.dirname(__file__), "datasets", "dev")
-OUT = os.path.join(os.path.dirname(__file__), "reports", "baselines-dev-v0.1.json")
+OUT = os.path.join(os.path.dirname(__file__), "reports", "baselines-dev-v0.2.json")
 
 
 def load_segments():

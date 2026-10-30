@@ -44,12 +44,13 @@ def test_funnel_is_monotone_and_names_the_bottleneck():
     loose = funnel_stats(segs, min_attempts=1)
     strict = funnel_stats(segs, min_attempts=2)
     for f in (loose, strict):
-        assert f["bars"] >= f["ema_side"] >= f["pullback_cross"] >= f["attempts"]
-        assert f["attempts"] >= f["signals"]
-    # 记录当前事实：attempts≥2 只留下不到 1% 的候选（计数器要求先做新低才计
-    # 第二次尝试，而 A1 的两腿允许「更高的第二腿低点」）。数值变了就该有人
-    # 回头看是不是计数器语义被改了。
-    assert strict["attempts"] / loose["attempts"] < 0.05
+        assert f["bars"] >= f["ema_side"] >= f["pullback_cross"] >= f["legs"]
+        assert f["legs"] >= f["signals"]
+    # 计量事实（2026-10-30 晚换表后）：腿数计量下 legs≥2 留住约三成回调
+    # bar、30/31 段出信号；旧扩张型 attempts 计量同口径只剩 30 个 bar、
+    # 2/31 段（v0.1 报告存档）。若 legs 环占比掉回个位数，先查计量语义。
+    assert strict["legs"] / loose["legs"] > 0.2
+    assert strict["segments_with_signal"] >= 25
     assert strict["segments_with_signal"] <= loose["segments_with_signal"]
 
 

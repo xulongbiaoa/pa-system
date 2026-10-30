@@ -1,7 +1,11 @@
 """两条对照基线（与主系统同费用、同回放口径、同生命周期）。
 
-1. 简单基线：趋势内（EMA 斜率 + 价在 EMA 同侧）回调做出第二信号（H2/L2
-   尝试计数 ≥2）入场，止损在回调极值外加缓冲，固定 1.5R 目标。每段至多一笔。
+1. 简单基线：趋势内（EMA 斜率 + 价在 EMA 同侧）回调走出第二腿（结构腿数
+   ≥2）入场，止损在回调极值外加缓冲，固定 1.5R 目标。每段至多一笔。
+   计量修正（2026-10-30 晚）：原用 count_entry_attempts（扩张型尝试，须先
+   创新低才计第二次）冒充 H2——漏斗实测 4650 个 bar-实例只剩 30 个过环、
+   31 段仅 2 段出信号。H2 的「第二」是第二腿（允许更高低点），改用
+   count_pullback_legs（A1/A2 卡同一计量），摆动按 bar i 的因果前缀算。
 2. 随机基线：同止损结构（1× 段均幅）与 1.5R 目标，入场根与方向由种子
    随机决定。每段一笔。
 
@@ -20,13 +24,14 @@ import numpy as np
 
 from perception.features import ema_series, load_config
 from perception.gaps import trimmed_avg_range
-from perception.legs import count_entry_attempts
+from perception.legs import count_pullback_legs
+from perception.swings import find_swings
 from replay import simulate_trade
 
 WARM = 30
 DECISION = 180   # 决策点：入场窗末端（与段协议、试点一致）
 LIFECYCLE = 300  # 决策点后/入场后 300 根，到期按收盘出场
-FUNNEL_KEYS = ("bars", "ema_side", "pullback_cross", "attempts", "signals")
+FUNNEL_KEYS = ("bars", "ema_side", "pullback_cross", "legs", "signals")
 
 
 def _ema_full(bars, period):
@@ -51,6 +56,8 @@ def simple_baseline(seg, min_attempts=2, decision=DECISION, lifecycle=LIFECYCLE,
     出场目标，不改入场条件，所以**交易笔数不变、只有结局变**——这正是做
     「目标从 1.5R 换到 2R 值不值」对照时需要的性质（2026-10-30 用户定
     「盈亏比 2:1」后补此参数）。
+
+    min_attempts：历史参数名，现语义 = 回调结构腿数下限（默认 2 = H2/L2）。
     """
     cfg = load_config()
     bars = seg["bars"]
@@ -76,10 +83,11 @@ def simple_baseline(seg, min_attempts=2, decision=DECISION, lifecycle=LIFECYCLE,
         if not any((bars[k]["c"] - emas[k]) * sign < 0 for k in range(j, i + 1)):
             continue  # 价从未到 EMA 另一侧，不算回调
         _bump(funnel, "pullback_cross")
-        attempts = count_entry_attempts(bars, j, i, side)
-        if attempts < min_attempts:
+        swings = find_swings(bars[: i + 1], cfg["swing_window_minor"])
+        legs = count_pullback_legs(swings, j, i, "H" if side == "long" else "L")
+        if legs < min_attempts:
             continue
-        _bump(funnel, "attempts")
+        _bump(funnel, "legs")
         seg_avg = trimmed_avg_range(bars[: i + 1])
         if side == "long":
             extreme = min(b["l"] for b in bars[j : i + 1])
