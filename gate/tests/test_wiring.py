@@ -66,3 +66,43 @@ def test_cli_gate_passes_context_and_ledger():
 def test_gold_run_passes_ledger():
     src = (ROOT / "eval" / "gold_run.py").read_text(encoding="utf-8")
     assert "ledger=ledger" in src, "gold_run 没传台账"
+
+
+# ---- 特征包字段接线审计（2026-10-30 扩：MM 未进 pack 是第三例同病）----
+
+REQUIRED_PACK_FIELDS = [
+    "last_close", "swings", "legs_major", "trend", "ema", "last_bar",
+    "seg_avg_range", "pullback", "gaps", "fortress", "trend_age", "mm",
+]
+
+# pack 内已知未产出的子字段：登记原因，产出后必须移除登记。
+PENDING_PACK = {
+    "trend.recent": "近段子窗趋势标签未实现（标签为全窗口径，区间日尾盘高潮可带偏全窗）",
+}
+
+
+def _synthetic_pack():
+    from perception.features import build_feature_pack, load_config
+    bars, price = [], 100.0
+    # 锯齿行情：保证 major 摆动与腿都出现
+    for leg_dir, n in ((1, 12), (-1, 8), (1, 12), (-1, 8), (1, 10)):
+        for _ in range(n):
+            o = price
+            price += leg_dir * 0.8
+            bars.append({"o": o, "h": max(o, price) + 0.2,
+                         "l": min(o, price) - 0.2, "c": price})
+    return build_feature_pack(bars, [], load_config())
+
+
+def test_pack_required_fields_present():
+    pack = _synthetic_pack()
+    missing = [f for f in REQUIRED_PACK_FIELDS if f not in pack]
+    assert not missing, f"特征包缺字段（没接线）: {missing}"
+
+
+def test_pack_mm_candidates_produced():
+    pack = _synthetic_pack()
+    assert pack["mm"]["candidates"], "有腿却没有 MM 候选投影 = mm_project 又掉线了"
+    for c in pack["mm"]["candidates"]:
+        assert c["kind"] in ("leg_end_continuation", "pullback_base")
+        assert isinstance(c["target"], (int, float))

@@ -167,6 +167,33 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
                 "legs": n_legs,
                 "two_legs": n_legs >= 2,
             }
+    # MM 候选投影（2026-10-30 接线）：mm_project 此前从未被组装进 pack，
+    # 判断层看不到任何 MM 目标（阿布官网盲测试点实锤）。口径只给候选、
+    # 不给结论：每条近端 major 腿两类投影——① 腿末延续（end + 腿高）；
+    # ② 以腿后首个反向 major 摆动极值（回踩极值）为基的同腿投影。
+    # 用哪条、算不算数，由判断层按八锚点口径挑；pack 只保证原料齐全。
+    mm_candidates = []
+    swing_by_bar = {s.get("bar"): s for s in major}
+    for leg in legs[-2:]:
+        h = leg["end"] - leg["start"]
+        mm_candidates.append({
+            "base": r6(leg["end"]), "kind": "leg_end_continuation",
+            "leg": {"from_bar": leg["from_bar"], "to_bar": leg["to_bar"],
+                    "dir": leg["dir"]},
+            "target": r6(mm_project(leg["end"], leg["start"], leg["end"])),
+        })
+        opp = "L" if leg["dir"] == "up" else "H"
+        later = [s for s in major
+                 if s.get("bar") is not None and s["bar"] > leg["to_bar"]
+                 and s["kind"] == opp]
+        if later:
+            base = later[0]["anchor"]
+            mm_candidates.append({
+                "base": r6(base), "kind": "pullback_base",
+                "leg": {"from_bar": leg["from_bar"], "to_bar": leg["to_bar"],
+                        "dir": leg["dir"]},
+                "target": r6(mm_project(base, leg["start"], leg["end"])),
+            })
     return {
         "bars": len(bars),
         # 决策点价格（2026-10-30 补）：特征包原先**没有任何绝对价位**——
@@ -197,4 +224,8 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
             "confidence": "确定" if (minor or major) else "未定",
         },
         "trend_age": trend_age(bars, legs, emas, closes),
+        "mm": {
+            "candidates": mm_candidates,
+            "confidence": "边界" if mm_candidates else "未定",
+        },
     }

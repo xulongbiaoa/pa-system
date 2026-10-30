@@ -11,6 +11,14 @@ import sys
 sys.path.insert(0, ".")
 from perception.features import build_feature_pack, load_config  # noqa: E402
 
+ANSWER_20261027 = {
+    "day_type": "震荡",          # 杯柄突破后转区间（Breakout to Trading Range）
+    "morning_low": 7712.0,       # 熊陷阱低点 = 昨日收盘 7713.25 一线
+    "spike_high": 7773.0,        # 尖峰/头肩顶
+    "range_lo": 7751.0,          # 午后区间底（MM 头肩一线）
+    "range_hi": 7763.0,          # 午后区间顶
+}
+
 ANSWER_20261028 = {
     "day_type": "震荡",          # Trading Range Day（FOMC）
     "sell_climax_low": 7752.0,   # 开盘卖出高潮低点 / 开盘反转起点（bar 9 一带）
@@ -44,7 +52,7 @@ def main():
     path, cutoffs = sys.argv[1], [int(x) for x in sys.argv[2].split(",")]
     bars_all = load_bars(path)
     cfg = load_config()
-    a = ANSWER_20261028
+    a = ANSWER_20261027 if "2026-10-27" in path else ANSWER_20261028
     print(f"总根数 {len(bars_all)}，末收 {bars_all[-1]['c']}")
     for cut in cutoffs:
         bars = bars_all[:cut]
@@ -55,15 +63,23 @@ def main():
         print("要塞带:", [(b["lo"], b["hi"], "测", b["tests"], "穿", b["crosses"]) for b in bands])
         print("摆动(major):", [(s["kind"], s["anchor"]) for s in p["swings"]["major"]])
         print("腿(major):", p.get("legs_major"))
-        print("MM 投影: 特征包无此字段（mm_project 函数存在但未组装进 pack）")
         gaps = p.get("gaps", {})
         print("敞开缺口数:", len(gaps.get("open", [])), "| 账本置信:", gaps.get("confidence"))
+        print("MM 候选:", [(c["kind"], c["base"], "→", c["target"]) for c in p["mm"]["candidates"]])
         # 对照答案卡（仅全天 cutoff 有意义的项标注）
-        for name, key, tol in (("楔形底 7757 带", "wedge_bottom", 3.0),
-                               ("尖峰顶 7790 带", "midday_spike_high", 3.0)):
+        checks = []
+        if "wedge_bottom" in a:
+            checks = [("楔形底 7757 带", "wedge_bottom", 3.0),
+                      ("尖峰顶 7790 带", "midday_spike_high", 3.0)]
+        elif "spike_high" in a:
+            checks = [("尖峰顶 7773 带", "spike_high", 3.0),
+                      ("区间底 7751 带", "range_lo", 3.0)]
+            lows = [s["anchor"] for s in p["swings"]["major"] if s["kind"] == "L"]
+            print(f"  对照 晨间低点 7712 摆动: {'命中' if any(abs(x - a['morning_low']) <= 3 for x in lows) else '未命中'} (major 低点 {lows})")
+        for name, key, tol in checks:
             hit = any(b["lo"] - tol <= a[key] <= b["hi"] + tol for b in bands)
             print(f"  对照 {name}: {'命中' if hit else '未命中'}")
-        if cut >= 70:
+        if cut >= 70 and "wedge_bottom" in a:
             b7757 = [b for b in bands if b["lo"] - 3 <= a["wedge_bottom"] <= b["hi"] + 3]
             if b7757:
                 print(f"  对照 双底测次（答案=至少 2）: 带测次 {b7757[0]['tests']}")
