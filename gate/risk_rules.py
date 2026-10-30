@@ -8,7 +8,7 @@ H4 入场截止、H5 引用完整性（引用了置信「未定」的特征）�
 
 import math
 
-from perception.features import load_config
+from perception.features import load_config, net_rr as _net_rr
 
 RR_MIN = 1.5
 RISK_FRAC_MAX = 0.01  # core 红线 3「单笔风险 1%」；原为 0.015，源自方案原文
@@ -17,13 +17,10 @@ CUTOFF_LEFT = 10  # trainer 局内：距窗口末尾不足 10 根不开仓
 CONTEXTS = ("上升", "下降", "震荡")  # 语境枚举，与 perception 趋势标签一致
 
 
-def _net_rr(entry, stop, target, fees, limit_in=False):
-    risk = abs(entry - stop)
-    if risk <= 0:
-        return None
-    fin = fees["limit_in"] if limit_in else fees["market_in"]
-    cost = entry * fin + target * fees["out"]
-    return (abs(target - entry) - cost) / (risk + entry * fin + entry * fees["out"])
+def _rr(entry, stop, target, fees, limit_in=False):
+    """薄包装：净 RR 的唯一实现在 perception.features.net_rr，此处只补 side
+    形参（公式本身与方向无关，用绝对幅度）。"""
+    return _net_rr(entry, stop, target, None, fees, limit_in=limit_in)
 
 
 def _round_step(price):
@@ -60,7 +57,7 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     flags = flags or {}
     hard, soft = [], []
     rr_by_target = [
-        _net_rr(plan["entry"], plan["stop"], t, fees, plan.get("limit_in", False))
+        _rr(plan["entry"], plan["stop"], t, fees, plan.get("limit_in", False))
         for t in plan["targets"]
     ]
     # H1 按**首目标**计价：回放（eval/replay.simulate_trade）就按 targets[0]

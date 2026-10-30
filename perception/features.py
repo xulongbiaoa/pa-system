@@ -76,18 +76,21 @@ def mm_project(base, leg_start, leg_end):
     return base + (leg_end - leg_start)
 
 
-def net_rr(entry, stop, target, side, fees):
+def net_rr(entry, stop, target, side, fees, limit_in=False):
+    """净 RR 的**唯一实现**（裁决层 H1 与特征包都用它，防两套公式漂移）。
+
+    亏损侧风险 = 价格风险 + 入场费 + 出场费；盈利侧 = 毛幅 − 入场费 −
+    出场费（出场费按**目标价**计，原实现按入场价计，差 ≤0.05%×幅度）。
+    限价入场费率不同（fees['limit_in']）。
+    原实现长/空两分支同体且重复计了一次入场费，已删。
+    """
     risk = abs(entry - stop)
-    reward = abs(target - entry)
     if risk <= 0:
         return None
-    if side == "long":
-        net_risk = risk + entry * fees["market_in"] + entry * fees["out"]
-        net_reward = reward - entry * fees["market_in"] - entry * fees["out"]
-    else:
-        net_risk = risk + entry * fees["market_in"] + entry * fees["out"]
-        net_reward = reward - entry * fees["market_in"] - entry * fees["out"]
-    return round(net_reward / net_risk, 4) if net_risk > 0 else None
+    fin = fees["limit_in"] if limit_in else fees["market_in"]
+    cost = entry * fin + target * fees["out"]
+    denom = risk + entry * fin + entry * fees["out"]
+    return round((abs(target - entry) - cost) / denom, 6) if denom > 0 else None
 
 
 def trend_state(major_swings):
@@ -120,7 +123,6 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
     ema_prev = emas[-4] if len(emas) >= 4 else ema_now
     ride = None
     if emas:
-        seg = list(zip(closes, emas))[-20:]
         # emas 与 closes 的对齐：emas 从第 period-1 根起
         offset = len(closes) - len(emas)
         pairs = [(closes[i], emas[i - offset]) for i in range(offset, len(closes))][-20:]

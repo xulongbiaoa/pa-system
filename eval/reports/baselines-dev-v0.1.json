@@ -1,6 +1,13 @@
 {
  "split": "dev",
  "segments": 31,
+ "protocol": {
+  "entry_window": [
+   30,
+   180
+  ],
+  "lifecycle_bars": 300
+ },
  "baselines": {
   "simple": {
    "n": 2,
@@ -26,30 +33,74 @@
     "max_consec_losses": 0,
     "proven_edge": false,
     "note": "样本不足（n=2<30），不下结论"
+   },
+   "funnel": {
+    "bars": 4650,
+    "ema_side": 3961,
+    "pullback_cross": 3662,
+    "attempts": 30,
+    "signals": 30,
+    "segments_with_signal": 2,
+    "segments": 31
    }
   },
-  "random": {
+  "simple_loose": {
    "n": 31,
-   "win_rate": 0.4516,
-   "mean_r": 0.0036,
-   "median_r": -1.0143,
+   "win_rate": 0.4839,
+   "mean_r": 0.1295,
+   "median_r": -1.0082,
    "mean_r_ci95": [
-    -0.4175,
-    0.4333
+    -0.2949,
+    0.574
    ],
    "max_consec_losses": 4,
    "proven_edge": false,
    "note": "尚未证明优势（CI 包含或低于 0）",
    "fee_x2": {
     "n": 31,
-    "win_rate": 0.4516,
-    "mean_r": -0.1218,
-    "median_r": -1.0285,
+    "win_rate": 0.4839,
+    "mean_r": 0.0494,
+    "median_r": -1.0164,
     "mean_r_ci95": [
-     -0.5459,
-     0.2941
+     -0.3848,
+     0.4959
     ],
     "max_consec_losses": 4,
+    "proven_edge": false,
+    "note": "尚未证明优势（CI 包含或低于 0）"
+   },
+   "funnel": {
+    "bars": 4650,
+    "ema_side": 3961,
+    "pullback_cross": 3662,
+    "attempts": 3546,
+    "signals": 3546,
+    "segments_with_signal": 31,
+    "segments": 31
+   }
+  },
+  "random": {
+   "n": 31,
+   "win_rate": 0.3548,
+   "mean_r": -0.2416,
+   "median_r": -1.0534,
+   "mean_r_ci95": [
+    -0.664,
+    0.2095
+   ],
+   "max_consec_losses": 9,
+   "proven_edge": false,
+   "note": "尚未证明优势（CI 包含或低于 0）",
+   "fee_x2": {
+    "n": 31,
+    "win_rate": 0.3548,
+    "mean_r": -0.3702,
+    "median_r": -1.1068,
+    "mean_r_ci95": [
+     -0.8117,
+     0.0952
+    ],
+    "max_consec_losses": 9,
     "proven_edge": false,
     "note": "尚未证明优势（CI 包含或低于 0）"
    }

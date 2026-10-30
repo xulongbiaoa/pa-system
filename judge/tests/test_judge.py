@@ -78,6 +78,38 @@ def test_prompt_assembly_on_dev_segment():
     text = build_prompt(pack, bars)
     assert "交易者等式" in text and "只输出 JSON" in text
     assert "weight" not in text.split("## 任务")[0].lower() or True
-    cards = route_cards(pack)
+    cards, reasons = route_cards(pack)
     assert 1 <= len(cards) <= 3
+    assert reasons and "trend=" in reasons[0]
     assert len(text) < 60000  # 粘贴式可搬运的体量上限
+
+
+def _pack(label, conf="确定", verdict="一致"):
+    return {"trend": {"label": label, "confidence": conf,
+                      "gap_consistency": {"verdict": verdict}}}
+
+
+def test_route_trend_carries_follow_card_and_breakout_family():
+    cards, _ = route_cards(_pack("上升"))
+    assert cards[0] == "A1-m2b"
+    assert "B1-trend-breakout" in cards and "B2-breakout-pullback" in cards
+    cards, _ = route_cards(_pack("下降"))
+    assert cards[0] == "A2-m2s"
+
+
+def test_route_reversal_promotes_mtr():
+    # 标签与账本冲突 = 标签可能过期 → MTR 升权（原实现永不带 C1，整族不可达）
+    cards, reasons = route_cards(_pack("下降", verdict="冲突"))
+    assert cards[0] == "C1-mtr" and any("反转候选" in r for r in reasons)
+    cards, _ = route_cards(_pack("上升", conf="边界"))
+    assert "C1-mtr" in cards
+
+
+def test_route_range_still_carries_mtr_and_caps_at_three():
+    cards, _ = route_cards(_pack("震荡", conf="边界", verdict="不适用（震荡）"))
+    assert cards[0] == "B3-failed-breakout" and "C1-mtr" in cards
+    for label, conf, verdict in (("上升", "确定", "一致"), ("下降", "确定", "冲突"),
+                                 ("震荡", "边界", "不适用（震荡）"), ("未定", "未定", None)):
+        cards, _ = route_cards(_pack(label, conf, verdict))
+        assert 1 <= len(cards) <= 3
+        assert len(set(cards)) == len(cards)
