@@ -107,6 +107,9 @@ def test_feature_pack_builds_on_all_gold():
         for k in ("trend", "ema", "gaps", "swings", "pullback", "seg_avg_range"):
             assert k in pack, f"{g['segment']} 特征包缺 {k}"
         assert pack["trend"]["label"] in CONTEXTS + ("未定",)
+        if pack["pullback"]:
+            # A1/A2 卡依赖的腿数字段必须存在（2026-10-30 补）
+            assert "legs" in pack["pullback"] and "two_legs" in pack["pullback"]
 
 
 def test_frozen_candidates_pass_gate():

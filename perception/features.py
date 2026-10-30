@@ -9,7 +9,7 @@ import os
 
 from .fortress import build_fortress_bands, trend_age
 from .gaps import build_ledger, trimmed_avg_range
-from .legs import legs_from_swings
+from .legs import count_pullback_legs, legs_from_swings
 from .precision import r6
 from .swings import find_swings
 
@@ -154,11 +154,18 @@ def build_feature_pack(bars, map_anchors=None, cfg=None):
             )
         if pb and adv and adv["height"]:
             ratio = pb["height"] / adv["height"]
+            # 腿数（2026-10-30 补）：A1/A2 卡要求「回踩已走出第二腿（腿数由
+            # 特征包计）」，但包里一直没有这个字段——判断层只能靠感觉数。
+            # 这里按 minor 摆动的结构计，不看根数（卡片原话）。
+            sep = "H" if pb["dir"] == "down" else "L"
+            n_legs = count_pullback_legs(minor, pb["from_bar"], pb["to_bar"], sep)
             pullback = {
                 "depth_ratio": round(ratio, 4),
                 "bars": pb["to_bar"] - pb["from_bar"],
                 "dir_against": pb["dir"],
                 "expired": ratio >= 1.0,
+                "legs": n_legs,
+                "two_legs": n_legs >= 2,
             }
     return {
         "bars": len(bars),

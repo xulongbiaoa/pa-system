@@ -116,3 +116,27 @@ def test_feature_pack_shape_and_confidence():
     assert pack["gaps"]["confidence"] == "未定"  # 无地图锚 = 无账本
     pack2 = build_feature_pack(bars, [{"price": 10.0, "source": "map"}])
     assert pack2["gaps"]["confidence"] == "确定"
+
+
+def test_pullback_legs_counts_higher_low_second_leg():
+    """两腿回调的第二腿是更高低点——尝试计数器只算 1，腿数必须算 2。"""
+    from perception.legs import count_pullback_legs
+    sw = [{"bar": 3, "kind": "L", "anchor": 90.0},
+          {"bar": 6, "kind": "H", "anchor": 94.0},
+          {"bar": 9, "kind": "L", "anchor": 91.0}]  # 第二腿 91 > 第一腿 90
+    assert count_pullback_legs(sw, 3, 9, "H") == 2
+
+
+def test_pullback_legs_ignores_terminal_bounce():
+    """只有端点反抽、后面没有同向推进 = 单腿，不算第二腿。"""
+    from perception.legs import count_pullback_legs
+    sw = [{"bar": 3, "kind": "L", "anchor": 90.0},
+          {"bar": 6, "kind": "H", "anchor": 94.0}]
+    assert count_pullback_legs(sw, 3, 6, "H") == 1
+
+
+def test_pullback_legs_single_leg():
+    from perception.legs import count_pullback_legs
+    sw = [{"bar": 3, "kind": "L", "anchor": 90.0},
+          {"bar": 9, "kind": "L", "anchor": 86.0}]
+    assert count_pullback_legs(sw, 3, 9, "H") == 1
