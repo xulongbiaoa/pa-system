@@ -5,28 +5,113 @@
  "with_candidate": 3,
  "qualified": 3,
  "no_trade": 28,
- "gate_reject": 3,
+ "gate_reject": 1,
  "gate_reject_rules": {
-  "H1": 3
+  "H1": 1
  },
  "unfilled": 0,
  "structured_pending": 31,
- "trades": [],
+ "trades": [
+  {
+   "r": -0.704199999999993,
+   "exit_price": 1.13,
+   "exit_bar": 12,
+   "exit_reason": "void",
+   "win": false,
+   "filled": true,
+   "fill_bar": 12,
+   "order_type": "limit",
+   "event": "f2-SNXUSDT-15m-1759951800000@b77",
+   "segment": "f2-SNXUSDT-15m-1759951800000",
+   "bar": 77,
+   "setup": "B3",
+   "side": "short",
+   "entry": 1.116,
+   "layer": 0
+  },
+  {
+   "r": -0.08039600000000406,
+   "exit_price": 1.443,
+   "exit_bar": 20,
+   "exit_reason": "void",
+   "win": false,
+   "filled": true,
+   "fill_bar": 5,
+   "order_type": "limit",
+   "event": "f2-THETAUSDT-15m-1738636200000@b77",
+   "segment": "f2-THETAUSDT-15m-1738636200000",
+   "bar": 77,
+   "setup": "G1",
+   "side": "short",
+   "entry": 1.442,
+   "layer": 3
+  }
+ ],
  "layers": {
   "L0": {
-   "n": 0
+   "n": 2,
+   "win_rate": 0.0,
+   "mean_r": -0.3923,
+   "median_r": -0.3923,
+   "mean_r_ci95": [
+    -0.7042,
+    -0.0804
+   ],
+   "max_consec_losses": 2,
+   "proven_edge": false,
+   "note": "样本不足（n=2<30），不下结论"
   },
   "L1": {
-   "n": 0
+   "n": 1,
+   "win_rate": 0.0,
+   "mean_r": -0.0804,
+   "median_r": -0.0804,
+   "mean_r_ci95": [
+    -0.0804,
+    -0.0804
+   ],
+   "max_consec_losses": 1,
+   "proven_edge": false,
+   "note": "样本不足（n=1<30），不下结论"
   },
   "L2": {
-   "n": 0
+   "n": 1,
+   "win_rate": 0.0,
+   "mean_r": -0.0804,
+   "median_r": -0.0804,
+   "mean_r_ci95": [
+    -0.0804,
+    -0.0804
+   ],
+   "max_consec_losses": 1,
+   "proven_edge": false,
+   "note": "样本不足（n=1<30），不下结论"
   },
   "L3": {
-   "n": 0
+   "n": 1,
+   "win_rate": 0.0,
+   "mean_r": -0.0804,
+   "median_r": -0.0804,
+   "mean_r_ci95": [
+    -0.0804,
+    -0.0804
+   ],
+   "max_consec_losses": 1,
+   "proven_edge": false,
+   "note": "样本不足（n=1<30），不下结论"
   }
  },
  "summary": {
-  "n": 0
+  "n": 2,
+  "win_rate": 0.0,
+  "mean_r": -0.3923,
+  "median_r": -0.3923,
+  "mean_r_ci95": [
+   -0.7042,
+   -0.0804
+  ],
+  "max_consec_losses": 2,
+  "proven_edge": false,
+  "note": "样本不足（n=2<30），不下结论"
  }
 }

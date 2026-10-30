@@ -131,8 +131,17 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     #
     # 修法取 element-wise min：计划入场价优于现价时按现价重算（该价必然可达），
     # 劣于现价时保留计划口径（不奖励追单）。零新常数；市价单 entry≈现价，
-    # 行为不变。代价：合法的「卖反弹」限价单拿不到更好的 RR，1.5 的门槛含义
-    # 变成「按现价可达」——这是裁决层「只能否决或降仓」的应有偏向。
+    # 行为不变。
+    #
+    # 限价计划豁免（2026-10-31 用户裁定，按 Brooks 原册）：限价单是事前
+    # 声明的挂单价，阿布的交易者等式锚在自己的入场价（v30 slide 34：
+    # risk/reward 均从 entry price 起算；slide 72/74：50% 回踩限价单按
+    # 限价位算 risk=reward）。故 limit_in 的计划 rr_gate 直接取计划口径，
+    # 不再与现价取 min。防滥用由三件套兜底：① 成交须穿越限价（回放
+    # simulate_limit_trade 从严口径），RR 承诺只能在真实成交后兑现；
+    # ② 未成交单单独留档统计，未成交率即这类计划的诚实度量；③ 红线 4
+    # 禁事后挑价，限价必须是决策点当时写明的价。现价口径 RR 仍算出并
+    # 记入 notes 供对照。市价计划维持 min 口径不变。
     px = pack.get("last_close")
     rr_at_decision = None
     if px:
@@ -141,7 +150,13 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
             for t in plan["targets"]
         ]
     rr_gate = rr_by_target
-    if rr_at_decision:
+    if limit_in:
+        if rr_at_decision:
+            notes.append(
+                f"H1 按限价入场价 {plan['entry']} 计价（2026-10-31 裁定）；"
+                f"现价口径净RR {rr_at_decision[0]} 仅作对照"
+            )
+    elif rr_at_decision:
         rr_gate = [min(a, b) for a, b in zip(rr_by_target, rr_at_decision)]
         if rr_gate[0] != rr_by_target[0]:
             notes.append(
@@ -152,7 +167,8 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     # 结算，门槛必须与结算同口径。原先取末级目标，等于「加一个远目标就能
     # 过 1.5 门槛」，是「目标改近」的反向利用（2026-10-30 修正）。
     rr_main = rr_gate[0] if rr_gate else None
-    # H1 净 RR（按首目标 + 现价口径，与回放结算同口径）
+    # H1 净 RR（按首目标计价，与回放结算同口径；计价基点：市价计划取
+    # 现价与计划入场价的 element-wise min，限价计划取限价入场价）
     if rr_main is None or rr_main < RR_MIN:
         hard.append({"rule": "H1", "detail": f"净RR={rr_main} < {RR_MIN}（首目标）"})
     # H2 止损在结构外：止损须越过入场最近一侧的摆动极值（大小级别合并看；

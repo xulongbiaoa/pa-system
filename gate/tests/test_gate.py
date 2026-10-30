@@ -300,3 +300,18 @@ def test_legacy_limit_in_still_honoured():
     legacy = adjudicate(_plan(limit_in=True), _pack(), bars_left=50)
     limit = adjudicate(_plan(order_type="limit"), _pack(), bars_left=50)
     assert legacy["rr_by_target"] == limit["rr_by_target"]
+
+
+def test_h1_limit_plan_priced_at_limit_entry():
+    """2026-10-31 裁定（按 Brooks v30）：限价计划按限价入场价计 H1。
+    同一组数字：现价已贴近目标 → 现价口径 RR≈0，市价计划被 H1 拒；
+    限价计划按事前写明的限价位计 RR≈1.59 → 过 H1。"""
+    pack = _pack()
+    pack["last_close"] = 109.5
+    market = adjudicate(_plan(), pack, bars_left=50,
+                        feature_refs=["trend.label"])
+    assert any(h["rule"] == "H1" for h in market["hard_hits"])
+    limit = adjudicate(_plan(order_type="limit"), pack, bars_left=50,
+                       feature_refs=["trend.label"])
+    assert not any(h["rule"] == "H1" for h in limit["hard_hits"])
+    assert limit["verdict"] == "pass"
