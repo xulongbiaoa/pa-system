@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "eval"))
 
 from gate.risk_rules import adjudicate  # noqa: E402
+from gate.flags import build_flags  # noqa: E402
 from judge.prompt_builder import build_prompt  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import build_feature_pack, load_config  # noqa: E402
@@ -59,6 +60,7 @@ def main():
         verdict = adjudicate(
             plan, pack, bars_left=len(seg["bars"]) - 180,
             feature_refs=c.get("feature_refs", []),
+            flags=build_flags(plan, pack),
         )
         print(json.dumps(verdict, ensure_ascii=False, indent=1))
     else:

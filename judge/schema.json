@@ -42,6 +42,11 @@
         ],
         "default": "market",
         "description": "限价单按 core 限价口径回放：穿越才成交、未成交留档"
+       },
+       "second_bar_confirmed": {
+        "type": "boolean",
+        "default": false,
+        "description": "入场方式声明：触发后已见第二根确认（判断层声明、裁决层 S2 查验）；非感知量，不许事后补填"
        }
       },
       "required": [

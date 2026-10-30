@@ -1,0 +1,52 @@
+"""接线审计：防「规则写了、测了、没接上数据」复发。
+
+两条不变量：
+1. adjudicate 消费的每个 flags 键，要么有生产者（gate/flags.build_flags
+   能产出），要么登记在 PENDING 里写明未接原因——不许静默缺席。
+2. 每个生产调用点（pa_cli / gold_run / pilot_run）源码里必须真的调用
+   build_flags 传给 adjudicate——不许再出现「参数在、调用点不传」。
+"""
+import re
+from pathlib import Path
+
+from gate.flags import build_flags
+
+ROOT = Path(__file__).resolve().parents[2]
+
+# 未接线但已登记的键：键 → 原因。判据定版后必须从这里移除并补生产者。
+PENDING = {
+    "parabolic": "S1 判据（连续根数/实体/总幅倍数）需新常数，无样本与原册依据前不设",
+}
+
+CALLERS = ["judge/pa_cli.py", "eval/gold_run.py", "eval/pilot_run.py"]
+
+
+def _adjudicate_flag_keys():
+    src = (ROOT / "gate" / "risk_rules.py").read_text(encoding="utf-8")
+    return set(re.findall(r'flags\.get\("(\w+)"\)', src))
+
+
+def _producible_keys():
+    plan = {"entry": 100.0, "stop": 89.0, "second_bar_confirmed": True}
+    pack = {"fortress": {"bands": [
+        {"lo": 99.0, "hi": 101.0, "trampled": True, "decaying": False},
+        {"lo": 90.0, "hi": 92.0, "trampled": False, "decaying": True},
+    ]}}
+    return set(build_flags(plan, pack).keys())
+
+
+def test_every_flag_key_produced_or_pending():
+    consumed = _adjudicate_flag_keys()
+    assert consumed, "审计失效：没从 risk_rules 里解析到 flags 键"
+    missing = consumed - _producible_keys() - set(PENDING)
+    assert not missing, f"flags 键无生产者且未登记 PENDING: {missing}"
+    stale = set(PENDING) - consumed
+    assert not stale, f"PENDING 里有 adjudicate 已不消费的键: {stale}"
+
+
+def test_all_production_callers_wire_build_flags():
+    for rel in CALLERS:
+        src = (ROOT / rel).read_text(encoding="utf-8")
+        assert "build_flags" in src, f"{rel} 未接 build_flags（flags 又没生产者了）"
+        assert "flags=build_flags(plan, pack)" in src, \
+            f"{rel} 导入了 build_flags 但没传给 adjudicate"

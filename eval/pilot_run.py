@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 
 from gate.risk_rules import adjudicate  # noqa: E402
+from gate.flags import build_flags  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import build_feature_pack, load_config  # noqa: E402
 from replay import simulate_plan, summarize  # noqa: E402
@@ -92,6 +93,7 @@ def run(judgments_dir=JD):
         verdict = adjudicate(
             plan, pack, bars_left=LIFECYCLE,
             feature_refs=c.get("feature_refs", []),
+            flags=build_flags(plan, pack),
             ledger=ledger, mode="annotation",
         )
         for note in verdict.get("notes", []):

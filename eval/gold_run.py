@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from gate.risk_rules import adjudicate  # noqa: E402
+from gate.flags import build_flags  # noqa: E402
 from gold_build import DECISION, bars_of, gold_segments, pack_at_decision  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import load_config  # noqa: E402
@@ -86,7 +87,8 @@ def score(judgments_dir=JD, gold=None, cfg=None):
         plan.update({"side": c["side"], "setup": c["setup"],
                      "context": pack["trend"]["label"]})
         v = adjudicate(plan, pack, bars_left=LIFECYCLE,
-                       feature_refs=c.get("feature_refs", []), mode="annotation")
+                       feature_refs=c.get("feature_refs", []),
+                       flags=build_flags(plan, pack), mode="annotation")
         for note in v.get("notes", []):
             rep["gate_notes"][note] = rep["gate_notes"].get(note, 0) + 1
         if v["verdict"] == "reject":
