@@ -147,6 +147,10 @@ def run_arm(outdir, arm):
                 continue
             rep["candidates"] += 1
             plan = dict(c["plan"])
+            # 与 pilot_run/event_run 同口径：adjudicate 从 plan 读 side/setup，
+            # context 取感知层趋势标签（H6 台账键）；漏并会 KeyError（2026-10-31 计分时实测）。
+            plan.update({"side": c["side"], "setup": c["setup"],
+                         "context": pack["trend"]["label"]})
             merge_candidate_terms(plan, c)
             if arm == "camp":
                 pid = c.get("point_id")
@@ -187,8 +191,8 @@ def score(outdir):
         s = r["summary"]
         print(f"{arm}: judged {r['judged']} fmt_err {r['format_errors']} "
               f"cand {r['candidates']} gate_rej {r['gate_reject']} "
-              f"unfilled {r['unfilled']} trades {s['n']} sumR {s['sum']} "
-              f"meanR {s['mean']} violations {r['violations']}")
+              f"unfilled {r['unfilled']} trades {s['n']} "
+              f"meanR {s.get('mean_r')} violations {r['violations']}")
 
 
 if __name__ == "__main__":

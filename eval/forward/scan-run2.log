@@ -1,0 +1,226 @@
+/home/hatch/workspace/pylibs/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "
+{
+ "resolved": [],
+ "new_events": [
+  {
+   "event": "fw-BTCUSDT-15m-1793366100000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 460,
+   "decision_t": 1793366100000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793366100000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-BTCUSDT-15m-1793393100000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 490,
+   "decision_t": 1793393100000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793393100000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-BTCUSDT-1h-1793239200000",
+   "symbol": "BTCUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 455,
+   "decision_t": 1793239200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1793239200000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-BTCUSDT-1h-1793383200000",
+   "symbol": "BTCUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 495,
+   "decision_t": 1793383200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1793383200000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-ETHUSDT-15m-1793363400000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 457,
+   "decision_t": 1793363400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793363400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-ETHUSDT-15m-1793389500000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 486,
+   "decision_t": 1793389500000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793389500000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-ETHUSDT-1h-1793242800000",
+   "symbol": "ETHUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 456,
+   "decision_t": 1793242800000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1793242800000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-ETHUSDT-1h-1793286000000",
+   "symbol": "ETHUSDT",
+   "interval": "1h",
+   "kind": "gap-confirm",
+   "bar": 468,
+   "decision_t": 1793286000000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1793286000000.json",
+   "gap_price": 2354.51,
+   "attempts": 0
+  },
+  {
+   "event": "fw-SOLUSDT-15m-1793365200000",
+   "symbol": "SOLUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 459,
+   "decision_t": 1793365200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793365200000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-SOLUSDT-15m-1793390400000",
+   "symbol": "SOLUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 487,
+   "decision_t": 1793390400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793390400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-SOLUSDT-1h-1793336400000",
+   "symbol": "SOLUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 482,
+   "decision_t": 1793336400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1793336400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-DOGEUSDT-15m-1793365200000",
+   "symbol": "DOGEUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 459,
+   "decision_t": 1793365200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1793365200000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-DOGEUSDT-15m-1793385900000",
+   "symbol": "DOGEUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 482,
+   "decision_t": 1793385900000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1793385900000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-DOGEUSDT-1h-1793318400000",
+   "symbol": "DOGEUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 477,
+   "decision_t": 1793318400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1793318400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-XRPUSDT-15m-1793370600000",
+   "symbol": "XRPUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 465,
+   "decision_t": 1793370600000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1793370600000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-XRPUSDT-1h-1793246400000",
+   "symbol": "XRPUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 457,
+   "decision_t": 1793246400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1793246400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-LINKUSDT-15m-1793363400000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 457,
+   "decision_t": 1793363400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793363400000.json",
+   "gap_price": null,
+   "attempts": null
+  },
+  {
+   "event": "fw-LINKUSDT-15m-1793382300000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 478,
+   "decision_t": 1793382300000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793382300000.json",
+   "gap_price": null,
+   "attempts": null
+  }
+ ],
+ "tracked_open": 0,
+ "queued_unjudged": [
+  "fw-BTCUSDT-15m-1793366100000",
+  "fw-BTCUSDT-15m-1793393100000",
+  "fw-BTCUSDT-1h-1793239200000",
+  "fw-BTCUSDT-1h-1793383200000",
+  "fw-ETHUSDT-15m-1793363400000",
+  "fw-ETHUSDT-15m-1793389500000",
+  "fw-ETHUSDT-1h-1793242800000",
+  "fw-ETHUSDT-1h-1793286000000",
+  "fw-SOLUSDT-15m-1793365200000",
+  "fw-SOLUSDT-15m-1793390400000",
+  "fw-SOLUSDT-1h-1793336400000",
+  "fw-DOGEUSDT-15m-1793365200000",
+  "fw-DOGEUSDT-15m-1793385900000",
+  "fw-DOGEUSDT-1h-1793318400000",
+  "fw-XRPUSDT-15m-1793370600000",
+  "fw-XRPUSDT-1h-1793246400000",
+  "fw-LINKUSDT-15m-1793363400000",
+  "fw-LINKUSDT-15m-1793382300000"
+ ]
+}

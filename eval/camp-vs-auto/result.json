@@ -1,0 +1,32 @@
+{
+ "auto": {
+  "arm": "auto",
+  "judged": 20,
+  "format_errors": 0,
+  "candidates": 1,
+  "gate_reject": 1,
+  "gate_reject_rules": {
+   "H1": 1
+  },
+  "unfilled": 0,
+  "trades": [],
+  "violations": 0,
+  "summary": {
+   "n": 0
+  }
+ },
+ "camp": {
+  "arm": "camp",
+  "judged": 20,
+  "format_errors": 5,
+  "candidates": 0,
+  "gate_reject": 0,
+  "gate_reject_rules": {},
+  "unfilled": 0,
+  "trades": [],
+  "violations": 0,
+  "summary": {
+   "n": 0
+  }
+ }
+}
