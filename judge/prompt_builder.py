@@ -7,14 +7,20 @@
 震荡 → B3 翻面 + C1（区间边缘反转与突破失败共用同一套证据）；
 其余 → 只带 B3。每类至多 3 张卡。
 
-router.md 里还有两条条件**感知层没有对应字段**，不能硬凑成路由条件：
-「MM 已达（趋势成熟）」无 MM 投影字段；「两腿衰竭 / 腿数足」的
-trend_age.legs 恒为 1（主级别摆动交替，同向腿不可能相邻，见 2026-10-30
-复核），故腿数与 MM 一律留给判断层自己认定，路由不代判。
+router.md 里还有两条条件路由不能代判：「MM 已达（趋势成熟）」——MM
+候选投影已进 pack（pack.mm），但「已达」是认定不是字段；「两腿衰竭 /
+腿数足」的 trend_age.legs 恒为 1（主级别摆动交替，同向腿不可能相邻，
+见 2026-10-30 复核），故腿数与 MM 到达一律留给判断层自己认定。
+
+原册讲义召回（2026-10-30 接入）：按路由卡片 + 语境标签从原册案例库
+（knowledge/brooks-cases）拉 2 页 Brooks 本人讲义进提示，见
+judge/brooks_recall.py。只召回不裁决，出处随页附上。
 """
 
 import json
 import os
+
+from judge.brooks_recall import recall_cases
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 KB = os.path.join(ROOT, "knowledge")
@@ -148,6 +154,15 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         ]
         parts.append("## 参考样本（草稿标注，只作语境类比）\n```json\n"
                      + json.dumps(brief, ensure_ascii=False) + "\n```")
+    cases = recall_cases(pack, cards)
+    if cases:
+        blocks = []
+        for cs in cases:
+            blocks.append(f"### [{cs['book']} {cs['title']} · slide {cs['slide']}]"
+                          f"（标签：{','.join(cs['tags'])}）\n{cs['text']}")
+        parts.append("## 阿布原册讲义（案例召回，出处可溯）\n"
+                     "以下为 Brooks 本人课件原文，与本段无关的页请忽略；"
+                     "引用他的结论时注明出处页。\n\n" + "\n\n".join(blocks))
     if prev_hypotheses:
         parts.append("## 上一根假设账本\n```json\n"
                      + json.dumps(prev_hypotheses, ensure_ascii=False) + "\n```")
