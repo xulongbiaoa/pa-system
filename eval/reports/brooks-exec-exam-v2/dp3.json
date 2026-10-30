@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7744.0,
+ "stop": 0,
+ "target": 0,
+ "reason": "[无命中] 7773.25见高后回落，现价在7735.5至7751.0之间反复往返，为交易区间而非可执行的下降趋势延续"
+}

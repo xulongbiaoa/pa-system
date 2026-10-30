@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7761.0,
+ "stop": 0,
+ "target": 0,
+ "reason": "[无命中] 顶部横盘后强下破成下跌段，Bar9-11为弱回抽，正测7761.0-7769.25被破带，下方未达MM 7721.25仍敞着"
+}

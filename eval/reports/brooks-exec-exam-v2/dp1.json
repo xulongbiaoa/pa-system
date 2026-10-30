@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7735.5,
+ "stop": 0,
+ "target": 0,
+ "reason": "[感知未定] 仅8根可见段为下行小腿：高低点逐级下移、价格在下行EMA下方，末根阳线只是7727.5低点后的首次反弹尝试，尚无反转成立证据"
+}
