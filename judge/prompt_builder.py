@@ -138,7 +138,7 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
                  + "；".join(reasons)
                  + "\n卡内门槛（三件套、MM、腿数）感知层未算，须你自行认定；"
                    "认定不了就写进 uncertainty 并空仓。")
-    parts.append("## 特征包（感知层输出，只许引用其中的字段）\n```json\n"
+    parts.append("## 数字附件（特征包：精确价位、缺口账本与数字证据；语境与形态以图读为准——附件 trend 是机器摆动标签，与图读冲突时以图为准）\n```json\n"
                  + json.dumps(pack, ensure_ascii=False) + "\n```")
     exs = recall_examples(pack, segment=segment, symbol=symbol, bars=bars)
     if exs:
@@ -169,6 +169,8 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
     parts.append("## 最近 K 线（OHLC 数值表）\n```\n" + bars_table(bars[-120:]) + "\n```")
     parts.append(
         "## 任务（输出格式是硬契约，先看骨架再判断）\n"
+        "判读顺序：先看图（若随附图表）定语境、形态与 setup，再用数字附件的"
+        "精确价位定价、核对账本与红线；附件 trend 标签与图读冲突时以图为准。\n"
         "只输出一个 JSON 对象，不要任何解释文字、不要代码围栏。顶层只许 "
         "context / primary / hypotheses / candidates / no_trade_reason / "
         "pending_conditions / uncertainty 七个字段，多一个键即作废。骨架：\n"
