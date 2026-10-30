@@ -1,0 +1,332 @@
+[
+ {
+  "event": "fr-AAVEUSDT-15m-1745270100000@b97",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "bar": 97,
+  "arrival_bar": 95,
+  "gap_price": 153.68,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": false
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b79",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "bar": 79,
+  "arrival_bar": 75,
+  "gap_price": 167.22,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b152",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "bar": 152,
+  "arrival_bar": 150,
+  "gap_price": 161.38,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b145",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "bar": 145,
+  "arrival_bar": 144,
+  "gap_price": 389.4,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b174",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "bar": 174,
+  "arrival_bar": 169,
+  "gap_price": 396.3,
+  "trapped": "long",
+  "attempts": 2,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-4h-1731686400000@b146",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "bar": 146,
+  "arrival_bar": 143,
+  "gap_price": 587.0,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-15m-1744070400000@b166",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "bar": 166,
+  "arrival_bar": 163,
+  "gap_price": 14.35,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-1h-1744794000000@b136",
+  "segment": "fr-ETCUSDT-1h-1744794000000",
+  "bar": 136,
+  "arrival_bar": 134,
+  "gap_price": 15.59,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-FETUSDT-15m-1736014500000@b124",
+  "segment": "fr-FETUSDT-15m-1736014500000",
+  "bar": 124,
+  "arrival_bar": 123,
+  "gap_price": 1.57,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b134",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "bar": 134,
+  "arrival_bar": 132,
+  "gap_price": 0.04864,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b157",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "bar": 157,
+  "arrival_bar": 156,
+  "gap_price": 0.048,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b70",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "bar": 70,
+  "arrival_bar": 69,
+  "gap_price": 1.1421,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b117",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "bar": 117,
+  "arrival_bar": 112,
+  "gap_price": 1.1534,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b95",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "bar": 95,
+  "arrival_bar": 90,
+  "gap_price": 1.0346,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b123",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "bar": 123,
+  "arrival_bar": 121,
+  "gap_price": 1.088,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b110",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "bar": 110,
+  "arrival_bar": 108,
+  "gap_price": 1.291,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b154",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "bar": 154,
+  "arrival_bar": 149,
+  "gap_price": 1.375,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-1d-1717977600000@b169",
+  "segment": "fr-LDOUSDT-1d-1717977600000",
+  "bar": 169,
+  "arrival_bar": 168,
+  "gap_price": 1.508,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b123",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "bar": 123,
+  "arrival_bar": 118,
+  "gap_price": 1.026,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b152",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "bar": 152,
+  "arrival_bar": 151,
+  "gap_price": 0.9889,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b122",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "bar": 122,
+  "arrival_bar": 118,
+  "gap_price": 0.3977,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b166",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "bar": 166,
+  "arrival_bar": 161,
+  "gap_price": 0.3918,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-1d-1709251200000@b137",
+  "segment": "fr-PYTHUSDT-1d-1709251200000",
+  "bar": 137,
+  "arrival_bar": 132,
+  "gap_price": 0.3094,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b143",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "bar": 143,
+  "arrival_bar": 142,
+  "gap_price": 2.303e-05,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b167",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "bar": 167,
+  "arrival_bar": 164,
+  "gap_price": 2.331e-05,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-4h-1745971200000@b138",
+  "segment": "fr-SHIBUSDT-4h-1745971200000",
+  "bar": 138,
+  "arrival_bar": 134,
+  "gap_price": 1.536e-05,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-TRXUSDT-1h-1718132400000@b117",
+  "segment": "fr-TRXUSDT-1h-1718132400000",
+  "bar": 117,
+  "arrival_bar": 113,
+  "gap_price": 0.11562,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": false
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b108",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "bar": 108,
+  "arrival_bar": 107,
+  "gap_price": 7.441,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b132",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "bar": 132,
+  "arrival_bar": 131,
+  "gap_price": 7.396,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b131",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "bar": 131,
+  "arrival_bar": 130,
+  "gap_price": 1.518,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b169",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "bar": 169,
+  "arrival_bar": 164,
+  "gap_price": 1.537,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b73",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "bar": 73,
+  "arrival_bar": 68,
+  "gap_price": 0.0918,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b120",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "bar": 120,
+  "arrival_bar": 117,
+  "gap_price": 0.0952,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ }
+]

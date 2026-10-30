@@ -56,11 +56,12 @@ def layer_of(trade, pack):
     return 3 if trade["setup"] == "G1" else 2
 
 
-def run(judgments_dir=None):
+def run(judgments_dir=None, ev_dir=None):
     cfg = load_config()
     ledger = load_ledger()
-    manifest = json.load(open(os.path.join(EV, "events.json")))
-    jd = judgments_dir or os.path.join(EV, "judgments")
+    ev_dir = ev_dir or EV
+    manifest = json.load(open(os.path.join(ev_dir, "events.json")))
+    jd = judgments_dir or os.path.join(ev_dir, "judgments")
     rep = {"events": len(manifest), "judged": 0, "format_fail": 0,
            "with_candidate": 0, "qualified": 0, "no_trade": 0,
            "gate_reject": 0, "gate_reject_rules": {}, "unfilled": 0,
@@ -124,8 +125,10 @@ def run(judgments_dir=None):
 
 
 def main():
-    rep = run()
-    out = os.path.join(ROOT, "reports", "ablation-events-v0.2.json")
+    ev_dir = sys.argv[1] if len(sys.argv) > 1 else None
+    rep = run(ev_dir=ev_dir)
+    name = sys.argv[2] if len(sys.argv) > 2 else "ablation-events-v0.2.json"
+    out = os.path.join(ROOT, "reports", name)
     with open(out, "w") as f:
         json.dump(rep, f, indent=1, ensure_ascii=False)
     print(json.dumps({k: v for k, v in rep.items() if k != "trades"},

@@ -1,0 +1,461 @@
+[
+ {
+  "event": "fr-AAVEUSDT-15m-1745270100000@b95",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "bar": 95,
+  "gap_price": 153.68,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": false
+ },
+ {
+  "event": "fr-AAVEUSDT-15m-1745270100000@b172",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "bar": 172,
+  "gap_price": 168.05,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b75",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "bar": 75,
+  "gap_price": 167.22,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-AAVEUSDT-1h-1727218800000@b129",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "bar": 129,
+  "gap_price": 159.86,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b92",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "bar": 92,
+  "gap_price": 396.1,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-15m-1718712000000@b144",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "bar": 144,
+  "gap_price": 389.4,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-4h-1731686400000@b115",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "bar": 115,
+  "gap_price": 536.2,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-BCHUSDT-4h-1731686400000@b143",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "bar": 143,
+  "gap_price": 587.0,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ENAUSDT-15m-1749197700000@b71",
+  "segment": "fr-ENAUSDT-15m-1749197700000",
+  "bar": 71,
+  "gap_price": 0.2996,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-ENAUSDT-1h-1758682800000@b68",
+  "segment": "fr-ENAUSDT-1h-1758682800000",
+  "bar": 68,
+  "gap_price": 0.5976,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ENAUSDT-1h-1758682800000@b175",
+  "segment": "fr-ENAUSDT-1h-1758682800000",
+  "bar": 175,
+  "gap_price": 0.6002,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-15m-1744070400000@b75",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "bar": 75,
+  "gap_price": 14.28,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-15m-1744070400000@b153",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "bar": 153,
+  "gap_price": 14.28,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-1h-1744794000000@b134",
+  "segment": "fr-ETCUSDT-1h-1744794000000",
+  "bar": 134,
+  "gap_price": 15.59,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ETCUSDT-1h-1744794000000@b171",
+  "segment": "fr-ETCUSDT-1h-1744794000000",
+  "bar": 171,
+  "gap_price": 17.06,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-FETUSDT-15m-1736014500000@b123",
+  "segment": "fr-FETUSDT-15m-1736014500000",
+  "bar": 123,
+  "gap_price": 1.57,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-FETUSDT-4h-1736683200000@b93",
+  "segment": "fr-FETUSDT-4h-1736683200000",
+  "bar": 93,
+  "gap_price": 1.142,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b73",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "bar": 73,
+  "gap_price": 0.04863,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-HBARUSDT-15m-1730846700000@b120",
+  "segment": "fr-HBARUSDT-15m-1730846700000",
+  "bar": 120,
+  "gap_price": 0.0486,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-HBARUSDT-4h-1741262400000@b71",
+  "segment": "fr-HBARUSDT-4h-1741262400000",
+  "bar": 71,
+  "gap_price": 0.18428,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b69",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "bar": 69,
+  "gap_price": 1.1421,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-15m-1716804900000@b112",
+  "segment": "fr-JUPUSDT-15m-1716804900000",
+  "bar": 112,
+  "gap_price": 1.1534,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b89",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "bar": 89,
+  "gap_price": 1.0346,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-JUPUSDT-4h-1713384000000@b121",
+  "segment": "fr-JUPUSDT-4h-1713384000000",
+  "bar": 121,
+  "gap_price": 1.088,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b74",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "bar": 74,
+  "gap_price": 1.297,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-15m-1731094200000@b108",
+  "segment": "fr-LDOUSDT-15m-1731094200000",
+  "bar": 108,
+  "gap_price": 1.291,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-1d-1717977600000@b114",
+  "segment": "fr-LDOUSDT-1d-1717977600000",
+  "bar": 114,
+  "gap_price": 1.508,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-LDOUSDT-1d-1717977600000@b168",
+  "segment": "fr-LDOUSDT-1d-1717977600000",
+  "bar": 168,
+  "gap_price": 1.508,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "fr-ONDOUSDT-15m-1756139400000@b157",
+  "segment": "fr-ONDOUSDT-15m-1756139400000",
+  "bar": 157,
+  "gap_price": 0.9274,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b73",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "bar": 73,
+  "gap_price": 0.7976,
+  "trapped": "long",
+  "attempts": 2,
+  "overlap": true
+ },
+ {
+  "event": "fr-ONDOUSDT-1d-1744416000000@b113",
+  "segment": "fr-ONDOUSDT-1d-1744416000000",
+  "bar": 113,
+  "gap_price": 0.8265,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b118",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "bar": 118,
+  "gap_price": 0.3977,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-15m-1734995700000@b161",
+  "segment": "fr-PYTHUSDT-15m-1734995700000",
+  "bar": 161,
+  "gap_price": 0.3918,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-1d-1709251200000@b132",
+  "segment": "fr-PYTHUSDT-1d-1709251200000",
+  "bar": 132,
+  "gap_price": 0.3094,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-PYTHUSDT-1d-1709251200000@b177",
+  "segment": "fr-PYTHUSDT-1d-1709251200000",
+  "bar": 177,
+  "gap_price": 0.3397,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b66",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "bar": 66,
+  "gap_price": 2.201e-05,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-15m-1734947100000@b142",
+  "segment": "fr-SHIBUSDT-15m-1734947100000",
+  "bar": 142,
+  "gap_price": 2.303e-05,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-4h-1745971200000@b134",
+  "segment": "fr-SHIBUSDT-4h-1745971200000",
+  "bar": 134,
+  "gap_price": 1.536e-05,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-SHIBUSDT-4h-1745971200000@b163",
+  "segment": "fr-SHIBUSDT-4h-1745971200000",
+  "bar": 163,
+  "gap_price": 1.402e-05,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-TRXUSDT-1h-1718132400000@b113",
+  "segment": "fr-TRXUSDT-1h-1718132400000",
+  "bar": 113,
+  "gap_price": 0.11562,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": false
+ },
+ {
+  "event": "fr-TRXUSDT-1h-1718132400000@b133",
+  "segment": "fr-TRXUSDT-1h-1718132400000",
+  "bar": 133,
+  "gap_price": 0.11799,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b107",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "bar": 107,
+  "gap_price": 7.441,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-UNIUSDT-15m-1722311100000@b131",
+  "segment": "fr-UNIUSDT-15m-1722311100000",
+  "bar": 131,
+  "gap_price": 7.396,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-UNIUSDT-1d-1704758400000@b90",
+  "segment": "fr-UNIUSDT-1d-1704758400000",
+  "bar": 90,
+  "gap_price": 11.568,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-UNIUSDT-1d-1704758400000@b117",
+  "segment": "fr-UNIUSDT-1d-1704758400000",
+  "bar": 117,
+  "gap_price": 7.807,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-WLDUSDT-15m-1746357300000@b103",
+  "segment": "fr-WLDUSDT-15m-1746357300000",
+  "bar": 103,
+  "gap_price": 0.906,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b130",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "bar": 130,
+  "gap_price": 1.518,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-WLDUSDT-1h-1723507200000@b164",
+  "segment": "fr-WLDUSDT-1h-1723507200000",
+  "bar": 164,
+  "gap_price": 1.537,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-XLMUSDT-15m-1744771500000@b137",
+  "segment": "fr-XLMUSDT-15m-1744771500000",
+  "bar": 137,
+  "gap_price": 0.2395,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b68",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "bar": 68,
+  "gap_price": 0.0918,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "fr-XLMUSDT-1d-1718928000000@b92",
+  "segment": "fr-XLMUSDT-1d-1718928000000",
+  "bar": 92,
+  "gap_price": 0.0977,
+  "trapped": "long",
+  "attempts": 2,
+  "overlap": true
+ }
+]
