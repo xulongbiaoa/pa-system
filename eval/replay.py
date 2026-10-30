@@ -16,20 +16,21 @@ def simulate_trade(bars_after, side, entry, stop, target, fee_mult=1.0):
         return None
     exit_price = bars_after[-1]["c"] if bars_after else entry
     exit_bar = len(bars_after) - 1
+    exit_reason = "window_end"
     for i, b in enumerate(bars_after):
         if side == "long":
             if b["l"] <= stop:
-                exit_price, exit_bar = stop, i
+                exit_price, exit_bar, exit_reason = stop, i, "stop"
                 break
             if b["h"] >= target:
-                exit_price, exit_bar = target, i
+                exit_price, exit_bar, exit_reason = target, i, "target"
                 break
         else:
             if b["h"] >= stop:
-                exit_price, exit_bar = stop, i
+                exit_price, exit_bar, exit_reason = stop, i, "stop"
                 break
             if b["l"] <= target:
-                exit_price, exit_bar = target, i
+                exit_price, exit_bar, exit_reason = target, i, "target"
                 break
     gross = (exit_price - entry) if side == "long" else (entry - exit_price)
     fees = (entry + exit_price) * FEE * fee_mult
@@ -37,8 +38,49 @@ def simulate_trade(bars_after, side, entry, stop, target, fee_mult=1.0):
         "r": (gross - fees) / risk,
         "exit_price": exit_price,
         "exit_bar": exit_bar,
+        "exit_reason": exit_reason,
         "win": gross - fees > 0,
     }
+
+
+INTERVAL_MINUTES = {"15m": 15, "30m": 30, "1h": 60, "2h": 120, "4h": 240,
+                    "6h": 360, "12h": 720, "1d": 1440, "1w": 10080}
+
+
+def bars_for_days(interval, days=7):
+    """自然时间口径换算：N 天 = 多少根（仅作评估对照口径，未定版）。"""
+    m = INTERVAL_MINUTES.get(interval)
+    return int(days * 1440 / m) if m else None
+
+
+def simulate_limit_trade(bars_after, side, limit_price, stop, target,
+                         window=300, fee_mult=1.0):
+    """限价单回放（2026-10-30 用户口径）：
+    - 成交从严：价格必须穿越限价（买单 bar 低点 < 限价；卖单 bar 高点 >
+      限价），仅触及不算成交——防「砸穿才成交」的好单被系统性高估；
+    - 生命周期锚在决策点：成交只消耗窗口的前段，离场仍在决策点后
+      window 根内判定；
+    - 未成交不丢弃：返回 filled=False / exit_reason='unfilled'，调用方
+      必须留档单独统计（未成交率本身是样本选择偏差的度量）。
+    """
+    seg = bars_after[:window]
+    fill_bar = None
+    for i, b in enumerate(seg):
+        if side == "long" and b["l"] < limit_price:
+            fill_bar = i
+            break
+        if side == "short" and b["h"] > limit_price:
+            fill_bar = i
+            break
+    if fill_bar is None:
+        return {"filled": False, "exit_reason": "unfilled", "fill_bar": None}
+    t = simulate_trade(seg[fill_bar:], side, limit_price, stop, target,
+                       fee_mult=fee_mult)
+    if t is None:
+        return {"filled": False, "exit_reason": "unfilled", "fill_bar": None}
+    t.update({"filled": True, "fill_bar": fill_bar,
+              "exit_bar": fill_bar + t["exit_bar"]})
+    return t
 
 
 def summarize(trades, seed=42):
