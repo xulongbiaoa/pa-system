@@ -196,7 +196,7 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/void/"
         "second_bar_confirmed）。若随附 G1 卡且引用 G1：该候选必须另带 "
         "conditions 条件矩阵（R1/R2/R3 必需、V1/V2/V3 否决、E1/E2 增强，"
-        "逐项写 rule_id/role/status/evidence_refs/groups，声明 met 必带证据"
+        "逐项写 rule_id/role/status/dimension/evidence_refs/groups（维度由 rule_id 固定映射：R1 账本/R2 位置/R3 触发，不许改），声明 met 必带证据"
         "引用，同源证据只算一组）与 strongest_countercase（最强反证一句）；"
         "G1 证据不齐只能挂起（pending_conditions）或空仓，不许降标准凑齐。"
         "无合格候选时 candidates=[] 且 no_trade_reason 必填"

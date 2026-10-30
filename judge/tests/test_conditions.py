@@ -4,8 +4,13 @@
 from judge.validate import validate_judgment
 
 
+DIMS = {"R1": "账本", "R2": "位置", "R3": "触发",
+        "V1": "反证", "V2": "账本", "V3": "位置"}
+
+
 def _cond(rid, role, status, refs=("gaps.open[0]",), groups=("g",)):
     return {"rule_id": rid, "role": role, "status": status,
+            "dimension": DIMS[rid],
             "evidence_refs": list(refs) if status == "met" else [],
             "groups": list(groups)}
 
@@ -81,3 +86,17 @@ def test_g1_unqualified_without_conditions_ok():
     c = _cand(qualified=False)
     del c["conditions"], c["plan"]
     assert validate_judgment(_judgment(c)) == []
+
+
+def test_dimension_mislabel_errors():
+    conds = _matrix()
+    conds[1]["dimension"] = "过程"  # R2 固定映射是「位置」
+    errs = validate_judgment(_judgment(_cand(conditions=conds)))
+    assert any("维度错位" in e for e in errs)
+
+
+def test_dimension_missing_errors():
+    conds = _matrix()
+    del conds[0]["dimension"]
+    errs = validate_judgment(_judgment(_cand(conditions=conds)))
+    assert any("dimension" in e for e in errs)

@@ -11,6 +11,19 @@
       "items": {
        "additionalProperties": false,
        "properties": {
+        "dimension": {
+         "description": "证据维度（账本/位置/过程/触发/背景/反证/风险）：多证据按维度计数，同维只算一票；G1 必备且须与 rule_id 的固定映射一致",
+         "enum": [
+          "账本",
+          "位置",
+          "过程",
+          "触发",
+          "背景",
+          "反证",
+          "风险"
+         ],
+         "type": "string"
+        },
         "evidence_refs": {
          "items": {
           "type": "string"

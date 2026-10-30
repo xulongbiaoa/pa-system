@@ -241,6 +241,14 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
             for rid in ("R1", "R2", "R3", "V1", "V2", "V3"):
                 if rid not in by_id:
                     hard.append({"rule": "H7", "detail": f"G1 矩阵缺条件 {rid}"})
+            # 维度错位执法（与 validate 同一映射，两层都查）：必需三项
+            # 必须各占其固定维度（账本/位置/触发），把 R2 的一堆同维锚
+            # 申报成多个维度 = 维度造假，与同源凑数同罪。
+            for rid, dim in (("R1", "账本"), ("R2", "位置"), ("R3", "触发")):
+                cd = by_id.get(rid)
+                if cd is not None and cd.get("dimension") != dim:
+                    hard.append({"rule": "H7", "detail":
+                                 f"{rid} 维度错位：申报 {cd.get('dimension')}，应为 {dim}"})
             r2 = by_id.get("R2")
             if r2 is not None and len(set(r2.get("groups") or [])) < 2:
                 hard.append({"rule": "H7", "detail":

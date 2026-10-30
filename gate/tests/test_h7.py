@@ -14,8 +14,13 @@ def _pack():
     }
 
 
+DIMS = {"R1": "账本", "R2": "位置", "R3": "触发", "E1": "触发",
+        "E2": "位置", "V1": "反证", "V2": "账本", "V3": "位置"}
+
+
 def _cond(rid, role, status, groups=("g1",), refs=("gaps.open[0]",)):
     return {"rule_id": rid, "role": role, "status": status,
+            "dimension": DIMS[rid],
             "evidence_refs": list(refs) if status == "met" else [],
             "groups": list(groups), "note": ""}
 
@@ -127,3 +132,10 @@ def test_non_g1_with_veto_met_conditions_rejected():
               conditions=[_cond("V1", "veto", "met", refs=("x",))])
     r = adjudicate(p, _pack(), bars_left=50)
     assert any(h["rule"] == "H7" for h in r["hard_hits"])
+
+
+def test_dimension_mislabel_rejected():
+    # 把 R2（一堆位置锚）申报成「过程」维度充数 = 维度造假
+    conds = _matrix(R2={"dimension": "过程"})
+    r = adjudicate(_plan(conditions=conds), _pack(), bars_left=50)
+    assert any("维度错位" in h["detail"] for h in _h7(r))

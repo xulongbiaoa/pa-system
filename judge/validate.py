@@ -12,6 +12,14 @@ COND_STATUS = {"met", "not_met", "unknown", "not_applicable"}
 # 校验器与裁决层 H7 共用同一份名单，改卡必须同步改这里）
 G1_REQUIRED = ("R1", "R2", "R3")
 G1_VETO = ("V1", "V2", "V3")
+# 维度固定映射（用户 2026-10-30 定：多证据按维度计数，同维只算一票；
+# 维度由 rule_id 定死，判断层申报错位即造假/误读，两层都拒）
+COND_DIMENSIONS = {"账本", "位置", "过程", "触发", "背景", "反证", "风险"}
+G1_DIMENSION_MAP = {
+    "R1": "账本", "R2": "位置", "R3": "触发",
+    "E1": "触发", "E2": "位置", "E3": "过程", "E4": "背景",
+    "V1": "反证", "V2": "账本", "V3": "位置",
+}
 NO_TRADE = {"无命中", "位置不对", "成色不合格", "背景不明", "感知未定"}
 BANNED_KEYS = {"weight", "weights", "probability", "prob"}
 
@@ -116,6 +124,14 @@ def _validate_conditions(c, errs):
             errs.append(f"condition {cd.get('rule_id')} 声明 met 必须带 evidence_refs")
         if not isinstance(cd.get("groups"), list):
             errs.append(f"condition {cd.get('rule_id')} 的 groups 必须是数组（证据同源组）")
+        if c.get("setup") == "G1":
+            dim = cd.get("dimension")
+            if dim not in COND_DIMENSIONS:
+                errs.append(f"G1 condition {cd.get('rule_id')} 必须申报 dimension（证据维度）")
+            elif G1_DIMENSION_MAP.get(cd.get("rule_id")) not in (None, dim):
+                errs.append(
+                    f"G1 condition {cd.get('rule_id')} 维度错位：申报 {dim}，"
+                    f"固定映射 {G1_DIMENSION_MAP[cd['rule_id']]}")
     if c.get("setup") == "G1" and c.get("qualified"):
         ids = {cd.get("rule_id") for cd in conds if isinstance(cd, dict)}
         for rid in G1_REQUIRED + G1_VETO:
