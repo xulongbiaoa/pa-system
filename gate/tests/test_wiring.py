@@ -110,3 +110,23 @@ def test_pack_trend_recent_produced():
     pack = _synthetic_pack()
     recent = pack["trend"].get("recent")
     assert recent is not None and "label" in recent and "window" in recent
+
+
+def test_runner_merge_feeds_h7():
+    """回归（v0.5 实测 bug）：候选的 conditions/反证必须经 runner 并入
+    plan，H7 才读得到；漏并时带完整矩阵的 G1 也会被误判缺矩阵。"""
+    import os
+    import sys
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "eval"))
+    from pilot_run import merge_candidate_terms
+    plan = {"entry": 10.0, "stop": 9.0, "targets": [13.0], "setup": "G1"}
+    cand = {"conditions": [{"rule_id": "R1", "role": "required",
+                            "status": "met", "dimension": "账本",
+                            "evidence_refs": ["gaps.open[0]"],
+                            "groups": ["gap"]}],
+            "strongest_countercase": "反证一句话"}
+    out = merge_candidate_terms(dict(plan), cand)
+    assert out["conditions"] == cand["conditions"]
+    assert out["strongest_countercase"] == cand["strongest_countercase"]
+    bare = merge_candidate_terms(dict(plan), {})
+    assert "conditions" not in bare

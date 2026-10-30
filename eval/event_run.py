@@ -17,11 +17,12 @@ from judge.validate import validate_judgment  # noqa: E402
 from perception.features import load_config  # noqa: E402
 from replay import simulate_plan, summarize  # noqa: E402
 from build_events import pack_at  # noqa: E402
-from pilot_run import load_ledger  # noqa: E402
+from pilot_run import load_ledger, merge_candidate_terms  # noqa: E402
 
 ROOT = os.path.dirname(__file__)
 EV = os.path.join(ROOT, "ablation-events")
 DS = os.path.join(ROOT, "datasets", "fresh")
+_DS = DS
 LIFECYCLE = 300
 TOL_MULT = 0.25
 
@@ -57,6 +58,9 @@ def layer_of(trade, pack):
 
 
 def run(judgments_dir=None, ev_dir=None):
+    global _DS
+    _DS = (os.path.join(ROOT, "datasets", "fresh2")
+           if ev_dir and "confirm2" in str(ev_dir) else DS)
     cfg = load_config()
     ledger = load_ledger()
     ev_dir = ev_dir or EV
@@ -88,12 +92,13 @@ def run(judgments_dir=None, ev_dir=None):
             continue
         rep["qualified"] += 1
         c = qual[0]
-        seg = json.load(open(os.path.join(DS, ev["segment"] + ".json")))
+        seg = json.load(open(os.path.join(_DS, ev["segment"] + ".json")))
         bar = ev["bar"]  # 1-based 决策根
         pack = pack_at(seg["bars"][:bar], cfg)
         plan = dict(c["plan"])
         plan.update({"side": c["side"], "setup": c["setup"],
                      "context": pack["trend"]["label"]})
+        merge_candidate_terms(plan, c)
         verdict = adjudicate(plan, pack, bars_left=LIFECYCLE,
                              feature_refs=c.get("feature_refs", []),
                              flags=build_flags(plan, pack),

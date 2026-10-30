@@ -29,8 +29,10 @@ from build_gap_events import has_overlap  # noqa: E402
 from render_fast import render_bars  # noqa: E402
 
 ROOT = os.path.dirname(__file__)
-DS = os.path.join(ROOT, "datasets", "fresh")
-OUT = os.path.join(ROOT, "ablation-confirm-events")
+DS = (os.path.join(ROOT, sys.argv[1]) if len(sys.argv) > 1
+      else os.path.join(ROOT, "datasets", "fresh"))
+OUT = (os.path.join(ROOT, sys.argv[2]) if len(sys.argv) > 2
+       else os.path.join(ROOT, "ablation-confirm-events"))
 TOL_MULT = 0.25
 SCAN_FROM = 60
 SCAN_TO = 180

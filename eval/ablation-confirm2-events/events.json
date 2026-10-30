@@ -1,0 +1,312 @@
+[
+ {
+  "event": "f2-ALGOUSDT-1d-1704585600000@b109",
+  "segment": "f2-ALGOUSDT-1d-1704585600000",
+  "bar": 109,
+  "arrival_bar": 107,
+  "gap_price": 0.2,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-AXSUSDT-1d-1707436800000@b112",
+  "segment": "f2-AXSUSDT-1d-1707436800000",
+  "bar": 112,
+  "arrival_bar": 110,
+  "gap_price": 7.532,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-AXSUSDT-1d-1707436800000@b157",
+  "segment": "f2-AXSUSDT-1d-1707436800000",
+  "bar": 157,
+  "arrival_bar": 153,
+  "gap_price": 5.5,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": false
+ },
+ {
+  "event": "f2-CHZUSDT-15m-1755962100000@b89",
+  "segment": "f2-CHZUSDT-15m-1755962100000",
+  "bar": 89,
+  "arrival_bar": 87,
+  "gap_price": 0.04033,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-CHZUSDT-15m-1755962100000@b110",
+  "segment": "f2-CHZUSDT-15m-1755962100000",
+  "bar": 110,
+  "arrival_bar": 109,
+  "gap_price": 0.04174,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-CHZUSDT-1h-1728525600000@b119",
+  "segment": "f2-CHZUSDT-1h-1728525600000",
+  "bar": 119,
+  "arrival_bar": 116,
+  "gap_price": 0.0769,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-CRVUSDT-15m-1739538000000@b90",
+  "segment": "f2-CRVUSDT-15m-1739538000000",
+  "bar": 90,
+  "arrival_bar": 86,
+  "gap_price": 0.5265,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-EGLDUSDT-15m-1717848000000@b73",
+  "segment": "f2-EGLDUSDT-15m-1717848000000",
+  "bar": 73,
+  "arrival_bar": 71,
+  "gap_price": 34.58,
+  "trapped": "long",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "f2-GALAUSDT-15m-1745508600000@b150",
+  "segment": "f2-GALAUSDT-15m-1745508600000",
+  "bar": 150,
+  "arrival_bar": 145,
+  "gap_price": 0.01794,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "f2-IMXUSDT-1h-1722632400000@b114",
+  "segment": "f2-IMXUSDT-1h-1722632400000",
+  "bar": 114,
+  "arrival_bar": 112,
+  "gap_price": 1.136,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-IMXUSDT-1h-1722632400000@b163",
+  "segment": "f2-IMXUSDT-1h-1722632400000",
+  "bar": 163,
+  "arrival_bar": 160,
+  "gap_price": 1.191,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-MANAUSDT-15m-1749876300000@b98",
+  "segment": "f2-MANAUSDT-15m-1749876300000",
+  "bar": 98,
+  "arrival_bar": 94,
+  "gap_price": 0.2647,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-MANAUSDT-15m-1749876300000@b143",
+  "segment": "f2-MANAUSDT-15m-1749876300000",
+  "bar": 143,
+  "arrival_bar": 141,
+  "gap_price": 0.2636,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-MANAUSDT-4h-1740297600000@b79",
+  "segment": "f2-MANAUSDT-4h-1740297600000",
+  "bar": 79,
+  "arrival_bar": 77,
+  "gap_price": 0.2842,
+  "trapped": "short",
+  "attempts": 1,
+  "overlap": true
+ },
+ {
+  "event": "f2-RUNEUSDT-15m-1717880400000@b113",
+  "segment": "f2-RUNEUSDT-15m-1717880400000",
+  "bar": 113,
+  "arrival_bar": 112,
+  "gap_price": 5.268,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-RUNEUSDT-1d-1692748800000@b112",
+  "segment": "f2-RUNEUSDT-1d-1692748800000",
+  "bar": 112,
+  "arrival_bar": 109,
+  "gap_price": 5.997,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-SANDUSDT-1h-1731034800000@b93",
+  "segment": "f2-SANDUSDT-1h-1731034800000",
+  "bar": 93,
+  "arrival_bar": 88,
+  "gap_price": 0.3004,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-SNXUSDT-15m-1759951800000@b77",
+  "segment": "f2-SNXUSDT-15m-1759951800000",
+  "bar": 77,
+  "arrival_bar": 76,
+  "gap_price": 1.095,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-SNXUSDT-15m-1759951800000@b159",
+  "segment": "f2-SNXUSDT-15m-1759951800000",
+  "bar": 159,
+  "arrival_bar": 155,
+  "gap_price": 1.368,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-SNXUSDT-1h-1758078000000@b155",
+  "segment": "f2-SNXUSDT-1h-1758078000000",
+  "bar": 155,
+  "arrival_bar": 151,
+  "gap_price": 0.675,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-SNXUSDT-1h-1758078000000@b175",
+  "segment": "f2-SNXUSDT-1h-1758078000000",
+  "bar": 175,
+  "arrival_bar": 171,
+  "gap_price": 0.709,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-STXUSDT-15m-1725937200000@b114",
+  "segment": "f2-STXUSDT-15m-1725937200000",
+  "bar": 114,
+  "arrival_bar": 113,
+  "gap_price": 1.554,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-STXUSDT-4h-1714089600000@b72",
+  "segment": "f2-STXUSDT-4h-1714089600000",
+  "bar": 72,
+  "arrival_bar": 67,
+  "gap_price": 2.1609,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-THETAUSDT-15m-1738636200000@b77",
+  "segment": "f2-THETAUSDT-15m-1738636200000",
+  "bar": 77,
+  "arrival_bar": 72,
+  "gap_price": 1.418,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-THETAUSDT-4h-1712779200000@b139",
+  "segment": "f2-THETAUSDT-4h-1712779200000",
+  "bar": 139,
+  "arrival_bar": 138,
+  "gap_price": 2.161,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-VETUSDT-15m-1732038300000@b131",
+  "segment": "f2-VETUSDT-15m-1732038300000",
+  "bar": 131,
+  "arrival_bar": 126,
+  "gap_price": 0.03141,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-VETUSDT-15m-1732038300000@b160",
+  "segment": "f2-VETUSDT-15m-1732038300000",
+  "bar": 160,
+  "arrival_bar": 159,
+  "gap_price": 0.03166,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-VETUSDT-1h-1752778800000@b78",
+  "segment": "f2-VETUSDT-1h-1752778800000",
+  "bar": 78,
+  "arrival_bar": 75,
+  "gap_price": 0.02845,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": false
+ },
+ {
+  "event": "f2-VETUSDT-1h-1752778800000@b139",
+  "segment": "f2-VETUSDT-1h-1752778800000",
+  "bar": 139,
+  "arrival_bar": 138,
+  "gap_price": 0.02615,
+  "trapped": "short",
+  "attempts": 0,
+  "overlap": false
+ },
+ {
+  "event": "f2-XTZUSDT-15m-1761203700000@b149",
+  "segment": "f2-XTZUSDT-15m-1761203700000",
+  "bar": 149,
+  "arrival_bar": 145,
+  "gap_price": 0.6,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ },
+ {
+  "event": "f2-XTZUSDT-4h-1714910400000@b93",
+  "segment": "f2-XTZUSDT-4h-1714910400000",
+  "bar": 93,
+  "arrival_bar": 92,
+  "gap_price": 0.967,
+  "trapped": "long",
+  "attempts": 0,
+  "overlap": true
+ }
+]

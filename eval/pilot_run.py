@@ -29,6 +29,17 @@ LEDGER_PATH = os.path.join(
 )
 
 
+def merge_candidate_terms(plan, c):
+    """把候选的条件矩阵与最强反证并入 plan——H7 从 plan 读这两项。
+    2026-10-30 消融 v0.5 实测：runner 组装 plan 时漏并，H7 把带完整
+    矩阵的 G1 候选误判为「缺 conditions」全数拒绝（接线 bug）。"""
+    if c.get("conditions"):
+        plan["conditions"] = c["conditions"]
+    if c.get("strongest_countercase"):
+        plan["strongest_countercase"] = c["strongest_countercase"]
+    return plan
+
+
 def load_ledger(path=LEDGER_PATH):
     """模式台账：落盘格式见 eval/ledger.py（v1：all / by_context / by_order_type）。
 
@@ -90,6 +101,7 @@ def run(judgments_dir=JD):
         # 永远查不中，停牌规则等于没接线（2026-10-30 修正）。
         plan.update({"side": c["side"], "setup": c["setup"],
                      "context": pack["trend"]["label"]})
+        merge_candidate_terms(plan, c)
         verdict = adjudicate(
             plan, pack, bars_left=LIFECYCLE,
             feature_refs=c.get("feature_refs", []),
