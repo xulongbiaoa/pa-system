@@ -148,6 +148,32 @@ class QueryService:
                                same_timeframe=True,
                                same_level=(a.level_key == b.level_key))
 
+    # ---------- 单方连续活动（切到小视角也不丢线） ----------
+    # 只有“行动类”事件算一方的作为；LEFT_BAND/RETURN/TOUCHED 是价格与地形的位置
+    # 关系（价格在带下方不等于空方做了什么），不计入单方活动线。
+    SIDE_ACTION_EVENTS = ("ATTEMPT_STARTED", "SEPARATED", "GAP_OPENED", "GAP_CLOSED",
+                          "TEST_STARTED", "TEST_ENDED", "RECLAIMED")
+
+    def get_side_activity(self, direction: str) -> dict:
+        """某一方在本周期内的连续状态：按时间序的全部事件 + 每段行动的结果向量。
+
+        视角（全局/局部）只是同一状态的窗口，这条线不因缩放而断。
+        没有记录到活动时返回 recorded=False —— 是“未观测到”，不是“力量为零”（方案 §6.5）。
+        """
+        if direction not in ("up", "down"):
+            raise ValueError(f"direction 必须是 up/down: {direction}")
+        end_seq = self.repo.rev_last_seq.get(self.revision, 0)
+        evs = [e.to_dict() for e in self.repo.kernel.events
+               if e.sequence <= end_seq and e.direction == direction
+               and e.type in self.SIDE_ACTION_EVENTS]
+        segs = []
+        for s in self.repo.kernel.segments.values():
+            if s.direction == direction:
+                segs.append({"segment_id": s.segment_id, "level_key": s.level_key,
+                             "open": s.open, "result": s.result(self.repo.bars_by_id)})
+        return {"direction": direction, "recorded": bool(evs or segs),
+                "events": evs, "segments": segs}
+
     # ---------- 条件核对（观察计划用） ----------
     def check_conditions(self, plan: dict) -> dict:
         satisfied, missing = [], []

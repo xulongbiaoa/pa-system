@@ -273,3 +273,17 @@ def test_contest_forms_after_both_directions():
         prev = c
     scene = kernel.state_dict()
     assert scene["contests"] and scene["contests"][0]["level_key"] == "P1@v1"
+
+
+def test_side_activity_continuous_and_absence_is_not_zero():
+    kernel, repo = fresh_repo()
+    run_fixture(repo)
+    qs = QueryService(repo, make_token(repo))
+    up = qs.get_side_activity("up")
+    assert up["recorded"] is True
+    types = [e["type"] for e in up["events"]]
+    assert types.count("TEST_STARTED") == 2 and "GAP_OPENED" in types
+    assert len(up["segments"]) == 1
+    assert up["segments"][0]["result"]["net_progress"] == Decimal("3.8")
+    down = qs.get_side_activity("down")
+    assert down["recorded"] is False and down["events"] == []   # 未观测到 != 力量为零
