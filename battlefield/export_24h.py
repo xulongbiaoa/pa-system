@@ -73,7 +73,10 @@ def prepare(sym: str):
     print(sym, "bars:", len(bars), "rev:", pkg["snapshot_revision"], "token:", pkg["token"])
 
 
-def _rebuild_with_outputs(sym: str):
+def _rebuild_with_outputs(sym: str, tolerant: bool = False):
+    """日内整窗语义：账本只由本窗 bars 构成，输出在整窗建完后按序回放
+    （read_cursor == 本窗 revision，旧的严格校验即正确语义）。
+    tolerant 参数保留兼容签名，日内模式下不使用。"""
     bars = _load_bars(sym)
     repo = build_battlefield(sym, "15m", TF_MS, bars)
     session = BrainSession(repo, RecordedAdapter([]))
@@ -81,12 +84,16 @@ def _rebuild_with_outputs(sym: str):
     outputs = []
     if os.path.exists(out_path):
         outputs = [json.loads(l) for l in open(out_path) if l.strip()]
+    applied = []
     for out in outputs:
         session.adapter = RecordedAdapter([out])
         res = session.run_once()
         if res["status"] != "ok":
             raise RuntimeError(f"{sym} 大脑输出校验不过: {res}")
-    return repo, session, outputs
+        applied.append(out)
+    session.applied_count = len(applied)
+    session.total_outputs = len(outputs)
+    return repo, session, applied
 
 
 def apply(sym: str, judge_file: str):
@@ -110,8 +117,8 @@ def apply(sym: str, judge_file: str):
     print(sym, "applied:", res)
 
 
-def finalize(sym: str):
-    repo, session, outputs = _rebuild_with_outputs(sym)
+def finalize(sym: str, tolerant: bool = False):
+    repo, session, outputs = _rebuild_with_outputs(sym, tolerant=tolerant)
     token = make_token(repo)
     qs = QueryService(repo, token)
     scene = qs.get_scene()
@@ -157,15 +164,19 @@ def finalize(sym: str):
             "state_revision": scene["revision"], "cursor_close_ms": scene["cursor"],
             "bars_count": len(bars), "generated_at_ms": int(time.time() * 1000),
             "data_health": scene["data_health"],
-            "window": "15m × 24h（96 根已收盘）",
-            "ai": {"outputs": len(outputs), "last_read_cursor": ai_cursor,
+            "window": "15m × 24h（日内整窗）",
+            "book_bars": len(bars),
+            "ai": {"outputs": len(outputs),
+                   "outputs_total": getattr(session, "total_outputs", len(outputs)),
+                   "last_read_cursor": ai_cursor,
                    "last_action": last_out.get("action") if last_out else None,
                    "status": "completed" if last_out else "none",
-                   "stale": (ai_cursor is not None and ai_cursor < scene["revision"])},
+                   "stale": (ai_cursor is not None and ai_cursor < scene["revision"])
+                            or getattr(session, "applied_count", len(outputs)) < getattr(session, "total_outputs", len(outputs))},
             "source": "24h 新鲜战场（feed → runner → QueryService）",
         },
         "bars": [{"t": b.open_time, "o": _num(b.open), "h": _num(b.high),
-                  "l": _num(b.low), "c": _num(b.close)} for b in bars],
+                  "l": _num(b.low), "c": _num(b.close)} for b in bars[-128:]],
         "levels": [{"level_key": lv["level_key"], "kind": lv["kind"],
                     "lo": _num(lv["lo"]), "hi": _num(lv["hi"]),
                     "watch_lo": _num(lv["watch_lo"]), "watch_hi": _num(lv["watch_hi"])}

@@ -221,7 +221,9 @@ function renderCompare() {
     <tr><td>持续时间</td><td>${cell(up, "dur")}</td><td>${cell(dn, "dur")}</td></tr></table>`;
 }
 // ---------- 装配 ----------
+let curSymbol = "BTCUSDT";
 async function load(sym) {
+    curSymbol = sym;
     $("symBTC").classList.toggle("on", sym === "BTCUSDT");
     $("symETH").classList.toggle("on", sym === "ETHUSDT");
     snap = await (await fetch(`data24/${sym}.json`)).json();
@@ -247,3 +249,27 @@ window.addEventListener("resize", positionBands);
 $("symBTC").addEventListener("click", () => load("BTCUSDT"));
 $("symETH").addEventListener("click", () => load("ETHUSDT"));
 load("BTCUSDT");
+// 日内滚动：每 60 秒探一次新快照，token 变了才整页重渲染（数据由 roll_site 每 15 分钟整窗更新）
+setInterval(async () => {
+    try {
+        const fresh = await (await fetch(`data24/${curSymbol}.json?t=${Date.now()}`)).json();
+        if (!snap || fresh.meta.token !== snap.meta.token) {
+            snap = fresh;
+            const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1];
+            const prev = bars[bars.length - 2] || last;
+            const chg = last.c - prev.c, pct = (chg / prev.c * 100);
+            $("dataTime").textContent = `数据时间 ${fmtTc(m.cursor_close_ms)}（UTC+8） · ${m.window}`;
+            $("tokenBadge").textContent = m.token;
+            $("aiBadge").textContent = m.ai.stale ? "AI 参谋 · 待复核" : "AI 参谋运行中 · 已复核至当前";
+            $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span><span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span><span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>`;
+            buildZones();
+            renderChart();
+            renderBrief();
+            renderPlan();
+            renderTimeline();
+            renderCompare();
+            $("footLine").textContent = `快照 ${m.token} · rev ${m.state_revision} · 生成 ${fmtTc(m.generated_at_ms)} · ${m.source} · 缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
+        }
+    }
+    catch (e) { /* 网络抖动下轮再探 */ }
+}, 60000);
