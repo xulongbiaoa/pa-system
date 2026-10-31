@@ -1,3 +1,8 @@
+## 2026-10-31 P1 机会状态机核心落地：状态机 + 文件存储 + waits 桥（分支 codex/gap-trading-design）
+- runtime/opportunities.py（纯逻辑）：§15 全状态转移（取消/否决优先于成立、同快照取消优先；READY 定价无效回 WAITING 标 SPACE_INSUFFICIENT、非反证；提交后取消只置 cancel_requested 走撤单确认）；§22 三计数分开（assessment 只计 revision 匹配的已接受评估、迟到只落审计；test_sequence 只由测试边界涨；unknown_streak 按条件计、API 错误不沾）；unknown 双政策（review_hold 停复核不关确定性取消、operational_expire 标运营终结不冒充策略拒绝，政策与上限必填无默认）；双 recheck 模式（new_evidence 相关变化即唤醒、leave_then_return 离开武装→返回才算新测试；模式是冻结属性，兜底新根唤醒不覆盖 leave_then_return 条件）；预算用尽标 deferred 不丢事实。
+- runtime/opportunity_store.py：文件存储迁移桥梁——进程锁独占（第二写者 StoreLocked）、状态+任务同一存储单元、tmp+fsync+os.replace 原子替换；任务按 request_key 唯一。只供研究/影子，真实执行等 PostgreSQL（§22.4 边界已写进模块）。
+- eval/forward_opportunity_bridge.py：due→重判闭环——dispatch 把 due 的 wait 按冻结 missing 一字不改建成 Opportunity（branch 出处=leave_then_return、其余=new_evidence；test_sequence/assessment 起始各 1）并登记唯一 rejudge 任务；apply 消费：still_missing 同一机会续等且 wait 重开（due 不再是终态）、ready→READY、invalidated→机会作废且 wait 关闭。CLI 供批量轮操作者显式运行，未挂自动流程、未动存量 waits.json。
+- 测试 +22（状态机 17 + 桥 5），全仓 229 passed + 1 skipped。未做：T05 PostgreSQL、T06 图数 API 接线、T03 统一 DecisionService、把桥接进批量轮收尾（等下一批影子消费 110 个存量 due 时一并验）。
 ## 2026-10-31 事件器 v1 第一步落地：事实事件纯函数 + 尝试状态机（分支 codex/gap-trading-design）
 - 新增 runtime/events.py（零依赖、纯函数）：WatchLevel 位置契约（原始带 + 观察带、等于边界不算越界、无隐含容差）、10 类事实事件、AttemptTracker 双向尝试状态机（attempt_id 确定性生成、event_id 幂等、retest_sequence 只在分离后返回时递增、冷启动不追认、同根多顺序事件标 intrabar_order_unknown）。只报事实，不接 gate、不改任何门槛；E12/E13/E14 属机会/调度/gate 层，留 P1。
 - 验收：runtime/tests/test_events.py 16 项全过（E01–E11 + 下破镜像 + 边界相等 + 无前根 + 宽观察带）；全仓 207 passed + 1 skipped。
