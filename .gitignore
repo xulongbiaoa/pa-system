@@ -18,3 +18,6 @@ shadow/
 # W08 冻结语料与 W09 导出数据（可由 prepare_data.py / export_web.py 重生成）
 eval/w08/data/
 battlefield/web/data/
+
+# 沙盘 24h 数据（export_24h 生成：bars/待判包/判读落账/快照，均为运行产物）
+battlefield/web/data24/

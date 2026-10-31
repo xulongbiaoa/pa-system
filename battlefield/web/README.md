@@ -8,11 +8,22 @@
 
 ## 运行
 
+沙盘（主）读 24h 数据，核验页读影子全史数据，两条导出分开：
+
 ```bash
 cd ~/workspace/pa-system
-python3 -m battlefield.export_web          # 从 shadow 账本重放导出 web/data/{BTCUSDT,ETHUSDT}.json
+# 沙盘：15m × 24h（96 根）新鲜战场（用户 2026-10-31 定版口径）
+python3 -m battlefield.export_24h prepare BTCUSDT   # 抓数建场，出待判包
+python3 -m battlefield.export_24h prepare ETHUSDT
+# 判读员读 data24/pkg_<SYM>.json 出简报后：
+python3 -m battlefield.export_24h apply BTCUSDT <判读输出.json>
+python3 -m battlefield.export_24h apply ETHUSDT <判读输出.json>
+python3 -m battlefield.export_24h finalize BTCUSDT  # 出 data24/<SYM>.json
+python3 -m battlefield.export_24h finalize ETHUSDT
+# 核验页：影子全史快照
+python3 -m battlefield.export_web                   # 出 web/data/{BTCUSDT,ETHUSDT}.json
 cd battlefield/web && python3 -m http.server 8901
-# 打开 http://127.0.0.1:8901/
+# 打开 http://127.0.0.1:8901/sandbox.html（沙盘）或 index.html（核验页）
 ```
 
 `web/data/` 是生成物（gitignore），改账本后重跑导出即刷新。本机 Chrome 直连 127.0.0.1 可能被 Local Network Access 拦截，验收截图走 puppeteer 请求拦截供文件（脚本范例 `~/workspace/.tmp/shot_w09.js`）。

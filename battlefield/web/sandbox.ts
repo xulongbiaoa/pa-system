@@ -180,7 +180,7 @@ function showBand(lower: AnyObj | null, upper: AnyObj | null, px: number, bandLo
 function renderPanels() {
   const m = snap!.meta;
   $("metaLine").innerHTML =
-    `<span class="badge">${m.token}</span><span class="badge">rev ${m.state_revision}</span>` +
+    `<span class="badge">${m.token}</span><span class="badge">${m.window || ""}</span><span class="badge">rev ${m.state_revision}</span>` +
     `<span class="badge">最新收盘 ${fmtTc(m.cursor_close_ms)}</span>` +
     (m.ai.stale ? `<span class="badge stale">AI 基于旧快照，待复核</span>` : `<span class="badge">AI 已复核至当前</span>`);
   $("hypBody").innerHTML = snap!.hypotheses.length ? snap!.hypotheses.map((h: AnyObj) => `
@@ -212,7 +212,7 @@ async function load(sym: string) {
   symbol = sym;
   $("symBTC").classList.toggle("on", sym === "BTCUSDT");
   $("symETH").classList.toggle("on", sym === "ETHUSDT");
-  snap = await (await fetch(`data/${sym}.json`)).json();
+  snap = await (await fetch(`data24/${sym}.json`)).json();
   drawBoard();
   renderPanels();
 }
