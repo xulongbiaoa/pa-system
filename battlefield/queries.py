@@ -182,9 +182,10 @@ class QueryService:
         if direction not in ("up", "down"):
             raise ValueError(f"direction 必须是 up/down: {direction}")
         end_seq = self.repo.rev_last_seq.get(self.revision, 0)
+        # RECLAIMED 双面记账：对尝试方是失败，对收回方是反制成果，两边活动线都收
         evs = [e.to_dict() for e in self.repo.kernel.events
-               if e.sequence <= end_seq and e.direction == direction
-               and e.type in self.SIDE_ACTION_EVENTS]
+               if e.sequence <= end_seq and e.type in self.SIDE_ACTION_EVENTS
+               and (e.direction == direction or e.type == "RECLAIMED")]
         segs = []
         for s in self.repo.kernel.segments.values():
             if s.direction == direction:

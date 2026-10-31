@@ -39,12 +39,15 @@ class SwingDetector:
     同一极值只确认一次；确认时刻 = 第 right 根右侧 bar 的 close_time。
     """
 
-    def __init__(self, left=DEFAULT_SWING_LEFT, right=DEFAULT_SWING_RIGHT, band_fn=None):
+    def __init__(self, left=DEFAULT_SWING_LEFT, right=DEFAULT_SWING_RIGHT, band_fn=None,
+                 kind="swing", name_prefix="SW"):
         self.left = left
         self.right = right
         self.bars: List[Bar] = []
         self._confirmed_idx = set()
         self._seq = 0
+        self.kind = kind
+        self.name_prefix = name_prefix
         self.band_fn = band_fn or (lambda scale: Decimal("0.5") * scale if scale else Decimal("0"))
 
     def on_bar(self, bar: Bar, scale: Optional[Decimal]) -> List[Level]:
@@ -60,14 +63,16 @@ class SwingDetector:
         if all(cand.high > b.high for b in lefts + rights):
             self._confirmed_idx.add(i)
             self._seq += 1
-            out.append(make_level(f"SW-H-{self._seq}", cand.high, cand.high, kind="swing",
+            out.append(make_level(f"{self.name_prefix}-H-{self._seq}", cand.high, cand.high,
+                                  kind=self.kind,
                                   source=f"swing_high left={self.left} right={self.right}",
                                   available_at=bar.close_time, confirmed_at=bar.close_time,
                                   band=band, direction_hint="down"))
         elif all(cand.low < b.low for b in lefts + rights):
             self._confirmed_idx.add(i)
             self._seq += 1
-            out.append(make_level(f"SW-L-{self._seq}", cand.low, cand.low, kind="swing",
+            out.append(make_level(f"{self.name_prefix}-L-{self._seq}", cand.low, cand.low,
+                                  kind=self.kind,
                                   source=f"swing_low left={self.left} right={self.right}",
                                   available_at=bar.close_time, confirmed_at=bar.close_time,
                                   band=band, direction_hint="up"))

@@ -302,3 +302,19 @@ def test_changes_carry_actor_and_terrain_lenses():
     assert att["lens"] == "actor"
     # 事件日志本身不被标注污染
     assert "lens" not in kernel.events[0].to_dict()
+
+
+def test_contest_forms_on_reclaim_alone():
+    # 只有一上方尝试 + 被收回：收回即对方反制成果，争夺成立
+    kernel = Battlefield("TEST", "15m", TF_MS)
+    repo = InMemoryRepository(kernel)
+    kernel.register_level(level_p1())
+    closes = [99, 101, 99]
+    prev = 99
+    for i, c in enumerate(closes):
+        o = prev
+        repo.commit_bar(bar(i, o, max(o, c) + Decimal("0.4"), min(o, c) - Decimal("0.4"), c))
+        prev = c
+    scene = kernel.state_dict()
+    assert scene["contests"] and scene["contests"][0]["level_key"] == "P1@v1"
+    assert scene["contests"][0]["up_events"] and scene["contests"][0]["down_events"]

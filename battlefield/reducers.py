@@ -23,6 +23,10 @@ from .terrain import SwingDetector
 
 TEST_REJECTION_PROXY = "full_bar_leave_band"
 
+# 只有这些来源的位置有资格开缺口账（缺口定义 v0.2 入账范围：据点/要塞上下沿的
+# 波段点 + 人工审定锚）。minor 摆动只作地形，不立账——否则账本被小摆动淹没。
+GAP_ELIGIBLE_KINDS = ("manual", "gap_anchor", "swing_major")
+
 
 @dataclass
 class LevelRuntime:
@@ -56,7 +60,9 @@ class Battlefield:
     """单标的、单周期、已收盘 K 线的翻译内核。不调用模型。"""
 
     def __init__(self, symbol: str, timeframe: str, timeframe_ms: int,
-                 enable_swings: bool = False):
+                 enable_swings: bool = False, swing_specs=None):
+        """swing_specs: [(left, right, kind, name_prefix), ...]；enable_swings=True
+        且未给 specs 时只装 minor (2,2) 摆动（兼容旧测试）。"""
         self.symbol = symbol
         self.timeframe = timeframe
         self.timeframe_ms = int(timeframe_ms)
@@ -83,7 +89,13 @@ class Battlefield:
         self._test_seq = 0
         self._prev_close: Optional[Decimal] = None
         self._last_scale: Optional[Decimal] = None
-        self._swings = SwingDetector() if enable_swings else None
+        if swing_specs:
+            self._swings = [SwingDetector(left=l, right=r, kind=k, name_prefix=p)
+                            for (l, r, k, p) in swing_specs]
+        elif enable_swings:
+            self._swings = [SwingDetector()]
+        else:
+            self._swings = []
 
     # ---------- 注册 ----------
     def register_level(self, level: Level) -> None:
@@ -125,8 +137,8 @@ class Battlefield:
         self.facts_by_id[bar.id] = facts
         self._last_scale = facts.scale
         # 摆动地形（确认时刻纪律在 SwingDetector 内）
-        if self._swings is not None:
-            for lv in self._swings.on_bar(bar, facts.scale):
+        for det in self._swings:
+            for lv in det.on_bar(bar, facts.scale):
                 self.register_level(lv)
                 out.append(self._emit("LEVEL_CONFIRMED", bar, level_key=lv.key(),
                                       direction=lv.direction_hint,
@@ -195,14 +207,21 @@ class Battlefield:
                 elif prev_close >= lv.lo and bar.close < lv.lo:
                     self._start_attempt(rt, bar, "down", out, extra)
             elif rt.attempt_dir == "up" and bar.close <= lv.hi:
-                out.append(self._emit("RECLAIMED", bar, level_key=key, direction="up",
-                                      payload={"attempt_segment": rt.attempt_segment, **extra}))
+                ev = self._emit("RECLAIMED", bar, level_key=key, direction="up",
+                                payload={"attempt_segment": rt.attempt_segment, **extra})
+                out.append(ev)
+                # 收回是对方在该位置的反制成果：争夺自此成立
+                rt.dirs_seen.add("down")
+                rt.event_refs["down"].append(ev.event_id)
                 self._close_segment(rt)
                 rt.attempt_dir = None
                 rt.separated = False
             elif rt.attempt_dir == "down" and bar.close >= lv.lo:
-                out.append(self._emit("RECLAIMED", bar, level_key=key, direction="down",
-                                      payload={"attempt_segment": rt.attempt_segment, **extra}))
+                ev = self._emit("RECLAIMED", bar, level_key=key, direction="down",
+                                payload={"attempt_segment": rt.attempt_segment, **extra})
+                out.append(ev)
+                rt.dirs_seen.add("up")
+                rt.event_refs["up"].append(ev.event_id)
                 self._close_segment(rt)
                 rt.attempt_dir = None
                 rt.separated = False
@@ -217,7 +236,7 @@ class Battlefield:
                 and prev_close > anchor and separated_above(bar, anchor):
             rt.separated = True
             out.append(self._emit("SEPARATED", bar, level_key=key, direction="up", payload={**extra}))
-            if gap is None:
+            if gap is None and lv.kind in GAP_ELIGIBLE_KINDS:
                 self._gap_seq += 1
                 gid = f"GAP-{lv.level_id}-{self._gap_seq}"
                 self.gaps[gid] = GapRecord(gap_id=gid, level_key=key, direction="up",
@@ -229,7 +248,7 @@ class Battlefield:
                 and prev_close < anchor and separated_below(bar, anchor):
             rt.separated = True
             out.append(self._emit("SEPARATED", bar, level_key=key, direction="down", payload={**extra}))
-            if gap is None:
+            if gap is None and lv.kind in GAP_ELIGIBLE_KINDS:
                 self._gap_seq += 1
                 gid = f"GAP-{lv.level_id}-{self._gap_seq}"
                 self.gaps[gid] = GapRecord(gap_id=gid, level_key=key, direction="down",
