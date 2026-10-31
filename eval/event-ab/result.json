@@ -1,0 +1,287 @@
+{
+ "auto": {
+  "arm": "auto",
+  "judged": 20,
+  "format_errors": 0,
+  "candidates": 3,
+  "gate_reject": 1,
+  "gate_reject_rules": {
+   "H2": 1
+  },
+  "unfilled": 0,
+  "trades": [
+   {
+    "r": -1.0488035714285717,
+    "win": false,
+    "exit_price": 162.3,
+    "exit_bar": 17,
+    "exit_reason": "scale:stop,stop",
+    "order_type": "market",
+    "exit_mode": "scale",
+    "filled": true,
+    "tranches": [
+     {
+      "frac": 0.5,
+      "target": 172.38,
+      "r": -1.0488035714285717,
+      "exit_reason": "stop",
+      "exit_bar": 17
+     },
+     {
+      "frac": 0.5,
+      "target": 175.74,
+      "r": -1.0488035714285717,
+      "exit_reason": "stop",
+      "exit_bar": 17
+     }
+    ],
+    "event": "ev01",
+    "setup": "A1",
+    "side": "long",
+    "entry": 165.66
+   },
+   {
+    "r": -0.4352939999999954,
+    "win": false,
+    "exit_price": 395.5,
+    "exit_bar": 17,
+    "exit_reason": "scale:void,void",
+    "order_type": "limit",
+    "exit_mode": "scale",
+    "filled": true,
+    "tranches": [
+     {
+      "frac": 0.5,
+      "target": 385.3,
+      "r": -0.4352939999999954,
+      "exit_reason": "void",
+      "exit_bar": 17
+     },
+     {
+      "frac": 0.5,
+      "target": 378.7,
+      "r": -0.4352939999999954,
+      "exit_reason": "void",
+      "exit_bar": 17
+     }
+    ],
+    "event": "ev07",
+    "setup": "B3",
+    "side": "short",
+    "entry": 393.6
+   }
+  ],
+  "violations": 0,
+  "actions": {},
+  "per_event": {
+   "ev01": {
+    "r": -1.0488035714285717,
+    "status": "resolved"
+   },
+   "ev02": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev03": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev04": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev05": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev06": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev07": {
+    "r": -0.4352939999999954,
+    "status": "resolved"
+   },
+   "ev08": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev09": {
+    "r": 0.0,
+    "status": "gate_reject"
+   },
+   "ev10": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev11": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev12": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev13": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev14": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev15": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev16": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev17": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev18": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev19": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev20": {
+    "r": 0.0,
+    "status": "no_trade"
+   }
+  },
+  "summary": {
+   "n": 2,
+   "win_rate": 0.0,
+   "mean_r": -0.742,
+   "median_r": -0.742,
+   "mean_r_ci95": [
+    -1.0488,
+    -0.4353
+   ],
+   "max_consec_losses": 2,
+   "proven_edge": false,
+   "note": "样本不足（n=2<30），不下结论"
+  },
+  "per_opp_r": -0.0742
+ },
+ "camp": {
+  "arm": "camp",
+  "judged": 20,
+  "format_errors": 6,
+  "candidates": 1,
+  "gate_reject": 1,
+  "gate_reject_rules": {
+   "H1": 1
+  },
+  "unfilled": 0,
+  "trades": [],
+  "violations": 1,
+  "actions": {
+   "地图作废": 13,
+   "执行": 1
+  },
+  "per_event": {
+   "ev01": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev02": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev03": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev04": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev05": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev06": {
+    "r": 0.0,
+    "status": "gate_reject"
+   },
+   "ev07": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev08": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev09": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev10": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev11": {
+    "r": 0.0,
+    "status": "format_error"
+   },
+   "ev12": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev13": {
+    "r": 0.0,
+    "status": "format_error"
+   },
+   "ev14": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev15": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev16": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev17": {
+    "r": 0.0,
+    "status": "format_error"
+   },
+   "ev18": {
+    "r": 0.0,
+    "status": "format_error"
+   },
+   "ev19": {
+    "r": 0.0,
+    "status": "format_error"
+   },
+   "ev20": {
+    "r": 0.0,
+    "status": "format_error"
+   }
+  },
+  "summary": {
+   "n": 0
+  },
+  "per_opp_r": 0.0
+ },
+ "paired": {
+  "n": 20,
+  "mean_diff_camp_minus_auto": 0.0742,
+  "ci95": [
+   0.0,
+   0.2008
+  ],
+  "events_camp_better": 2,
+  "events_auto_better": 0,
+  "events_tied": 18
+ }
+}

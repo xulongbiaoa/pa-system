@@ -1,0 +1,222 @@
+[
+ {
+  "dataset": "fresh",
+  "segment": "fr-AAVEUSDT-15m-1745270100000",
+  "symbol": "AAVEUSDT",
+  "interval": "15m",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1745405100000,
+  "eid": "ev01",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-ALGOUSDT-15m-1750120200000",
+  "symbol": "ALGOUSDT",
+  "interval": "15m",
+  "bar": 153,
+  "kind": "fortress",
+  "decision_t": 1750257000000,
+  "eid": "ev02",
+  "map_bar": 63
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-BATUSDT-15m-1750353300000",
+  "symbol": "BATUSDT",
+  "interval": "15m",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1750488300000,
+  "eid": "ev03",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-AAVEUSDT-1h-1727218800000",
+  "symbol": "AAVEUSDT",
+  "interval": "1h",
+  "bar": 156,
+  "kind": "fortress",
+  "decision_t": 1727776800000,
+  "eid": "ev04",
+  "map_bar": 66
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-ALGOUSDT-1d-1704585600000",
+  "symbol": "ALGOUSDT",
+  "interval": "1d",
+  "bar": 153,
+  "kind": "fortress",
+  "decision_t": 1717718400000,
+  "eid": "ev05",
+  "map_bar": 63
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-BATUSDT-1h-1724914800000",
+  "symbol": "BATUSDT",
+  "interval": "1h",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1725454800000,
+  "eid": "ev06",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-BCHUSDT-15m-1718712000000",
+  "symbol": "BCHUSDT",
+  "interval": "15m",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1718847000000,
+  "eid": "ev07",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-AXSUSDT-15m-1740945600000",
+  "symbol": "AXSUSDT",
+  "interval": "15m",
+  "bar": 152,
+  "kind": "fortress",
+  "decision_t": 1741081500000,
+  "eid": "ev08",
+  "map_bar": 62
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-ENSUSDT-15m-1721345400000",
+  "symbol": "ENSUSDT",
+  "interval": "15m",
+  "bar": 152,
+  "kind": "fortress",
+  "decision_t": 1721481300000,
+  "eid": "ev09",
+  "map_bar": 62
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-BCHUSDT-4h-1731686400000",
+  "symbol": "BCHUSDT",
+  "interval": "4h",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1733846400000,
+  "eid": "ev10",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-AXSUSDT-1d-1707436800000",
+  "symbol": "AXSUSDT",
+  "interval": "1d",
+  "bar": 153,
+  "kind": "fortress",
+  "decision_t": 1720569600000,
+  "eid": "ev11",
+  "map_bar": 63
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-ENSUSDT-4h-1731715200000",
+  "symbol": "ENSUSDT",
+  "interval": "4h",
+  "bar": 174,
+  "kind": "fortress",
+  "decision_t": 1734206400000,
+  "eid": "ev12",
+  "map_bar": 84
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-ENAUSDT-15m-1749197700000",
+  "symbol": "ENAUSDT",
+  "interval": "15m",
+  "bar": 153,
+  "kind": "fortress",
+  "decision_t": 1749334500000,
+  "eid": "ev13",
+  "map_bar": 63
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-CHZUSDT-15m-1755962100000",
+  "symbol": "CHZUSDT",
+  "interval": "15m",
+  "bar": 156,
+  "kind": "fortress",
+  "decision_t": 1756101600000,
+  "eid": "ev14",
+  "map_bar": 66
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-KSMUSDT-15m-1721538900000",
+  "symbol": "KSMUSDT",
+  "interval": "15m",
+  "bar": 152,
+  "kind": "fortress",
+  "decision_t": 1721674800000,
+  "eid": "ev15",
+  "map_bar": 62
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-ENAUSDT-1h-1758682800000",
+  "symbol": "ENAUSDT",
+  "interval": "1h",
+  "bar": 163,
+  "kind": "fortress",
+  "decision_t": 1759266000000,
+  "eid": "ev16",
+  "map_bar": 73
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-CHZUSDT-1h-1728525600000",
+  "symbol": "CHZUSDT",
+  "interval": "1h",
+  "bar": 154,
+  "kind": "fortress",
+  "decision_t": 1729076400000,
+  "eid": "ev17",
+  "map_bar": 64
+ },
+ {
+  "dataset": "fresh3",
+  "segment": "f3-KSMUSDT-1d-1697673600000",
+  "symbol": "KSMUSDT",
+  "interval": "1d",
+  "bar": 177,
+  "kind": "fortress",
+  "decision_t": 1712880000000,
+  "eid": "ev18",
+  "map_bar": 87
+ },
+ {
+  "dataset": "fresh",
+  "segment": "fr-ETCUSDT-15m-1744070400000",
+  "symbol": "ETCUSDT",
+  "interval": "15m",
+  "bar": 151,
+  "kind": "fortress",
+  "decision_t": 1744205400000,
+  "eid": "ev19",
+  "map_bar": 61
+ },
+ {
+  "dataset": "fresh2",
+  "segment": "f2-CRVUSDT-15m-1739538000000",
+  "symbol": "CRVUSDT",
+  "interval": "15m",
+  "bar": 162,
+  "kind": "fortress",
+  "decision_t": 1739682900000,
+  "eid": "ev20",
+  "map_bar": 72
+ }
+]
