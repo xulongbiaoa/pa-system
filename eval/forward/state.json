@@ -2434,19 +2434,6 @@
     }
    ]
   },
-  "fw-BTCUSDT-15m-1793129400000": {
-   "event": "fw-BTCUSDT-15m-1793129400000",
-   "symbol": "BTCUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 685,
-   "decision_t": 1793129400000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793129400000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
-  },
   "fw-ETHUSDT-15m-1792922400000": {
    "event": "fw-ETHUSDT-15m-1792922400000",
    "symbol": "ETHUSDT",
@@ -2556,19 +2543,6 @@
      "watch": "反弹进入P4 2465.12-2535.73后衰竭，阴信号K收盘跌回2465.12下方"
     }
    ]
-  },
-  "fw-SOLUSDT-15m-1793121300000": {
-   "event": "fw-SOLUSDT-15m-1793121300000",
-   "symbol": "SOLUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 676,
-   "decision_t": 1793121300000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793121300000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
   },
   "fw-SOLUSDT-1h-1792238400000": {
    "event": "fw-SOLUSDT-1h-1792238400000",
@@ -3144,19 +3118,6 @@
      "watch": "等新的刺破0.07816后1-3根内收盘收回0.0785上方并反向跟进时再审"
     }
    ]
-  },
-  "fw-XRPUSDT-15m-1793136600000": {
-   "event": "fw-XRPUSDT-15m-1793136600000",
-   "symbol": "XRPUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 693,
-   "decision_t": 1793136600000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1793136600000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
   },
   "fw-XRPUSDT-1h-1792231200000": {
    "event": "fw-XRPUSDT-1h-1792231200000",
@@ -4036,19 +3997,6 @@
     }
    ]
   },
-  "fw-BTCUSDT-15m-1792948500000": {
-   "event": "fw-BTCUSDT-15m-1792948500000",
-   "symbol": "BTCUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 479,
-   "decision_t": 1792948500000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792948500000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
-  },
   "fw-BTCUSDT-1h-1791543600000": {
    "event": "fw-BTCUSDT-1h-1791543600000",
    "symbol": "BTCUSDT",
@@ -4300,19 +4248,6 @@
     }
    ]
   },
-  "fw-SOLUSDT-15m-1793120400000": {
-   "event": "fw-SOLUSDT-15m-1793120400000",
-   "symbol": "SOLUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 670,
-   "decision_t": 1793120400000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793120400000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
-  },
   "fw-DOGEUSDT-15m-1792946700000": {
    "event": "fw-DOGEUSDT-15m-1792946700000",
    "symbol": "DOGEUSDT",
@@ -4453,19 +4388,6 @@
     }
    ]
   },
-  "fw-SOLUSDT-15m-1793146500000": {
-   "event": "fw-SOLUSDT-15m-1793146500000",
-   "symbol": "SOLUSDT",
-   "interval": "15m",
-   "kind": "fortress",
-   "bar": 699,
-   "decision_t": 1793146500000,
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793146500000.json",
-   "gap_price": null,
-   "attempts": null,
-   "map_bar": null,
-   "trigger_missing": true
-  },
   "fw-LINKUSDT-15m-1793416500000": {
    "event": "fw-LINKUSDT-15m-1793416500000",
    "symbol": "LINKUSDT",
@@ -4476,6 +4398,102 @@
    "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793416500000.json",
    "gap_price": 11.548,
    "attempts": 1
+  },
+  "fw-BTCUSDT-15m-1792925100000": {
+   "event": "fw-BTCUSDT-15m-1792925100000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 451,
+   "decision_t": 1792925100000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 441,
+   "map_lag": 10,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 80155.75,
+     "hi": 80219.31,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 80245.75,
+     "hi": 80353.57,
+     "anchors": 3
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792925100000.json"
+  },
+  "fw-BTCUSDT-1h-1792335600000": {
+   "event": "fw-BTCUSDT-1h-1792335600000",
+   "symbol": "BTCUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 699,
+   "decision_t": 1792335600000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 698,
+   "map_lag": 1,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 80748.46,
+     "hi": 80996.97,
+     "anchors": 6
+    },
+    {
+     "kind": "fortress",
+     "lo": 80932.01,
+     "hi": 81103.25,
+     "anchors": 3
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1792335600000.json"
+  },
+  "fw-ETHUSDT-15m-1792655100000": {
+   "event": "fw-ETHUSDT-15m-1792655100000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 151,
+   "decision_t": 1792655100000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 129,
+   "map_lag": 22,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2433.48,
+     "hi": 2440.98,
+     "anchors": 4
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792655100000.json"
+  },
+  "fw-LINKUSDT-15m-1792671300000": {
+   "event": "fw-LINKUSDT-15m-1792671300000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 169,
+   "decision_t": 1792671300000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 152,
+   "map_lag": 17,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 12.081,
+     "hi": 12.132,
+     "anchors": 3
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792671300000.json"
   }
  },
  "tracked": {},

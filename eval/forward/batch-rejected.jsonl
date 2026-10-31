@@ -1,0 +1,7 @@
+{"eid": "fw-BTCUSDT-15m-1793129400000", "symbol": "BTCUSDT", "interval": "15m", "decision_t": 1793129400000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-SOLUSDT-15m-1793121300000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793121300000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-XRPUSDT-15m-1793136600000", "symbol": "XRPUSDT", "interval": "15m", "decision_t": 1793136600000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-BTCUSDT-15m-1792948500000", "symbol": "BTCUSDT", "interval": "15m", "decision_t": 1792948500000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-SOLUSDT-15m-1793120400000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793120400000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-SOLUSDT-15m-1793146500000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793146500000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
+{"eid": "fw-SOLUSDT-15m-1793122200000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793122200000, "reason": "precheck_trigger_missing_full_snapshot"}

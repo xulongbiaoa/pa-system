@@ -1,3 +1,6 @@
+## 2026-10-31 扫盘入队预检落地（用户拍板）：trigger_missing 从源头归零
+- forward_batch_scan 入队前按全快照口径跑 compute_trigger（与 trigger 子命令同一函数）：fortress 算不出触发根 → 不入队、不写快照，记 eval/forward/batch-rejected.jsonl（按 eid 去重）。已卡 6 个 legacy 事件摘出队列、同档存档。
+- 验证重扫：9 picked → 入队 4（自带 map_bar）、预检拒绝 5（4 个 legacy 被重新挖出又被当场拦下 + 1 个全新同病事件）；队列 trigger_missing 计数 0，未判队列 = 5（1 gap-confirm + 4 新入队）。175 passed。
 ## 2026-10-31 影子批量轮第二批：合并账 resolved 2 笔、sum_r −1.2266
 - 存量尾部 7 + 增量新扫 16 入队，判读落账 22（no_trade 21、tracked 1）；中途派单通道断裂一次，接续批补完 10 个，全部首稿合法零重写。
 - 第二个 tracked：fw-BTCUSDT-15m B3 多头限价 80340（scale），收尾 scan 解析 traded、exit_bar 45 两档 void 出场，R=−0.4293。影子累计 resolved=2（均为 B3 多头、均成交、均 void 出场）、sum_r=−1.2266、tracked_open=0。

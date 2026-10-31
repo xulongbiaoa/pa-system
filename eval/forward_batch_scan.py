@@ -11,6 +11,12 @@ build_confirm_events 缺口确认窗，扫描窗 [150, 180)、两类 10 根内
 state.queued，之后走 forward_shadow 的 trigger/mapprompt/
 evmaprompt/record 既有 v2 流程。总量上限 60，按对轮转取。
 
+入队预检（2026-10-31 用户拍板）：fortress 事件入队前先按全快照
+口径跑 forward_shadow.compute_trigger（与 trigger 子命令同一函数），
+算不出触发根的一律不入队、记入 eval/forward/batch-rejected.jsonl。
+缘起：扫盘按 480 根窗特征包选事件、trigger 按全快照重算点位集，
+两口径不一致曾生出 6 个永远 trigger_missing 的队列噪音。
+
 用法：python3 eval/forward_batch_scan.py
 """
 
@@ -103,7 +109,29 @@ def mine_pair(bars):
     return out
 
 
+REJ_PATH = os.path.join(ROOT, "eval", "forward", "batch-rejected.jsonl")
+
+
+def _load_rejected():
+    out = set()
+    if os.path.exists(REJ_PATH):
+        for line in open(REJ_PATH):
+            line = line.strip()
+            if line:
+                out.add(json.loads(line)["eid"])
+    return out
+
+
+def _log_rejected(rec, known):
+    if rec["eid"] in known:
+        return
+    with open(REJ_PATH, "a") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    known.add(rec["eid"])
+
+
 def main():
+    rej_known = _load_rejected()
     st = fs.load_state()
     known = set(st["queued"]) | set(st["tracked"]) | set(st["done"])
     bars_cache = {}
@@ -133,28 +161,36 @@ def main():
                 picked.append((pair, pools[pair].pop(0)))
     os.makedirs(fs.EVENTS_DIR, exist_ok=True)
     enqueued = {}
+    rejected = []
     for (symbol, interval), ev in picked:
         bars = bars_cache[(symbol, interval)]
         abs_bar = ev["abs_bar"]
         eid = ev["eid"]
+        meta = {"event": eid, "symbol": symbol, "interval": interval,
+                "kind": ev["kind"], "bar": abs_bar,
+                "decision_t": ev["decision_t"],
+                "gap_price": ev.get("gap_price"),
+                "attempts": ev.get("attempts")}
+        if ev["kind"] == "fortress":
+            # 全快照口径预检：与 trigger 子命令同一函数，算不出触发根
+            # 的事件永远判不了，不入队、只存档（2026-10-31 用户拍板）。
+            trig = fs.compute_trigger(bars[:abs_bar], abs_bar, CFG)
+            if not trig:
+                _log_rejected({"eid": eid, "symbol": symbol,
+                               "interval": interval,
+                               "decision_t": ev["decision_t"],
+                               "reason": "precheck_trigger_missing_full_snapshot"},
+                              rej_known)
+                rejected.append(eid)
+                continue
+            meta["map_bar"] = trig["map_bar"]
+            meta["map_lag"] = trig["lag"]
+            meta["levels"] = trig["levels"]
         snap = {"id": eid, "symbol": symbol, "interval": interval,
                 "bars": bars[:abs_bar]}
         path = os.path.join(fs.EVENTS_DIR, eid + ".json")
         json.dump(snap, open(path, "w"), ensure_ascii=False)
-        meta = {"event": eid, "symbol": symbol, "interval": interval,
-                "kind": ev["kind"], "bar": abs_bar,
-                "decision_t": ev["decision_t"], "snapshot": path,
-                "gap_price": ev.get("gap_price"),
-                "attempts": ev.get("attempts")}
-        if ev["kind"] == "fortress":
-            trig = fs.compute_trigger(bars[:abs_bar], abs_bar, CFG)
-            if trig:
-                meta["map_bar"] = trig["map_bar"]
-                meta["map_lag"] = trig["lag"]
-                meta["levels"] = trig["levels"]
-            else:
-                meta["map_bar"] = None
-                meta["trigger_missing"] = True
+        meta["snapshot"] = path
         st["queued"][eid] = meta
         enqueued[(symbol, interval)] = enqueued.get((symbol, interval), 0) + 1
     fs.save_state(st)
@@ -162,7 +198,8 @@ def main():
         "per_pair": {f"{s} {i}": {**report[(s, i)],
                                   "enqueued": enqueued.get((s, i), 0)}
                      for (s, i) in fs.WATCH},
-        "total_enqueued": len(picked),
+        "total_enqueued": sum(enqueued.values()),
+        "precheck_rejected": rejected,
         "picked_ids": [ev["eid"] for _, ev in picked],
     }, ensure_ascii=False, indent=1))
 
