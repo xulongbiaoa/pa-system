@@ -1,0 +1,106 @@
+{
+ "population": 55,
+ "judged": 55,
+ "format_errors": 0,
+ "candidates": 8,
+ "qualified": 8,
+ "qualified_by_setup": {
+  "A2": 1,
+  "B3": 7
+ },
+ "violations": [],
+ "gate_reject": {
+  "H2": 3
+ },
+ "tracked": 5,
+ "unresolved": 1,
+ "trades": [
+  {
+   "event": "fw-BTCUSDT-15m-1793403000000",
+   "setup": "A2",
+   "side": "long",
+   "entry": 77384.02,
+   "order_type": "market",
+   "outcome": "traded",
+   "r": -0.1628847370162884,
+   "exit_reason": "scale:window_end,window_end,window_end",
+   "exit_bar": 23
+  },
+  {
+   "event": "fw-LINKUSDT-15m-1793373300000",
+   "setup": "B3",
+   "side": "short",
+   "entry": 11.199,
+   "order_type": "limit",
+   "outcome": "traded",
+   "r": -1.065287603305785,
+   "exit_reason": "scale:stop,stop,stop",
+   "exit_bar": 26
+  },
+  {
+   "event": "fw-XRPUSDT-1h-1790395200000",
+   "setup": "B3",
+   "side": "short",
+   "entry": 1.5612,
+   "order_type": "limit",
+   "outcome": "traded",
+   "r": 3.225118454935606,
+   "exit_reason": "scale:target,target",
+   "exit_bar": 129
+  },
+  {
+   "event": "fw-XRPUSDT-1h-1793260800000",
+   "setup": "B3",
+   "side": "long",
+   "entry": 1.2897,
+   "order_type": "limit",
+   "outcome": "traded",
+   "r": -1.1636436363636347,
+   "exit_reason": "scale:stop,stop",
+   "exit_bar": 9
+  }
+ ],
+ "point_coverage_maps2": [
+  44,
+  55
+ ],
+ "resolved_events": 4,
+ "sum_r": 0.8333,
+ "per_opportunity_r": 0.2083,
+ "trigger_stats_old": {
+  "branches": 350,
+  "req_counts": {
+   "不创新极值": 51,
+   "腿数结构": 86,
+   "收盘越界": 298,
+   "成色门槛": 110,
+   "跟进确认": 220,
+   "区间触及": 2
+  },
+  "stack_dist": {
+   "4": 30,
+   "3": 73,
+   "2": 193,
+   "0": 16,
+   "1": 37,
+   "5": 1
+  }
+ },
+ "trigger_stats_new": {
+  "branches": 451,
+  "req_counts": {
+   "收盘越界": 451,
+   "成色门槛": 134,
+   "区间触及": 275,
+   "腿数结构": 11,
+   "不创新极值": 1,
+   "跟进确认": 5
+  },
+  "stack_dist": {
+   "2": 267,
+   "3": 78,
+   "1": 105,
+   "4": 1
+  }
+ }
+}

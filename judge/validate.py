@@ -78,6 +78,12 @@ def validate_judgment(j):
             errs.append(f"未知 setup: {c.get('setup')}")
         if c.get("side") not in ("long", "short"):
             errs.append("candidate.side 必须是 long/short")
+        # 方向定版（2026-10-31 分支 A/B 抓到 A2 标多头）：A1 只多、
+        # A2 只空，其余 setup 双向合法
+        if c.get("setup") == "A1" and c.get("side") != "long":
+            errs.append("A1（M2B）只许多头")
+        if c.get("setup") == "A2" and c.get("side") != "short":
+            errs.append("A2（M2S）只许空头")
         if not c.get("feature_refs"):
             errs.append("candidate 必须引用至少一个特征字段")
         _validate_conditions(c, errs)

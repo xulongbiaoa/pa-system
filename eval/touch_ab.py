@@ -188,7 +188,8 @@ def score(outdir):
                              ledger=None, mode="annotation")
         if verdict["verdict"] == "reject":
             for h in verdict["hard_hits"]:
-                rep["gate_reject"][h] = rep["gate_reject"].get(h, 0) + 1
+                hk = h["rule"] if isinstance(h, dict) else h
+                rep["gate_reject"][hk] = rep["gate_reject"].get(hk, 0) + 1
             continue
         rep["tracked"] += 1
         bars = fs.fetch_bars(ev["symbol"], ev["interval"], limit=400,

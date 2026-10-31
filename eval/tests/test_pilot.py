@@ -73,3 +73,18 @@ def test_pending_missing_basis_rules():
     no_basis = dict(base, pending_conditions=[{"setup": "B3", "missing": [
         {"condition": "x", "evidence": "y"}]}])
     assert validate_judgment(no_basis)
+
+
+def test_candidate_setup_side_lock():
+    from judge.validate import validate_judgment
+    base = {"context": "上升", "primary": "H1", "hypotheses": _hyp(),
+            "no_trade_reason": None, "pending_conditions": [],
+            "uncertainty": []}
+    plan = {"entry": 100.0, "stop": 99.0, "targets": [102.0],
+            "void": {"level": 99.0, "side": "below"},
+            "cap_reason": "夹具"}
+    bad = dict(base, candidates=[{"setup": "A2", "side": "long",
+                                  "qualified": True, "reason": "x",
+                                  "feature_refs": ["trend.label"],
+                                  "plan": plan}])
+    assert any("A2" in e for e in validate_judgment(bad))
