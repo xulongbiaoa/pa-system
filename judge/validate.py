@@ -113,6 +113,28 @@ def validate_judgment(j):
                 errs.append(f"pending_conditions 的 setup 非法：{pc.get('setup')}")
             if not (isinstance(pc.get("missing"), list) and pc["missing"]):
                 errs.append("pending_conditions 对象必须带非空 missing 数组")
+            # 依据引用（2026-10-31 Build 1）：missing 的对象形式必须三键
+            # 齐全、basis 合法；card 引用的条目号必须属于本 pending 的
+            # setup；branch 引用必须是点位号；extra 必须自述理由。
+            # 字符串项是存量旧格式，容忍不验。
+            import re as _re
+            for mi in pc.get("missing") or []:
+                if not isinstance(mi, dict):
+                    continue
+                for k in ("condition", "evidence", "basis"):
+                    if not mi.get(k):
+                        errs.append(f"pending missing 对象缺 {k}：{mi!r:.80}")
+                b = mi.get("basis") or {}
+                bt, ref = b.get("type"), b.get("ref") or ""
+                if bt not in ("branch", "card", "skeleton", "extra"):
+                    errs.append(f"pending missing basis.type 非法：{bt!r}")
+                elif bt == "card" and not _re.fullmatch(
+                        _re.escape(pc.get("setup") or "") + r"-[NBVR]\d+", ref):
+                    errs.append(f"card 引用必须为本 setup 条目号（{pc.get('setup')}-N/B/V/R#）：{ref!r}")
+                elif bt == "branch" and not _re.fullmatch(r"P\d+", ref):
+                    errs.append(f"branch 引用必须是点位号 P#：{ref!r}")
+                elif bt in ("skeleton", "extra") and not ref.strip():
+                    errs.append(f"basis={bt} 必须写明 ref（条款名/加码理由）")
     return errs
 
 

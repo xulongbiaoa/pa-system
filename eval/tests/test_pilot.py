@@ -49,3 +49,27 @@ def test_pipeline_end_to_end(tmp_path):
     assert rep["judged"] == 2 and rep["format_fail"] == 0
     assert rep["no_trade"] == 1
     assert len(rep["trades"]) + rep["gate_reject"] == 1
+
+
+def test_pending_missing_basis_rules():
+    from judge.validate import validate_judgment
+    base = {"context": "上升", "primary": "H1", "hypotheses": _hyp(),
+            "candidates": [], "no_trade_reason": "位置不对",
+            "uncertainty": []}
+    ok = dict(base, pending_conditions=[{"setup": "B3", "missing": [
+        {"condition": "未收回位内", "evidence": "决策根收 100.5 在位外",
+         "basis": {"type": "card", "ref": "B3-N3"}},
+        {"condition": "想等更强跟进", "evidence": "决策根",
+         "basis": {"type": "extra", "ref": "个人偏好"}}]}])
+    assert validate_judgment(ok) == []
+    bad_ref = dict(base, pending_conditions=[{"setup": "B3", "missing": [
+        {"condition": "x", "evidence": "y",
+         "basis": {"type": "card", "ref": "A1-N1"}}]}])
+    assert any("条目号" in e for e in validate_judgment(bad_ref))
+    bad_branch = dict(base, pending_conditions=[{"setup": "B3", "missing": [
+        {"condition": "x", "evidence": "y",
+         "basis": {"type": "branch", "ref": "触发未成立"}}]}])
+    assert any("点位号" in e for e in validate_judgment(bad_branch))
+    no_basis = dict(base, pending_conditions=[{"setup": "B3", "missing": [
+        {"condition": "x", "evidence": "y"}]}])
+    assert validate_judgment(no_basis)

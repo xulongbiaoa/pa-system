@@ -1,3 +1,7 @@
+## 2026-10-31 决策机制修复纲领开工：卡片四分定版 + Build 1 依据引用落地（用户立项）
+- 纲领（eval/reports/decision-mechanism-fix-2026-10-31.md）：用户立纪律「允许空仓但要有依据，允许等待但条件满足后不能换理由」，不降风控门槛。第一批落地：① 7 张卡全量四分（必须有 N/加分 B/否决 V/封顶条款，条目号就位）；用户三项裁定入 B3：反向跟进必要→加分（B3-B1）、收回根盘中创反向新极值维持降格（B3-B5 负加分）、成色只设 N4 定性地板；A1/A2 的净 RR 数字改归 gate（N2 只管空间存在性）。B1-N1 归类注分清「强突破的跟进 K 是构成要件」与 B3 跟进（裁定后的一根）不同。G1 保留 R/E/V 原编号（validate/H7 共用），只加四分头与封顶条款。
+- ② Build 1 依据引用：schema 的 missing 升级为对象 {condition, evidence, basis{type: branch/card/skeleton/extra, ref}}；validate 硬校验引用格式（card 须本 setup 条目号、branch 须点位号、extra 须自述理由），新增 1 测试（176 passed）；prompt_builder 与到达备忘同步写入依据纪律 + extra 不许单独否决；forward_anatomy 新增 missing_basis/extra_rate/extra_only_judgments——存量基线：85 份判读 642 条缺项 100% 无 basis。
+- 待续：Build 3 等待对象化（waits 注册表）、Build 4 错误空仓考试；maps2 分支条款验证继续作对照。
 ## 2026-10-31 触及口径 A/B 收官：增量 2/55、终局 −0.3607R，不建议采进执法
 - 总体 55 脱带事件 B 臂回判（复用冻结地图、只改到达认定）：候选 2、qualified 2（均 B3 限价多头）、violation 0、gate 拒绝 0、tracked 2；已解析 1 笔 LINK 1h B3 多 −0.3607R（入场当根两档 void——触及成交正撞跌穿那一根，逆向选择现形），XRP 15m 1 笔未解析待复跑 score 补数。
 - 裁决（eval/reports/touch-ab-verdict-2026-10-31.md）：触及口径不采进 v2 执法（增量 3.6%、唯一终局为负）；真卡点再下沉——到达放开后 53/55 仍无候选，瓶颈在冻结分支触发预写。附记：已解析 B3 多头限价累计 3 笔全亏全 void（trainer 大胜 B3 为空头），多空不对称待证伪。

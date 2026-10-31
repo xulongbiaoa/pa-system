@@ -49,6 +49,8 @@ def main():
     meta = st["queued"]
     ntr, cand_setup, cand_side, pend_setup, miss_b = (collections.Counter()
                                                       for _ in range(5))
+    basis_b = collections.Counter()
+    n_extra_only_judged = 0
     n_cand = n_qual = gapc = 0
     inband = {"tracked": [0, 0], "no_trade": [0, 0]}
     paths = sorted(glob.glob(os.path.join(FWD, "judgments", "*.json")))
@@ -65,12 +67,22 @@ def main():
             cand_side[c.get("side")] += 1
             if c.get("qualified"):
                 n_qual += 1
+        all_extra = bool(j.get("pending_conditions")) and not j.get("candidates")
         for p in j.get("pending_conditions") or []:
             if isinstance(p, dict):
                 pend_setup[p.get("setup")] += 1
                 for miss in p.get("missing") or []:
                     miss_b[bucket(miss if isinstance(miss, str) else
                                   json.dumps(miss, ensure_ascii=False))] += 1
+                    bt = ((miss.get("basis") or {}).get("type")
+                          if isinstance(miss, dict) else None)
+                    basis_b[bt or "无basis"] += 1
+                    if bt != "extra":
+                        all_extra = False
+            else:
+                all_extra = False
+        if all_extra:
+            n_extra_only_judged += 1
         mp = os.path.join(FWD, "maps", eid + ".json")
         sp = m.get("snapshot")
         if os.path.exists(mp) and sp and os.path.exists(sp):
@@ -91,6 +103,10 @@ def main():
         "cand_by_setup": dict(cand_setup), "cand_by_side": dict(cand_side),
         "pending_by_setup": dict(pend_setup),
         "pending_missing_buckets": dict(miss_b),
+        "missing_basis": dict(basis_b),
+        "extra_rate": (round(basis_b.get("extra", 0) / sum(basis_b.values()), 3)
+                       if basis_b else None),
+        "extra_only_judgments": n_extra_only_judged,
         "inband": inband,
     }, ensure_ascii=False, indent=1))
 

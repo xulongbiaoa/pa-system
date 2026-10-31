@@ -75,7 +75,15 @@ candidates/no_trade_reason/pending_conditions/uncertainty）。
 点外造单（写了地图上没有的位置）= 违规，会被单独计数。
 hypotheses 直接沿用地图的主备假设（可按 takeover_if 更新 primary）。
 plan 契约与单点判读完全一致：结构化 void 必备（只写文字版判格式
-不合格）；首目标毛 RR 取不到 2:1 时必须带 cap_reason 点名封顶结构。"""
+不合格）；首目标毛 RR 取不到 2:1 时必须带 cap_reason 点名封顶结构。
+依据引用（硬性）：pending_conditions 的每条 missing 必须是对象
+{"condition": "缺哪条必要条件", "evidence": "对应哪根K线/哪个价位",
+"basis": {"type": ..., "ref": ...}}。出处只有四类：冻结分支 trigger
+未成立的部分 basis={branch, 点位号}；卡片必须项缺失 basis={card,
+条目号 如 B3-N3}；骨架硬条 basis={skeleton, 条款名}；冻结文本与
+卡片之外的任何要求 basis 一律标 {extra, 理由一句话}。extra 不许
+单独构成不写候选的理由：分支 trigger 与卡上必须项都已成立时必须
+按分支写候选，extra 只作复核标记随判读落账。"""
 
 
 def _context_parts(pack, bars):
