@@ -13,3 +13,4 @@ eval/gold/judgments/
 
 # 本地 agent 工作区（记忆与运行态），不进版本库
 .workbuddy-ai/
+shadow/

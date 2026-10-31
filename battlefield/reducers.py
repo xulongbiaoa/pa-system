@@ -276,10 +276,11 @@ class Battlefield:
                                       payload={"gap_id": gap.gap_id, "test_id": rt.test_id,
                                                "test_index": gap.test_count}))
             elif rt.test_open and side_now == gap_side:
+                ended_id = rt.test_id
                 self._end_test(rt, gap, bar, outcome="rejected_proxy")
                 out.append(self._emit("TEST_ENDED", bar, level_key=key,
                                       direction=gap.direction,
-                                      payload={"gap_id": gap.gap_id, "test_id": rt.test_id,
+                                      payload={"gap_id": gap.gap_id, "test_id": ended_id,
                                                "outcome": "rejected_proxy",
                                                "proxy": TEST_REJECTION_PROXY}))
         if side_now is not None:

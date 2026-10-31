@@ -76,6 +76,8 @@ def build_task_package(repo: InMemoryRepository, since_revision: int) -> dict:
         "cursor": k.cursor,
         "scene": qs.get_scene(),
         "changes": qs.get_changes(since_revision),
+        "side_up": qs.get_side_activity("up"),
+        "side_down": qs.get_side_activity("down"),
         "hypotheses": copy.deepcopy(k.hypotheses),
         "watch_plans": copy.deepcopy(k.watch_plans),
     }
