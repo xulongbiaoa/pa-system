@@ -91,7 +91,7 @@ function positionBands() {
     div.style.borderBottom = z.anchorEdge === "bottom" ? "none" : `1px dashed rgba(${z.color},.5)`;
     const siege = z.gap ? (z.gap.test_count > 0 ? ` · 已挡攻城 ⚔×${z.gap.test_count}` : " · 尚未被攻") : "";
     div.innerHTML = `<span class="blabel" style="color:rgba(${z.color},1);${z.anchorEdge === "top" ? "top:3px" : "bottom:3px"}">${z.kind} ${fmtPx(z.bandLo)} – ${fmtPx(z.bandHi)}</span>` +
-      (z.hasGap ? `<span class="alabel" style="${z.anchorEdge === "bottom" ? "bottom:-8px" : "top:-8px"}">${z.gap.gap_id} ${z.gap.direction === "up" ? "向上" : "向下"}缺口</span>` : `<span class="alabel">无缺口（${z.level.level_key}）</span>`);
+      (z.hasGap ? `<span class="alabel" style="${z.anchorEdge === "bottom" ? "bottom:-8px" : "top:-8px"}">${fmtPx(z.gap.anchor)} ${z.gap.direction === "up" ? "向上" : "向下"}缺口锚</span>` : `<span class="alabel">${fmtPx((z.level && (z.level.lo ?? z.level.anchor)) || 0)} 无缺口</span>`);
     host.appendChild(div);
     if (z.hasGap) {
       const yA = candleSeries.priceToCoordinate(z.anchor);
@@ -107,6 +107,35 @@ function positionBands() {
 }
 
 // ---------- 图表 ----------
+
+// —— 页面只写数字，不写机器 ID（用户 2026-10-31：GAP-SWM-H-8-4 这种很丑）——
+let GAP_PX: Record<string, number> = {};
+let LV_PX: Record<string, number> = {};
+let EV_MAP: Record<string, AnyObj> = {};
+const EV_SHORT: Record<string, string> = { GAP_OPENED: "立账", GAP_CLOSED: "关账", TEST_STARTED: "测试开始", TEST_ENDED: "测试结束" };
+function buildLookups() {
+  GAP_PX = {}; LV_PX = {}; EV_MAP = {};
+  const s: AnyObj = snap!;
+  [...(s.open_gaps || []), ...(s.closed_gaps_recent || [])].forEach((g: AnyObj) => { GAP_PX[g.gap_id] = g.anchor; });
+  (s.levels || []).forEach((l: AnyObj) => { LV_PX[l.level_key] = l.lo; });
+  (s.events || []).forEach((e: AnyObj) => { EV_MAP[e.event_id] = e; });
+}
+function evTime(ev: AnyObj): number { return ev.bar_open_ms ?? ev.time_ms ?? ev.occurred_at_ms ?? 0; }
+function numRef(id: string): string {
+  if (id in GAP_PX) return fmtPx(GAP_PX[id]);
+  if (id in LV_PX) return fmtPx(LV_PX[id]);
+  const ev = EV_MAP[id];
+  if (ev) return `${fmtTc(evTime(ev), false)} ${EV_SHORT[ev.type] || "事件"}`;
+  return id;
+}
+function humanize(text: string): string {
+  if (!text) return text;
+  let t = text.replace(/GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*[（(]锚\s*([0-9.]+)[）)]/g, (_m, p) => fmtPx(Number(p)));
+  t = t.replace(/GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*/g, m => (m in GAP_PX) ? fmtPx(GAP_PX[m]) : "该缺口");
+  t = t.replace(/[A-Z]{1,4}-[HL]-\d+@v\d+/g, m => (m in LV_PX) ? fmtPx(LV_PX[m]) : "该位置");
+  t = t.replace(/\bev-\d+/g, m => { const ev = EV_MAP[m]; return ev ? fmtTc(evTime(ev), false) : m; });
+  return t;
+}
 
 function renderHeader() {
   const m = snap!.meta;
@@ -163,17 +192,17 @@ function renderChart() {
 // ---------- 右栏 ----------
 function renderBrief() {
   const hyps: AnyObj[] = snap!.hypotheses;
-  const fmtRefs = (refs: string[]) => refs && refs.length ? refs.join("、") : "—";
+  const fmtRefs = (refs: string[]) => refs && refs.length ? refs.map(numRef).join("、") : "—";
   if (!hyps.length) { $("hypBody").innerHTML = "暂无假设。"; return; }
   const [main, ...rest] = hyps;
   const backup = rest[0];
   $("hypBody").innerHTML = `
-    <div class="hypMain"><div class="t">主要观点（当前假设 ${main.hyp_id}）</div><div>${main.text || ""}</div></div>
+    <div class="hypMain"><div class="t">主要观点（当前假设 ${main.hyp_id}）</div><div>${humanize(main.text || "")}</div></div>
     <div class="evT">支持证据</div>
     ${[main].map(h => `<div class="evItem"><span class="n">✓</span><span>${fmtRefs(h.support_refs)}</span></div>`).join("")}
     <div class="evT red">反证因素</div>
     <div class="evItem"><span class="n">!</span><span>${fmtRefs(main.counter_refs)}</span></div>
-    ${backup ? `<div class="evT">备推演（${backup.hyp_id}）</div><div style="color:#c6dcee;font-size:12.5px">${backup.text || ""}</div>` : ""}`;
+    ${backup ? `<div class="evT">备推演（${backup.hyp_id}）</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
   $("hypUpd").textContent = `更新于 ${fmtTc(snap!.meta.generated_at_ms, false)}`;
 }
 
@@ -188,12 +217,12 @@ function renderPlan() {
   const step = (n: number, cls: string, title: string, desc: string, extra = "") =>
     `<div class="step ${cls}"><span class="n">${n}</span><div><div class="st">${title}</div><div class="sd">${desc}</div></div>${extra}</div>`;
   $("planBody").innerHTML = `<div class="steps">` +
-    step(1, "done", "观察位置", p.watch_level || "—") +
-    step(2, "act", "等待行为", p.watch_behavior || "—", `<span class="waitB">WAIT</span>`) +
-    step(3, "", "复核触发", `${p.entry_trigger || "—"}<br><span style="color:#55707f;font-size:11.5px">满足后唤醒 AI 复核，不是入场指令</span>`) +
+    step(1, "done", "观察位置", numRef(p.watch_level || "") || "—") +
+    step(2, "act", "等待行为", humanize(p.watch_behavior || "—"), `<span class="waitB">WAIT</span>`) +
+    step(3, "", "复核触发", `${humanize(p.entry_trigger || "—")}<br><span style="color:#55707f;font-size:11.5px">满足后唤醒 AI 复核，不是入场指令</span>`) +
     step(4, cand ? "done" : "", "候选条件", candText || "等待——尚无候选，复核通过后才立") +
     step(5, execText ? "done" : "", "订单触发", execText || "等待——候选未立，无可执行触发") +
-    step(6, "", "取消条件", p.cancel_if || "—") + `</div>`;
+    step(6, "", "取消条件", humanize(p.cancel_if || "—")) + `</div>`;
 }
 
 // ---------- 底部：时间线 + 多空对照 ----------
@@ -212,7 +241,7 @@ function sparkline(barMs: number): string {
 
 function renderTimeline() {
   const TITLE: Record<string, (e: AnyObj) => [string, string]> = {
-    GAP_OPENED: e => ["缺口建立", `形成 ${e.payload?.gap_id || ""} 锚 ${e.payload?.anchor ? fmtPx(Number(e.payload.anchor)) : ""}`],
+    GAP_OPENED: e => ["缺口建立", `锚 ${e.payload?.anchor ? fmtPx(Number(e.payload.anchor)) : ""}`],
     TEST_STARTED: e => [`测试（T${e.payload?.test_index || ""}）`, `${e.payload?.gap_id || ""} 回补测试开始`],
     TEST_ENDED: e => ["测试结束", `${e.payload?.gap_id || ""} · ${e.payload?.outcome === "anchor_touched" ? "触锚" : "被拒（代理口径）"}`],
     GAP_CLOSED: e => ["缺口回补", `${e.payload?.gap_id || ""} 触锚关账（城破）`],
@@ -220,7 +249,7 @@ function renderTimeline() {
   const story = snap!.events.filter((e: AnyObj) => TITLE[e.type]).slice(-5);
   $("tlBody").innerHTML = story.length ? story.map((e: AnyObj) => {
     const [t, s] = TITLE[e.type](e);
-    return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot"></div><div class="tt">${t}</div><div class="ts">${s}</div>${sparkline(e.bar_open_ms)}</div>`;
+    return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot"></div><div class="tt">${t}</div><div class="ts">${humanize(s)}</div>${sparkline(e.bar_open_ms)}</div>`;
   }).join("") : "24h 内无缺口事件。";
 }
 
@@ -249,6 +278,7 @@ async function load(sym: string) { curSymbol = sym;
   $("symBTC").classList.toggle("on", sym === "BTCUSDT");
   $("symETH").classList.toggle("on", sym === "ETHUSDT");
   snap = await (await fetch(`data24/${sym}.json`)).json();
+  buildLookups();
   const m = snap!.meta, bars = snap!.bars, last = bars[bars.length - 1];
   const prev = bars[bars.length - 2] || last;
   const chg = last.c - prev.c, pct = (chg / prev.c * 100);
@@ -274,7 +304,7 @@ load("BTCUSDT");
 setInterval(async () => {
   try {
     const fresh = await (await fetch(`data24/${curSymbol}.json?t=${Date.now()}`)).json();
-    if (!snap || fresh.meta.token !== snap.meta.token) { snap = fresh; const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1]; const prev = bars[bars.length - 2] || last; const chg = last.c - prev.c, pct = (chg / prev.c * 100);
+    if (!snap || fresh.meta.token !== snap.meta.token) { snap = fresh; buildLookups(); const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1]; const prev = bars[bars.length - 2] || last; const chg = last.c - prev.c, pct = (chg / prev.c * 100);
       renderHeader();
       $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span><span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span><span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>`;
       buildZones(); renderChart(); renderBrief(); renderPlan(); renderTimeline(); renderCompare();
