@@ -9,7 +9,24 @@
    "decision_t": 1793366100000,
    "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793366100000.json",
    "gap_price": null,
-   "attempts": null
+   "attempts": null,
+   "map_bar": 443,
+   "map_lag": 17,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 77252.14,
+     "hi": 77476.15,
+     "anchors": 6
+    },
+    {
+     "kind": "fortress",
+     "lo": 77436.43,
+     "hi": 77696.81,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
   },
   "fw-BTCUSDT-15m-1793393100000": {
    "event": "fw-BTCUSDT-15m-1793393100000",
