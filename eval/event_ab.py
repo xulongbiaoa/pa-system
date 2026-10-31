@@ -163,6 +163,38 @@ def arrival(outdir):
     print(f"arrival prompts: {made}, missing maps: {missing}")
 
 
+def hybridprep(outdir):
+    """第三臂提示 = AUTO 原提示 + 文末「战役备忘」（冻结地图 JSON + 三条使用规则）。"""
+    events = json.load(open(os.path.join(outdir, "events.json")))
+    os.makedirs(os.path.join(outdir, "prompts-hybrid"), exist_ok=True)
+    made, missing = 0, []
+    for ev in events:
+        eid = ev["eid"]
+        mp = os.path.join(outdir, "maps", eid + ".json")
+        ap = os.path.join(outdir, "prompts-auto", eid + ".md")
+        if not (os.path.exists(mp) and os.path.exists(ap)):
+            missing.append(eid)
+            continue
+        map_obj = json.load(open(mp))
+        memo = (
+            "\n\n## 战役备忘（冻结地图附件，本事件开始前画定，不许重画、不许改点）\n\n"
+            "下面是本事件的战役地图（决胜点、主/备假设及其 holds_if / takeover_if / void_if 条款）：\n\n"
+            "```json\n" + json.dumps(map_obj, ensure_ascii=False, indent=1) + "\n```\n\n"
+            "使用规则（硬纪律）：\n"
+            "1. 每个候选必须在 candidate 中写 point_id，点名上面地图中的一个决胜点；"
+            "决策根收盘价不在该点 [lo, hi] ±0.25×段均幅（附件数字中的段均幅）内时，"
+            "该机会只许写进 pending_conditions，不许标 qualified。\n"
+            "2. 地图假设的 void_if 或战役作废条件已经发生时（例如价格已越过地图标注的 "
+            "MM 投影且该假设的顺势分支按其条款关闭、或趋势自起点腿的投影已达），"
+            "对应方向的候选不许标 qualified。\n"
+            "3. 地图只供位置与战役状态（决胜点在哪、本腿走到哪一步、哪条分支还活着）；"
+            "形态、触发、成色仍以你对图的判读为准；位置与图读冲突时，位置以地图为准。\n")
+        open(os.path.join(outdir, "prompts-hybrid", eid + ".md"), "w").write(
+            open(ap).read() + memo)
+        made += 1
+    print(f"hybrid prompts: {made}, missing: {missing}")
+
+
 def _classify_camp_action(j):
     if any(c.get("qualified") for c in j.get("candidates", [])):
         return "执行"
@@ -202,7 +234,7 @@ def run_arm(outdir, arm, events):
             act = _classify_camp_action(j)
             rep["actions"][act] = rep["actions"].get(act, 0) + 1
         map_pts = {}
-        if arm == "camp":
+        if arm in ("camp", "hybrid"):
             mp = os.path.join(outdir, "maps", eid + ".json")
             if os.path.exists(mp):
                 m = json.load(open(mp))
@@ -216,7 +248,7 @@ def run_arm(outdir, arm, events):
             plan.update({"side": c["side"], "setup": c["setup"],
                          "context": pack["trend"]["label"]})
             merge_candidate_terms(plan, c)
-            if arm == "camp":
+            if arm in ("camp", "hybrid"):
                 pt = map_pts.get(c.get("point_id"))
                 seg_avg = pack.get("seg_avg_range") or 0
                 close = seg["bars"][ev["bar"] - 1]["c"]
@@ -252,25 +284,37 @@ def run_arm(outdir, arm, events):
     return rep
 
 
-def score(outdir):
-    events = json.load(open(os.path.join(outdir, "events.json")))
-    rep = {arm: run_arm(outdir, arm, events) for arm in ("auto", "camp")}
-    # 配对差与 bootstrap CI（主指标：每机会 R）
-    diffs = [rep["camp"]["per_event"][ev["eid"]]["r"]
-             - rep["auto"]["per_event"][ev["eid"]]["r"] for ev in events]
-    rng = random.Random(20261031)
+def _paired(rep, events, arm_hi, arm_lo, seed):
+    diffs = [rep[arm_hi]["per_event"][ev["eid"]]["r"]
+             - rep[arm_lo]["per_event"][ev["eid"]]["r"] for ev in events]
+    rng = random.Random(seed)
     n = len(diffs)
     boots = []
     for _ in range(10000):
         boots.append(sum(diffs[rng.randrange(n)] for _ in range(n)) / n)
     boots.sort()
-    rep["paired"] = {
-        "n": n, "mean_diff_camp_minus_auto": round(sum(diffs) / n, 4),
+    return {
+        "n": n, "mean_diff": round(sum(diffs) / n, 4),
         "ci95": [round(boots[250], 4), round(boots[9749], 4)],
-        "events_camp_better": sum(1 for d in diffs if d > 0),
-        "events_auto_better": sum(1 for d in diffs if d < 0),
+        f"events_{arm_hi}_better": sum(1 for d in diffs if d > 0),
+        f"events_{arm_lo}_better": sum(1 for d in diffs if d < 0),
         "events_tied": sum(1 for d in diffs if d == 0),
     }
+
+
+def score(outdir):
+    events = json.load(open(os.path.join(outdir, "events.json")))
+    rep = {arm: run_arm(outdir, arm, events) for arm in ("auto", "camp", "hybrid")}
+    # 配对差与 bootstrap CI（主指标：每机会 R）
+    p = _paired(rep, events, "camp", "auto", 20261031)
+    rep["paired"] = {
+        "n": p["n"], "mean_diff_camp_minus_auto": p["mean_diff"],
+        "ci95": p["ci95"],
+        "events_camp_better": p["events_camp_better"],
+        "events_auto_better": p["events_auto_better"],
+        "events_tied": p["events_tied"],
+    }
+    rep["paired_hybrid"] = _paired(rep, events, "hybrid", "auto", 20261031)
     json.dump(rep, open(os.path.join(outdir, "result.json"), "w"),
               ensure_ascii=False, indent=1)
     for arm, r in rep.items():
@@ -282,8 +326,10 @@ def score(outdir):
                   f"meanR {s.get('mean_r')} per_opp_R {r['per_opp_r']} "
                   f"violations {r['violations']} actions {r['actions']}")
     print("paired:", json.dumps(rep["paired"], ensure_ascii=False))
+    print("paired_hybrid:", json.dumps(rep["paired_hybrid"], ensure_ascii=False))
 
 
 if __name__ == "__main__":
     cmd, outdir = sys.argv[1], sys.argv[2]
-    {"mine": mine, "arrival": arrival, "score": score}[cmd](outdir)
+    {"mine": mine, "arrival": arrival, "score": score,
+     "hybridprep": hybridprep}[cmd](outdir)

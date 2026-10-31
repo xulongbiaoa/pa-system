@@ -273,6 +273,104 @@
   },
   "per_opp_r": 0.0
  },
+ "hybrid": {
+  "arm": "hybrid",
+  "judged": 20,
+  "format_errors": 0,
+  "candidates": 0,
+  "gate_reject": 0,
+  "gate_reject_rules": {},
+  "unfilled": 0,
+  "trades": [],
+  "violations": 0,
+  "actions": {},
+  "per_event": {
+   "ev01": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev02": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev03": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev04": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev05": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev06": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev07": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev08": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev09": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev10": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev11": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev12": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev13": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev14": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev15": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev16": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev17": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev18": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev19": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev20": {
+    "r": 0.0,
+    "status": "no_trade"
+   }
+  },
+  "summary": {
+   "n": 0
+  },
+  "per_opp_r": 0.0
+ },
  "paired": {
   "n": 20,
   "mean_diff_camp_minus_auto": 0.0742,
@@ -281,6 +379,17 @@
    0.2008
   ],
   "events_camp_better": 2,
+  "events_auto_better": 0,
+  "events_tied": 18
+ },
+ "paired_hybrid": {
+  "n": 20,
+  "mean_diff": 0.0742,
+  "ci95": [
+   0.0,
+   0.2008
+  ],
+  "events_hybrid_better": 2,
   "events_auto_better": 0,
   "events_tied": 18
  }
