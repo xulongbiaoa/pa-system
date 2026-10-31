@@ -76,6 +76,7 @@ class Battlefield:
                                   "revision_conflicts": 0, "late_bars": 0}
         self.hypotheses: List[dict] = []         # 与事实分区：只存提案，见 queries/proposals
         self.watch_plans: List[dict] = []
+        self.candidate_proposals: List[dict] = []  # 候选提案分区：不是事实，也不等于订单
         self._seq = 0
         self._seg_seq = 0
         self._gap_seq = 0
@@ -354,5 +355,6 @@ class Battlefield:
                 "directional_activity": directional, "contests": contests,
                 "active_hypotheses": copy.deepcopy(self.hypotheses),
                 "watch_plans": copy.deepcopy(self.watch_plans),
+                "candidate_proposals": copy.deepcopy(self.candidate_proposals),
                 "unresolved": copy.deepcopy(self.unresolved),
                 "data_health": dict(self.data_health)}

@@ -51,7 +51,8 @@ class QueryService:
                 "directional_activity": s["directional_activity"],
                 "unresolved": s["unresolved"], "data_health": s["data_health"],
                 "active_hypotheses": s["active_hypotheses"],
-                "watch_plans": s["watch_plans"]}
+                "watch_plans": s["watch_plans"],
+                "candidate_proposals": s["candidate_proposals"]}
 
     def get_changes(self, since_revision: int) -> dict:
         if since_revision > self.revision:
