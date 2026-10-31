@@ -107,7 +107,8 @@ order_type 与分支 entry_style 对齐：stop → stop_market（entry 写触发
 → 触发成立立即按分支写候选，不许以「再等一根确认」推迟；等待
 行为未发生的，pending 写明还缺哪个行为、在哪个点位带、取消条件
 是什么，basis 引 branch。假设只许因新的反证调整，调整时在
-uncertainty 写明反证是什么；不许无声移动入场标准。"""
+uncertainty 写明反证是什么；不许无声移动入场标准。
+B3 收回认定三问（2026-10-31 R1）：分支 trigger 以「收回」主张 B3 翻面成立时同样逐问作答——① 此前哪一根收盘站在翻面位之外（根号+收盘价；从无收盘在位外则不存在收回，盘中刺入不算）；② 收回根是哪一根；③ 收回根是否即本决策根（B3-N3：收回根也是入场决策根，前移认定或决策根只作到达/成交 = trigger 未成立）。任一问不过：不写候选，pending 的 missing 引 card B3-N1 或 B3-N3、evidence 写明卡在哪一问；全过写候选时把三问答案写进 candidate 的 reason。"""
 
 
 def _context_parts(pack, bars):
