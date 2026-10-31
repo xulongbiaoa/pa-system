@@ -409,6 +409,11 @@ def record(eid, judgment_path):
     plan = dict(c["plan"])
     merge_candidate_terms(plan, c)
     pack = pack_at(seg["bars"], cfg)
+    # 与 event_ab.run_arm 同款组装：side/setup/context 在候选层，不在
+    # plan 内，须注入后再裁决（2026-10-31 批量轮首个 qualified 候选
+    # 撞出：缺 side 时 adjudicate KeyError，此前影子从未有候选过门）。
+    plan.update({"side": c["side"], "setup": c.get("setup"),
+                 "context": pack["trend"]["label"]})
     if v2_active:
         map_obj = json.load(open(maps_path))
         pts = {p["id"]: p for p in map_obj.get("points") or []}

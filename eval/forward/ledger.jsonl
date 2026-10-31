@@ -1,0 +1,1 @@
+{"event": "fw-XRPUSDT-15m-1792665900000", "outcome": "traded", "r": -0.797372093023249, "exit_reason": "scale:void,void,void", "exit_bar": 3, "exit_mode": "scale", "symbol": "XRPUSDT", "interval": "15m", "setup": "B3", "side": "long", "entry": 1.3285}

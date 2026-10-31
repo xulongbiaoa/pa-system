@@ -1,3 +1,8 @@
+## 2026-10-31 影子批量轮：首个 tracked 计划诞生并已解析（−0.7974R）
+- 批量扫盘（eval/forward_batch_scan.py，12 对 ×1000 根、480 窗步长 300、mine_segment 同口径）：入队 30 个 fortress 事件（gap-confirm 0），27 判读落账、3 trigger_missing 跳过。record 分布：no_trade 26、tracked 1、violation/format_error 0。
+- 首个 tracked：fw-XRPUSDT-15m-1792665900000，B3 多头限价 1.3285（scale），收尾 scan 当场解析：traded、exit_bar 3 触发 void、R=−0.7974。影子 resolved_total=1、sum_r=−0.7974。
+- 修 record() 潜伏 bug：组装 plan 时从未注入候选层 side/setup/context，首个 qualified 候选撞 KeyError 'side'；已按 event_ab.run_arm 同款一行组装修复（不改规则口径）。
+- 证据登记：运行中途重启清空 /tmp 决策图，第 5/6 组 8 份到达判读改用提示内嵌 OHLC 表 + 附件完成（因果未破、uncertainty 已注明、全为 no_trade；唯一 tracked 出自有图组）。剩余未判队列 10（3 trigger_missing + 尾部新 7），留下批。
 ## 2026-10-31 对齐条款：点位命中率 45% → 80%
 - 用户拍板给 MAP 任务加对齐条款：附件要塞带/缺口锚必须纳入点位或写 rejected_anchors 给理由；战役腿 MM 投影必报（无从投影须在 uncertainty 说明）；决胜点来源口径由「只许已存在结构」改为「结构 + 投影」两类，点数上限 5 → 7。改 judge/campaign_prompt.py 一处，实验臂与影子共用。
 - evmap 20 事件同触发根只重画地图：命中率 maps 20% → maps-evmap 45% → maps-evmap2 80%（16/20）；rejected_anchors 20/20 使用、投影合规 20/20（18 画出 + 2 合法豁免）；裁决 eval/reports/evmap2-alignment-verdict-2026-10-31.md。
