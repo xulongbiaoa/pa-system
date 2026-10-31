@@ -111,6 +111,10 @@ def validate_map(m):
     for b in m.get("branches") or []:
         if b.get("point_id") not in ids:
             errs.append(f"分支引用不存在的点 {b.get('point_id')}")
+        # 四段链新字段（2026-10-31）：存量地图缺省容忍；写了必须非空
+        for k in ("watch_behavior", "cancel_if"):
+            if k in b and not (isinstance(b[k], str) and b[k].strip()):
+                errs.append(f"分支 {k} 写了必须是非空字符串")
     return errs
 
 
