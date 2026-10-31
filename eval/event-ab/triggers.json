@@ -1,0 +1,384 @@
+[
+ {
+  "eid": "ev01",
+  "bar": 151,
+  "map_bar": 144,
+  "lag": 7,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 165.34,
+    "hi": 165.34,
+    "anchors": 4
+   }
+  ],
+  "avg": 1.146,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev02",
+  "bar": 153,
+  "map_bar": 151,
+  "lag": 2,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 0.1709,
+    "hi": 0.1709,
+    "trapped": "long",
+    "attempts": 0,
+    "opened_at": 131
+   }
+  ],
+  "avg": 0.0012,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev03",
+  "bar": 151,
+  "map_bar": 145,
+  "lag": 6,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.1222,
+    "hi": 0.1222,
+    "anchors": 3
+   }
+  ],
+  "avg": 0.000155,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev04",
+  "bar": 156,
+  "map_bar": 150,
+  "lag": 6,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 161.64,
+    "hi": 161.64,
+    "trapped": "short",
+    "attempts": 1,
+    "opened_at": 151
+   }
+  ],
+  "avg": 1.605263,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev05",
+  "bar": 153,
+  "map_bar": 148,
+  "lag": 5,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.1645,
+    "hi": 0.1782,
+    "anchors": 8
+   }
+  ],
+  "avg": 0.0081,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev06",
+  "bar": 151,
+  "map_bar": 141,
+  "lag": 10,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.1598,
+    "hi": 0.1623,
+    "anchors": 10
+   }
+  ],
+  "avg": 0.001366666667,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev07",
+  "bar": 151,
+  "map_bar": 92,
+  "lag": 59,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 396.3,
+    "hi": 396.3,
+    "trapped": "long",
+    "attempts": 1,
+    "opened_at": 80
+   },
+   {
+    "kind": "fortress",
+    "lo": 387.9,
+    "hi": 390.7,
+    "anchors": 6
+   }
+  ],
+  "avg": 1.815789,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev08",
+  "bar": 152,
+  "map_bar": 137,
+  "lag": 15,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 3.279,
+    "hi": 3.307,
+    "anchors": 4
+   }
+  ],
+  "avg": 0.028579,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev09",
+  "bar": 152,
+  "map_bar": 92,
+  "lag": 60,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 26.35,
+    "hi": 26.52,
+    "anchors": 3
+   }
+  ],
+  "avg": 0.152,
+  "fallback": "first_in_zone",
+  "clamped": false
+ },
+ {
+  "eid": "ev10",
+  "bar": 151,
+  "map_bar": 150,
+  "lag": 1,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 476.4,
+    "hi": 492.2,
+    "anchors": 8
+   }
+  ],
+  "avg": 18.994737,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev11",
+  "bar": 153,
+  "map_bar": 146,
+  "lag": 7,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 5.5,
+    "hi": 5.5,
+    "trapped": "long",
+    "attempts": 1,
+    "opened_at": 147
+   }
+  ],
+  "avg": 0.35805,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev12",
+  "bar": 174,
+  "map_bar": 154,
+  "lag": 20,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 38.86,
+    "hi": 40.72,
+    "anchors": 8
+   },
+   {
+    "kind": "fortress",
+    "lo": 41.9,
+    "hi": 43.84,
+    "anchors": 5
+   }
+  ],
+  "avg": 1.35625,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev13",
+  "bar": 153,
+  "map_bar": 143,
+  "lag": 10,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.3222,
+    "hi": 0.3241,
+    "anchors": 3
+   }
+  ],
+  "avg": 0.001877777778,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev14",
+  "bar": 156,
+  "map_bar": 155,
+  "lag": 1,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.03999,
+    "hi": 0.0402,
+    "anchors": 8
+   }
+  ],
+  "avg": 0.0002115789474,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev15",
+  "bar": 152,
+  "map_bar": 138,
+  "lag": 14,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 22.83,
+    "hi": 23.01,
+    "anchors": 4
+   }
+  ],
+  "avg": 0.114,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev16",
+  "bar": 163,
+  "map_bar": 142,
+  "lag": 21,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.5455,
+    "hi": 0.555,
+    "anchors": 3
+   }
+  ],
+  "avg": 0.007515,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev17",
+  "bar": 154,
+  "map_bar": 122,
+  "lag": 32,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 0.0799,
+    "hi": 0.0813,
+    "anchors": 3
+   }
+  ],
+  "avg": 0.001225,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev18",
+  "bar": 177,
+  "map_bar": 150,
+  "lag": 27,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 29.52,
+    "hi": 29.52,
+    "trapped": "short",
+    "attempts": 0,
+    "opened_at": 63
+   },
+   {
+    "kind": "fortress",
+    "lo": 26.57,
+    "hi": 30.07,
+    "anchors": 6
+   },
+   {
+    "kind": "fortress",
+    "lo": 30.02,
+    "hi": 33.57,
+    "anchors": 3
+   },
+   {
+    "kind": "fortress",
+    "lo": 40.76,
+    "hi": 46.15,
+    "anchors": 8
+   }
+  ],
+  "avg": 3.065789,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev19",
+  "bar": 151,
+  "map_bar": 148,
+  "lag": 3,
+  "levels": [
+   {
+    "kind": "fortress",
+    "lo": 14.12,
+    "hi": 14.2,
+    "anchors": 7
+   }
+  ],
+  "avg": 0.097368,
+  "fallback": "none",
+  "clamped": false
+ },
+ {
+  "eid": "ev20",
+  "bar": 162,
+  "map_bar": 161,
+  "lag": 1,
+  "levels": [
+   {
+    "kind": "gap",
+    "lo": 0.5057,
+    "hi": 0.5057,
+    "trapped": "short",
+    "attempts": 0,
+    "opened_at": 156
+   }
+  ],
+  "avg": 0.002582352941,
+  "fallback": "none",
+  "clamped": false
+ }
+]

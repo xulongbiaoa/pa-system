@@ -371,6 +371,182 @@
   },
   "per_opp_r": 0.0
  },
+ "evmap": {
+  "arm": "evmap",
+  "judged": 20,
+  "format_errors": 0,
+  "candidates": 2,
+  "gate_reject": 0,
+  "gate_reject_rules": {},
+  "unfilled": 0,
+  "trades": [
+   {
+    "r": 3.373491317365289,
+    "win": true,
+    "exit_price": 154.77,
+    "exit_bar": 3,
+    "exit_reason": "scale:target,target",
+    "order_type": "limit",
+    "exit_mode": "scale",
+    "filled": true,
+    "tranches": [
+     {
+      "frac": 0.5,
+      "target": 159.86,
+      "r": 1.848777245508989,
+      "exit_reason": "target",
+      "exit_bar": 2
+     },
+     {
+      "frac": 0.5,
+      "target": 154.77,
+      "r": 4.898205389221589,
+      "exit_reason": "target",
+      "exit_bar": 3
+     }
+    ],
+    "event": "ev04",
+    "setup": "B3",
+    "side": "short",
+    "entry": 163.06
+   },
+   {
+    "r": -1.014237704918033,
+    "win": false,
+    "exit_price": 44.95,
+    "exit_bar": 4,
+    "exit_reason": "scale:stop,stop,stop",
+    "order_type": "market",
+    "exit_mode": "scale",
+    "filled": true,
+    "tranches": [
+     {
+      "frac": 0.5,
+      "target": 35.48,
+      "r": -1.014237704918033,
+      "exit_reason": "stop",
+      "exit_bar": 4
+     },
+     {
+      "frac": 0.25,
+      "target": 33.03,
+      "r": -1.014237704918033,
+      "exit_reason": "stop",
+      "exit_bar": 4
+     },
+     {
+      "frac": 0.25,
+      "target": 30.29,
+      "r": -1.014237704918033,
+      "exit_reason": "stop",
+      "exit_bar": 4
+     }
+    ],
+    "event": "ev12",
+    "setup": "A2",
+    "side": "short",
+    "entry": 41.9
+   }
+  ],
+  "violations": 0,
+  "actions": {},
+  "per_event": {
+   "ev01": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev02": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev03": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev04": {
+    "r": 3.373491317365289,
+    "status": "resolved"
+   },
+   "ev05": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev06": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev07": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev08": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev09": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev10": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev11": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev12": {
+    "r": -1.014237704918033,
+    "status": "resolved"
+   },
+   "ev13": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev14": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev15": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev16": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev17": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev18": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev19": {
+    "r": 0.0,
+    "status": "no_trade"
+   },
+   "ev20": {
+    "r": 0.0,
+    "status": "no_trade"
+   }
+  },
+  "summary": {
+   "n": 2,
+   "win_rate": 0.5,
+   "mean_r": 1.1796,
+   "median_r": 1.1796,
+   "mean_r_ci95": [
+    -1.0142,
+    3.3735
+   ],
+   "max_consec_losses": 1,
+   "proven_edge": false,
+   "note": "样本不足（n=2<30），不下结论"
+  },
+  "per_opp_r": 0.118
+ },
  "paired": {
   "n": 20,
   "mean_diff_camp_minus_auto": 0.0742,
@@ -392,5 +568,72 @@
   "events_hybrid_better": 2,
   "events_auto_better": 0,
   "events_tied": 18
+ },
+ "paired_evmap": {
+  "n": 20,
+  "mean_diff_evmap_minus_auto": 0.1922,
+  "ci95": [
+   -0.0997,
+   0.602
+  ],
+  "events_evmap_better": 3,
+  "events_auto_better": 1,
+  "events_tied": 16
+ },
+ "hit_rate_maps": {
+  "mapdir": "maps",
+  "events_with_map": 20,
+  "hits": 4,
+  "rate": 0.2,
+  "per_event": {
+   "ev01": false,
+   "ev02": false,
+   "ev03": true,
+   "ev04": true,
+   "ev05": false,
+   "ev06": false,
+   "ev07": true,
+   "ev08": false,
+   "ev09": true,
+   "ev10": false,
+   "ev11": false,
+   "ev12": false,
+   "ev13": false,
+   "ev14": false,
+   "ev15": false,
+   "ev16": false,
+   "ev17": false,
+   "ev18": false,
+   "ev19": false,
+   "ev20": false
+  }
+ },
+ "hit_rate_maps_evmap": {
+  "mapdir": "maps-evmap",
+  "events_with_map": 20,
+  "hits": 9,
+  "rate": 0.45,
+  "per_event": {
+   "ev01": true,
+   "ev02": false,
+   "ev03": false,
+   "ev04": true,
+   "ev05": false,
+   "ev06": false,
+   "ev07": true,
+   "ev08": true,
+   "ev09": true,
+   "ev10": false,
+   "ev11": false,
+   "ev12": true,
+   "ev13": false,
+   "ev14": false,
+   "ev15": false,
+   "ev16": true,
+   "ev17": true,
+   "ev18": false,
+   "ev19": true,
+   "ev20": false
+  }
  }
 }

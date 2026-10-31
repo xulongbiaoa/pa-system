@@ -9,6 +9,8 @@
   mine    <outdir>   挖事件 + 生成 AUTO/MAP 提示与两张图
   arrival <outdir>   读 maps/*.json 生成 ARRIVAL 提示
   score   <outdir>   两臂判读齐后：validate→gate→回放，配对报告
+  trigprep <outdir>  第四臂：按预警带最后集结算触发根 + 新鲜地图提示/图
+  evmaprep <outdir>  第四臂到达提示 = AUTO 原提示 + 战役备忘（maps-evmap）
 """
 
 import json
@@ -195,6 +197,142 @@ def hybridprep(outdir):
     print(f"hybrid prompts: {made}, missing: {missing}")
 
 
+def compute_trigger(seg, ev):
+    """第四臂触发根（预注册 evmap-arm-prereg-2026-10-31，机械、因果）。
+
+    被测点位取 mine_segment 首事件的全部 levels（缺口锚与要塞带不分
+    种类，缺口锚 lo=hi=锚价；断言 bar 一致）；
+    预警带 = 每点位 [lo, hi] ±1.0×段均幅的并集（段均幅取决策根特征包）。
+    扫描窗 k ∈ [max(29, B-61), B-2]（下标，B 为事件 bar、决策根下标 B-1）：
+    找最后一个 j（bars[j-2..j] 三根收盘全在预警带外）→ T_idx = j+1；
+    找不到 → 窗内第一根 in_zone 的 k；窗内从未 in_zone → T_idx = B-6。
+    map_bar = T_idx + 1，下限 clamp 到 45。
+    """
+    B = ev["bar"]
+    mined = mine_segment(seg)
+    assert mined, f"{ev['eid']}: mine_segment 无事件"
+    first = mined[0]
+    assert first["bar"] == B, (
+        f"{ev['eid']}: mine_segment 首事件 bar={first['bar']} != 事件 bar={B}")
+    levels = list(first.get("levels") or [])
+    assert levels, f"{ev['eid']}: 首事件无 levels"
+    packB, _ = pack_at(seg, B)
+    avg = packB["seg_avg_range"]
+    bars = seg["bars"]
+    zones = [(lv["lo"] - 1.0 * avg, lv["hi"] + 1.0 * avg) for lv in levels]
+
+    def in_zone(k):
+        c = bars[k]["c"]
+        return any(lo <= c <= hi for lo, hi in zones)
+
+    win_lo, win_hi = max(29, B - 61), B - 2
+    T_idx, fallback = None, "none"
+    for j in range(win_hi, win_lo - 1, -1):
+        if not (in_zone(j - 2) or in_zone(j - 1) or in_zone(j)):
+            T_idx, fallback = j + 1, "none"
+            break
+    if T_idx is None:
+        for k in range(win_lo, win_hi + 1):
+            if in_zone(k):
+                T_idx, fallback = k, "first_in_zone"
+                break
+    if T_idx is None:
+        T_idx, fallback = B - 6, "never_in_zone"
+    map_bar = T_idx + 1
+    clamped = False
+    if map_bar < 45:
+        map_bar, clamped = 45, True
+    return {"map_bar": map_bar, "levels": levels, "avg": avg,
+            "fallback": fallback, "clamped": clamped}
+
+
+def trigprep(outdir):
+    """第四臂 prep：逐事件算触发根，生成新鲜地图提示与触发图、triggers.json。"""
+    events = json.load(open(os.path.join(outdir, "events.json")))
+    for sub in ("prompts-map-evmap", "maps-evmap", "prompts-evmap",
+                "judgments-evmap"):
+        os.makedirs(os.path.join(outdir, sub), exist_ok=True)
+    triggers = []
+    for ev in events:
+        eid = ev["eid"]
+        seg = load_seg(ev["dataset"], ev["segment"])
+        info = compute_trigger(seg, ev)
+        T = info["map_bar"]
+        packT, barsT = pack_at(seg, T)
+        mp = build_map_prompt(packT, barsT)
+        mp = mp.replace("第 90 根", f"第 {T} 根")
+        open(os.path.join(outdir, "prompts-map-evmap", eid + ".md"), "w").write(mp)
+        render_bars(barsT, os.path.join(outdir, "charts", eid + "-T.png"))
+        triggers.append({
+            "eid": eid, "bar": ev["bar"], "map_bar": T,
+            "lag": ev["bar"] - T, "levels": info["levels"],
+            "avg": info["avg"], "fallback": info["fallback"],
+            "clamped": info["clamped"],
+        })
+        print(f"trig {eid}: B={ev['bar']} T={T} lag={ev['bar'] - T} "
+              f"fallback={info['fallback']} clamped={info['clamped']}",
+              flush=True)
+    json.dump(triggers, open(os.path.join(outdir, "triggers.json"), "w"),
+              ensure_ascii=False, indent=1)
+    print(f"triggers: {len(triggers)}")
+
+
+def evmaprep(outdir):
+    """第四臂提示 = AUTO 原提示 + 文末「战役备忘」（新鲜地图 JSON + 三条使用规则，与 hybridprep 逐字一致）。"""
+    events = json.load(open(os.path.join(outdir, "events.json")))
+    os.makedirs(os.path.join(outdir, "prompts-evmap"), exist_ok=True)
+    made, missing = 0, []
+    for ev in events:
+        eid = ev["eid"]
+        mp = os.path.join(outdir, "maps-evmap", eid + ".json")
+        ap = os.path.join(outdir, "prompts-auto", eid + ".md")
+        if not (os.path.exists(mp) and os.path.exists(ap)):
+            missing.append(eid)
+            continue
+        map_obj = json.load(open(mp))
+        memo = (
+            "\n\n## 战役备忘（冻结地图附件，本事件开始前画定，不许重画、不许改点）\n\n"
+            "下面是本事件的战役地图（决胜点、主/备假设及其 holds_if / takeover_if / void_if 条款）：\n\n"
+            "```json\n" + json.dumps(map_obj, ensure_ascii=False, indent=1) + "\n```\n\n"
+            "使用规则（硬纪律）：\n"
+            "1. 每个候选必须在 candidate 中写 point_id，点名上面地图中的一个决胜点；"
+            "决策根收盘价不在该点 [lo, hi] ±0.25×段均幅（附件数字中的段均幅）内时，"
+            "该机会只许写进 pending_conditions，不许标 qualified。\n"
+            "2. 地图假设的 void_if 或战役作废条件已经发生时（例如价格已越过地图标注的 "
+            "MM 投影且该假设的顺势分支按其条款关闭、或趋势自起点腿的投影已达），"
+            "对应方向的候选不许标 qualified。\n"
+            "3. 地图只供位置与战役状态（决胜点在哪、本腿走到哪一步、哪条分支还活着）；"
+            "形态、触发、成色仍以你对图的判读为准；位置与图读冲突时，位置以地图为准。\n")
+        open(os.path.join(outdir, "prompts-evmap", eid + ".md"), "w").write(
+            open(ap).read() + memo)
+        made += 1
+    print(f"evmap prompts: {made}, missing: {missing}")
+
+
+def map_hit_rate(outdir, mapdir_name, events):
+    """点位命中率诊断：决策收盘落在任一地图决胜点 [lo,hi] ±0.25×段均幅内的事件占比。"""
+    hits, total, per = 0, 0, {}
+    for ev in events:
+        eid = ev["eid"]
+        mp = os.path.join(outdir, mapdir_name, eid + ".json")
+        if not os.path.exists(mp):
+            per[eid] = None
+            continue
+        seg = load_seg(ev["dataset"], ev["segment"])
+        pack, _ = pack_at(seg, ev["bar"])
+        avg = pack.get("seg_avg_range") or 0
+        close = seg["bars"][ev["bar"] - 1]["c"]
+        m = json.load(open(mp))
+        hit = any(p["lo"] - 0.25 * avg <= close <= p["hi"] + 0.25 * avg
+                  for p in m.get("points") or [])
+        per[eid] = hit
+        total += 1
+        hits += 1 if hit else 0
+    return {"mapdir": mapdir_name, "events_with_map": total, "hits": hits,
+            "rate": round(hits / total, 4) if total else None,
+            "per_event": per}
+
+
 def _classify_camp_action(j):
     if any(c.get("qualified") for c in j.get("candidates", [])):
         return "执行"
@@ -234,8 +372,9 @@ def run_arm(outdir, arm, events):
             act = _classify_camp_action(j)
             rep["actions"][act] = rep["actions"].get(act, 0) + 1
         map_pts = {}
-        if arm in ("camp", "hybrid"):
-            mp = os.path.join(outdir, "maps", eid + ".json")
+        if arm in ("camp", "hybrid", "evmap"):
+            mapdir = "maps-evmap" if arm == "evmap" else "maps"
+            mp = os.path.join(outdir, mapdir, eid + ".json")
             if os.path.exists(mp):
                 m = json.load(open(mp))
                 map_pts = {p["id"]: p for p in m.get("points") or []}
@@ -248,7 +387,7 @@ def run_arm(outdir, arm, events):
             plan.update({"side": c["side"], "setup": c["setup"],
                          "context": pack["trend"]["label"]})
             merge_candidate_terms(plan, c)
-            if arm in ("camp", "hybrid"):
+            if arm in ("camp", "hybrid", "evmap"):
                 pt = map_pts.get(c.get("point_id"))
                 seg_avg = pack.get("seg_avg_range") or 0
                 close = seg["bars"][ev["bar"] - 1]["c"]
@@ -304,7 +443,8 @@ def _paired(rep, events, arm_hi, arm_lo, seed):
 
 def score(outdir):
     events = json.load(open(os.path.join(outdir, "events.json")))
-    rep = {arm: run_arm(outdir, arm, events) for arm in ("auto", "camp", "hybrid")}
+    rep = {arm: run_arm(outdir, arm, events)
+           for arm in ("auto", "camp", "hybrid", "evmap")}
     # 配对差与 bootstrap CI（主指标：每机会 R）
     p = _paired(rep, events, "camp", "auto", 20261031)
     rep["paired"] = {
@@ -315,6 +455,16 @@ def score(outdir):
         "events_tied": p["events_tied"],
     }
     rep["paired_hybrid"] = _paired(rep, events, "hybrid", "auto", 20261031)
+    pe = _paired(rep, events, "evmap", "auto", 20261031)
+    rep["paired_evmap"] = {
+        "n": pe["n"], "mean_diff_evmap_minus_auto": pe["mean_diff"],
+        "ci95": pe["ci95"],
+        "events_evmap_better": pe["events_evmap_better"],
+        "events_auto_better": pe["events_auto_better"],
+        "events_tied": pe["events_tied"],
+    }
+    rep["hit_rate_maps"] = map_hit_rate(outdir, "maps", events)
+    rep["hit_rate_maps_evmap"] = map_hit_rate(outdir, "maps-evmap", events)
     json.dump(rep, open(os.path.join(outdir, "result.json"), "w"),
               ensure_ascii=False, indent=1)
     for arm, r in rep.items():
@@ -327,9 +477,13 @@ def score(outdir):
                   f"violations {r['violations']} actions {r['actions']}")
     print("paired:", json.dumps(rep["paired"], ensure_ascii=False))
     print("paired_hybrid:", json.dumps(rep["paired_hybrid"], ensure_ascii=False))
+    print("paired_evmap:", json.dumps(rep["paired_evmap"], ensure_ascii=False))
+    print("hit_rate maps (old):", json.dumps(rep["hit_rate_maps"], ensure_ascii=False))
+    print("hit_rate maps-evmap:", json.dumps(rep["hit_rate_maps_evmap"], ensure_ascii=False))
 
 
 if __name__ == "__main__":
     cmd, outdir = sys.argv[1], sys.argv[2]
     {"mine": mine, "arrival": arrival, "score": score,
-     "hybridprep": hybridprep}[cmd](outdir)
+     "hybridprep": hybridprep, "trigprep": trigprep,
+     "evmaprep": evmaprep}[cmd](outdir)
