@@ -108,10 +108,11 @@
        "order_type": {
         "enum": [
          "market",
-         "limit"
+         "limit",
+         "stop_market"
         ],
         "default": "market",
-        "description": "限价单按 core 限价口径回放：穿越才成交、未成交留档"
+        "description": "market=行为已成立按决策后首根开盘成交；limit=穿越限价才成交、未成交留档；stop_market=触及 entry 触发价才成交、跳空按开盘价、未触发留档（顺势延续 A1/A2/B2 的 stop 触发写此值，entry 写信号 K 极值外侧）"
        },
        "void": {
         "type": "object",

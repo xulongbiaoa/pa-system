@@ -1,3 +1,7 @@
+## 2026-10-31 设计 v2.2 P0 落地：订单成交语义修复 + 存量审计（分支 codex/gap-trading-design）
+- 用户裁定：缺口改造方案 v1 待商榷挂起；v2.2 与事件器 v1 先做。第一批 = P0 成交语义：replay 新增 stop_market（触及触发才成交、跳空按开盘价、未触发/前提先失效留档、成交根触止损/目标标 ambiguous、入场按市价费率）；market 改真语义（决策后首根开盘成交，不再按计划 entry 无条件成交）；limit 不动。schema 枚举加 stop_market，prompt_builder / campaign_prompt / router 入场分工同步改写（顺势 stop 触发写 stop_market、到达分支 entry_style 对齐）。gate 无需改：H1 的 min 口径对 stop 计划自动取触发价锚定 RR、费率按市价，审计中已核。
+- 测试：新增 test_stop_replay 9 项；test_replay_scale 2 项 fixture 按新 market 语义修正首根开盘价。全仓 191 passed + 1 skipped（原 182+9）。
+- 存量审计（eval/order_semantics_audit.py，报告 eval/reports/order-semantics-audit-2026-10-31.md）：已解析 plan 型 13 笔中 limit 10 笔不受影响；market 3 笔逐笔复核——ev12 A2 空 −1.014R 为未触发误成交、退役（evmap 臂修正为 1 笔 +3.373R、每机会 +0.169、裁决不变，evmap 裁决文件已加事后修正）；ev01 各读法均 ≈−1.04R 不动；branch BTC A2 修正为 −0.0889R（本在裁决口径外）。未解析 tracked 全为 limit，复跑不受影响。旧 market 计划自此属 LEGACY_ORDER_AMBIGUOUS，不得跨界重跑比对。
 ## 2026-10-31 错误空仓考试 v1：漏检 0/8、陷阱误放 0/8、片段 2/8（纲领四件收官）
 - 24 题盲考（规格 eval/reports/false-empty-exam-v1-spec-2026-10-31.md 出分前冻结；裁决 false-empty-exam-v1-verdict-2026-10-31.md）：L 合法机会（branch-ab 已 qualified 的 8 事件）重判全数重新出手，漏检率 0；T 相似陷阱（缺项全带出处、零 extra 的 8 事件）误放 0；F 未完成片段（L 决策点 −5 根）原始误放 2/8——逐题复核：X03 是机械位移撞上同族另一个完整 B3 触发（标签噪声）、X15 是正反双面自洽的争议题，干净误放 0–1/8。全卷零「纯加码空仓」。重写 2 次均由新立的 A1/A2 方向规则当场拦截。
 - 口径自警：自洽性考试（标签源于系统自身先前判读），证明新纪律下识别稳定、不自我加码，不是对 Brooks 的外部成绩。纲领四件（依据引用/卡四分/等待对象化/错误空仓考试）全部落地；考试转常态化，F 类位移下轮改定制以消 X03 型噪声；X15 型双面自洽案例攒样本再议。

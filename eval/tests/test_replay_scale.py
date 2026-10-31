@@ -18,7 +18,8 @@ def test_fracs():
 def test_scale_t1_hit_then_stop():
     # 多：入 100 损 90（风险 10），T1=110（+1R）、T2=120（+2R）。
     # 第 1 根摸 T1，第 2 根砸到止损：full=+1R；scale=0.5*1 + 0.5*(-1)=0。
-    bars = [B(111, 99, 105), B(105, 89, 95)] + [B(100, 95, 98)] * 5
+    # market 成交价 = 决策后首根开盘（2026-10-31 新语义），故首根 o=100。
+    bars = [{"o": 100, "h": 111, "l": 99, "c": 105}, B(105, 89, 95)] + [B(100, 95, 98)] * 5
     plan = {"entry": 100, "stop": 90, "targets": [110, 120], "order_type": "market"}
     full = simulate_plan(bars, plan, "long")
     assert full["exit_mode"] == "full" and abs(full["r"] - 1.0) < 0.02
@@ -29,7 +30,7 @@ def test_scale_t1_hit_then_stop():
 
 
 def test_scale_runner_reaches_last_target():
-    bars = [B(121, 99, 115)] + [B(122, 110, 120)] * 3
+    bars = [{"o": 100, "h": 121, "l": 99, "c": 115}] + [B(122, 110, 120)] * 3
     plan = {"entry": 100, "stop": 90, "targets": [110, 120, 130],
             "order_type": "market", "exit_mode": "scale"}
     sc = simulate_plan(bars, plan, "long")

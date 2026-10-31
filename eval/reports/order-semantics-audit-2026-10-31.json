@@ -1,0 +1,94 @@
+{
+ "counts": {
+  "branch-ab": {
+   "legacy_stop_semantics": 1,
+   "unaffected_limit": 3
+  },
+  "touch-ab": {
+   "unaffected_limit": 1
+  },
+  "event-ab/auto": {
+   "legacy_ambiguous": 1,
+   "unaffected_limit": 1
+  },
+  "event-ab/evmap": {
+   "unaffected_limit": 1,
+   "legacy_ambiguous": 1
+  },
+  "forward-ledger": {
+   "unaffected_limit": 2
+  }
+ },
+ "market_rows": [
+  {
+   "store": "branch-ab",
+   "event": "fw-BTCUSDT-15m-1793403000000",
+   "side": "long",
+   "entry": 77384.02,
+   "decision_close": 77364.01,
+   "rel_dev": 0.00026,
+   "recorded_r": -0.1628847370162884,
+   "class": "legacy_stop_semantics",
+   "new_filled": true,
+   "new_r": -0.08893572803157289,
+   "new_exit_reason": "scale:window_end,window_end,window_end",
+   "setup": "A2"
+  },
+  {
+   "store": "event-ab/auto",
+   "event": "ev01",
+   "side": "long",
+   "entry": 165.66,
+   "decision_close": 165.44,
+   "rel_dev": 0.00133,
+   "recorded_r": -1.0488035714285717,
+   "class": "legacy_ambiguous",
+   "as_limit_filled": true,
+   "as_limit_r": -1.0340125000000002,
+   "as_limit_exit": "scale:stop,stop",
+   "as_stop_filled": true,
+   "as_stop_r": -1.0488035714285717,
+   "as_stop_exit": "scale:stop,stop",
+   "setup": "A1"
+  },
+  {
+   "store": "event-ab/evmap",
+   "event": "ev12",
+   "side": "short",
+   "entry": 41.9,
+   "decision_close": 43.45,
+   "rel_dev": -0.03567,
+   "recorded_r": -1.014237704918033,
+   "class": "legacy_ambiguous",
+   "as_limit_filled": true,
+   "as_limit_r": -1.010116393442623,
+   "as_limit_exit": "scale:stop,stop,stop",
+   "as_stop_filled": false,
+   "as_stop_r": null,
+   "as_stop_exit": "void_before_fill",
+   "setup": "A2"
+  }
+ ],
+ "unresolved_tracked": [
+  {
+   "store": "branch-ab",
+   "event": "fw-DOGEUSDT-15m-1792920600000",
+   "order_type": "limit"
+  },
+  {
+   "store": "branch-ab",
+   "event": "fw-SOLUSDT-1h-1792328400000",
+   "order_type": "limit"
+  },
+  {
+   "store": "branch-ab",
+   "event": "fw-XRPUSDT-15m-1793370600000",
+   "order_type": "limit"
+  },
+  {
+   "store": "branch-ab",
+   "event": "fw-SOLUSDT-15m-1792921500000",
+   "order_type": "limit"
+  }
+ ]
+}

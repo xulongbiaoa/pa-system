@@ -1,5 +1,11 @@
 """回放与统计：以 R 为单位；同根内止损优先（trainer 口径）。
 
+订单语义（2026-10-31 设计 v2.2 P0 落地）：三类分开——limit 穿越才
+成交（既有口径）；stop_market 触及触发价才成交、跳空按开盘价；
+market 按决策后首根开盘价成交。旧实现对 market 计划从第一根起按
+计划 entry 无条件成交，把 stop 触发语义的计划在从未触发时也记成
+成交（存量影响见 eval/reports/order-semantics-audit-2026-10-31.md）。
+
 simulate_trade 在入场后的 K 线序列上逐根走：先判止损、再判目标（第一
 目标），都没碰到则窗口末收盘出场。
 
@@ -134,6 +140,57 @@ def simulate_limit_trade(bars_after, side, limit_price, stop, target,
     return t
 
 
+def simulate_stop_trade(bars_after, side, trigger_price, stop, target,
+                        window=300, fee_mult=1.0, fees=None, void=None):
+    """stop 市价单回放（2026-10-31，设计 v2.2 §8/§17）：
+    - 触发价是决策点事前写明的信号极值外侧价：价格触及或越过触发价
+      才成交。stop 单在真实市场按触及触发，与限价「穿越才成交」的
+      防排队高估口径不同——stop 要防的是未触发先成交；
+    - 跳空越过触发价按该根开盘价成交，不按触发价（不假装能成交在
+      没交易过的价位）；未跳空按触发价成交；
+    - 成交前收盘越过 void 线 → void_before_fill，与限价同级留档；
+    - 窗口内从未触发 → filled=False / exit_reason='untriggered'，
+      调用方留档单独统计（未触发率是这类计划的诚实度量）；
+    - 成交根同时触及止损或目标 → ambiguous=True，离场仍按
+      simulate_trade 的止损优先保守序（同根先后不可知）；
+    - 入场费按市价费率（taker），与 gate 对 stop_market 的计价同口径；
+    - 生命周期锚在决策点：窗口从决策点起算，成交不顺延窗口。
+    """
+    fees = _fees(fees)
+    seg = bars_after[:window]
+    fill_bar = None
+    fill_price = None
+    for i, b in enumerate(seg):
+        if side == "long" and b["h"] >= trigger_price:
+            fill_bar = i
+            fill_price = b["o"] if b["o"] >= trigger_price else trigger_price
+            break
+        if side == "short" and b["l"] <= trigger_price:
+            fill_bar = i
+            fill_price = b["o"] if b["o"] <= trigger_price else trigger_price
+            break
+        # 成交前先判前提（与限价同级）：收盘已越 void 线，单子作废。
+        if void_hit(void, b["c"]):
+            return {"filled": False, "exit_reason": "void_before_fill",
+                    "fill_bar": None, "void_bar": i}
+    if fill_bar is None:
+        return {"filled": False, "exit_reason": "untriggered", "fill_bar": None}
+    fb = seg[fill_bar]
+    if side == "long":
+        ambiguous = fb["l"] <= stop or fb["h"] >= target
+    else:
+        ambiguous = fb["h"] >= stop or fb["l"] <= target
+    t = simulate_trade(seg[fill_bar:], side, fill_price, stop, target,
+                       fee_mult=fee_mult, fees=fees,
+                       entry_fee=fees["market_in"], void=void)
+    if t is None:
+        return {"filled": False, "exit_reason": "untriggered", "fill_bar": None}
+    t.update({"filled": True, "fill_bar": fill_bar, "fill_price": fill_price,
+              "exit_bar": fill_bar + t["exit_bar"],
+              "ambiguous": bool(ambiguous)})
+    return t
+
+
 def _percentile(sorted_vals, q):
     """线性插值分位（与 numpy.percentile 默认口径一致），纯标准库。"""
     if not sorted_vals:
@@ -203,12 +260,29 @@ def _one_tranche(bars_after, plan, side, target, window, fee_mult, void):
             window=window, fee_mult=fee_mult, void=void)
         t["order_type"] = "limit"
         return t
-    t = simulate_trade(bars_after[:window], side, plan["entry"], plan["stop"],
-                       target, fee_mult=fee_mult, void=void)
+    if ot == "stop_market":
+        t = simulate_stop_trade(
+            bars_after, side, plan["entry"], plan["stop"], target,
+            window=window, fee_mult=fee_mult, void=void)
+        t["order_type"] = "stop_market"
+        return t
+    # market（真市价）：行为已成立、决策后首根开盘价即成交价。计划
+    # entry 只是决策点现价的记录，不再当作成交价（2026-10-31 修复：
+    # 旧实现按 entry 从第一根起无条件成交，stop 语义计划从未触发也
+    # 记成交；旧数据中 entry 明显偏离决策价的 market 计划属
+    # LEGACY_ORDER_AMBIGUOUS，见存量审计报告，不得跨界重跑比对）。
+    seg = bars_after[:window]
+    if not seg:
+        return {"filled": False, "exit_reason": "no_bars", "order_type": "market"}
+    fill_price = seg[0]["o"]
+    t = simulate_trade(seg, side, fill_price, plan["stop"], target,
+                       fee_mult=fee_mult, void=void)
     if t is None:
         return {"filled": False, "exit_reason": "no_bars", "order_type": "market"}
     t["order_type"] = "market"
     t["filled"] = True
+    t["fill_price"] = fill_price
+    t["fill_bar"] = 0
     return t
 
 
@@ -221,7 +295,8 @@ def simulate_plan(bars_after, plan, side, window=300, fee_mult=1.0):
       每档独立模拟到自己的目标，总 R = 配比加权。各档共用止损、
       不移保本（简化口径，记账在此）。限价未成交 = 全单未成交。
 
-    返回 dict 一定带 order_type 与 exit_mode；限价未成交时 filled=False、无 R。
+    返回 dict 一定带 order_type 与 exit_mode；限价未成交、stop 未触发时
+    filled=False、无 R，调用方必须留档单独统计。
     """
     void = (plan or {}).get("void")
     targets = list((plan or {}).get("targets") or [])

@@ -92,6 +92,8 @@ candidates/no_trade_reason/pending_conditions/uncertainty）。
 hypotheses 直接沿用地图的主备假设（可按 takeover_if 更新 primary）。
 plan 契约与单点判读完全一致：结构化 void 必备（只写文字版判格式
 不合格）；首目标毛 RR 取不到 2:1 时必须带 cap_reason 点名封顶结构。
+order_type 与分支 entry_style 对齐：stop → stop_market（entry 写触发价，
+回放触及才成交）；limit → limit；market → market（决策点立即入场）。
 依据引用（硬性）：pending_conditions 的每条 missing 必须是对象
 {"condition": "缺哪条必要条件", "evidence": "对应哪根K线/哪个价位",
 "basis": {"type": ..., "ref": ...}}。出处只有四类：冻结分支 trigger
