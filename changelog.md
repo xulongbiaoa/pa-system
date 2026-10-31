@@ -1,3 +1,8 @@
+## 2026-10-31 T07 在线影子引擎组装落地（分支 codex/gap-trading-design；T05 PostgreSQL 按用户指令暂缓）
+- runtime/levels.py：三类位置来源统一成 WatchLevel——地图点（source=model）、要塞带与缺口锚（source=machine，细类看 FORT/GAP 前缀）；缺口锚原始带=锚线本身、观察带 ±0.25×段均幅（观察窗非执法带）。
+- runtime/shadow_engine.py：逐根已收盘 K 线驱动全链——事件器 detect+advance 出事实事件 → 绑定机会 note_bar 双模式记账（绑定位置出新事实事件亦作新证据唤醒）→ 唤醒登记唯一 rejudge 任务 → 注入的评估器消费任务、apply_assessment 推进状态 → READY 带计划走统一决策服务 → eligible 模拟订单链走完并登记 tracked 持仓（沿用现行「登记—后解析」口径，不另造成交语义）；rejected 机会以 GATE_REJECTED 终结。全程审计链（level_event/wake/assessment/decision/position_opened，带 bar_t 与 revision，可选 JSONL 落盘）。
+- 评估器与特征包提供者均为注入的可调用对象：生产接模型时经 model_client 契约进，本模块不读文件、不调模型、不连行情、不下真实单。
+- 测试 +3（来源组装 + 全链至模拟持仓 + gate 拒绝终结），全仓 242 passed + 1 skipped。未做：把引擎接进批量影子轮（替换 forward_shadow 的在线段）与 110 个存量 due 的实消费——属运行批次动作，等用户指令开批时一并验；T08 执行沙盒、T10 Gold 样本量未动。
 ## 2026-10-31 T03 统一决策服务 + T06 模型适配器契约落地（分支 codex/gap-trading-design）
 - judge/service.py：assess_candidate(DecisionRequest) 显式入参（快照/候选/条件结果/特征包/台账/策略版本/模式），服务内不读任何隐式最新状态；DecisionResult 四态（eligible/waiting/rejected/invalid_input），gate 硬拒绝原样进 rule_hits 与 gate 原文，runner 不许改写成笼统 no_trade；条件未齐先 waiting 不进 gate 定价；H6 无台账结构化标 unavailable（不冒充通过）。
 - 等价迁移：pa_cli、forward_shadow、campaign_run、event_run 四处 adjudicate 直调改走服务（.gate 原文消费，输出字节不变，等价测试以同一夹具断言 service.gate == adjudicate 直调结果）。冻结实验 harness（branch_ab/touch_ab/event_ab/pilot_run/gold_run）有意不迁：其存量结果的复现路径保持原样，迁移与否等各自复跑时再议，已在此登记为边界而非漂移。
