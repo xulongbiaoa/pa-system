@@ -53,6 +53,9 @@ def phase1() -> list:
         out_path = os.path.join(OUT, f"output_{sym}.json")
         if os.path.exists(out_path):
             os.remove(out_path)
+        marker_path = os.path.join(OUT, f"applied_{sym}.json")
+        if os.path.exists(marker_path):
+            os.remove(marker_path)
         repo = e24.build_battlefield(sym, "15m", e24.TF_MS, bars)
         session = BrainSession(repo, RecordedAdapter([]))
         pkg = build_task_package(repo, session.read_revision)
@@ -64,9 +67,22 @@ def phase1() -> list:
 
 
 def phase2(judge_files: dict) -> list:
+    """幂等：同一窗同一份判读文件只落账一次（2026-10-31 21:15 轮教训：首跑
+    BTC 已落账、ETH 被拒后整批重跑，BTC 被追加了第二份，造成快照重复条目）。"""
+    import hashlib
     results = []
     for sym in SYMBOLS:
-        e24.apply(sym, judge_files[sym])
+        judge_path = judge_files[sym]
+        digest = hashlib.sha256(open(judge_path, "rb").read()).hexdigest()
+        pkg = json.load(open(os.path.join(OUT, f"pkg_{sym}.json")))
+        marker_path = os.path.join(OUT, f"applied_{sym}.json")
+        marker = json.load(open(marker_path)) if os.path.exists(marker_path) else {}
+        if marker.get("judge_sha256") == digest and marker.get("token") == pkg["token"]:
+            pass  # 本窗本文件已落过账：跳过 apply，只重建快照
+        else:
+            e24.apply(sym, judge_path)
+            json.dump({"judge_sha256": digest, "token": pkg["token"]},
+                      open(marker_path, "w"))
         e24.finalize(sym)
         snap = json.load(open(os.path.join(OUT, f"{sym}.json")))
         results.append({"symbol": sym, "token": snap["meta"]["token"],
