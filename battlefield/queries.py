@@ -54,13 +54,32 @@ class QueryService:
                 "watch_plans": s["watch_plans"],
                 "candidate_proposals": s["candidate_proposals"]}
 
+    # 事件的观察镜头：actor=角色行为，terrain=战场变化，terrain+actor=两者
+    # （缺口立账/关账既是角色的战果，也是舞台上阵地的生灭）。只在查询副本上标注，
+    # 不改事件日志本身。推演引用时据此区分“被行为触发”还是“被战场变化触发”。
+    TERRAIN_EVENTS = ("LEVEL_CONFIRMED", "LEVEL_TOUCHED", "RETURN_TO_BAND",
+                      "LEFT_BAND_UP", "LEFT_BAND_DOWN", "TARGET_TOUCHED", "DATA_GAP")
+    DUAL_EVENTS = ("GAP_OPENED", "GAP_CLOSED")
+
+    @classmethod
+    def event_lens(cls, event_type: str) -> str:
+        if event_type in cls.DUAL_EVENTS:
+            return "terrain+actor"
+        if event_type in cls.TERRAIN_EVENTS:
+            return "terrain"
+        return "actor"
+
     def get_changes(self, since_revision: int) -> dict:
         if since_revision > self.revision:
             raise ValueError("since_revision 晚于绑定快照")
         start_seq = self.repo.rev_last_seq.get(since_revision, 0)
         end_seq = self.repo.rev_last_seq.get(self.revision, 0)
-        evs = [e.to_dict() for e in self.repo.kernel.events
-               if start_seq < e.sequence <= end_seq]
+        evs = []
+        for e in self.repo.kernel.events:
+            if start_seq < e.sequence <= end_seq:
+                d = e.to_dict()
+                d["lens"] = self.event_lens(e.type)
+                evs.append(d)
         return {"from_revision": since_revision, "to_revision": self.revision, "events": evs}
 
     def scene_as_known_at(self, t: int) -> dict:

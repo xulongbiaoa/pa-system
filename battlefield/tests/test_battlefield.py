@@ -287,3 +287,18 @@ def test_side_activity_continuous_and_absence_is_not_zero():
     assert up["segments"][0]["result"]["net_progress"] == Decimal("3.8")
     down = qs.get_side_activity("down")
     assert down["recorded"] is False and down["events"] == []   # 未观测到 != 力量为零
+
+
+def test_changes_carry_actor_and_terrain_lenses():
+    kernel, repo = fresh_repo()
+    run_fixture(repo)
+    qs = QueryService(repo, make_token(repo))
+    evs = qs.get_changes(0)["events"]
+    lenses = {e["lens"] for e in evs}
+    assert "actor" in lenses and "terrain" in lenses and "terrain+actor" in lenses
+    gap_open = [e for e in evs if e["type"] == "GAP_OPENED"][0]
+    assert gap_open["lens"] == "terrain+actor"      # 既是多方战果，也是阵地新生
+    att = [e for e in evs if e["type"] == "ATTEMPT_STARTED"][0]
+    assert att["lens"] == "actor"
+    # 事件日志本身不被标注污染
+    assert "lens" not in kernel.events[0].to_dict()
