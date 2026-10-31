@@ -351,6 +351,7 @@ class Battlefield:
         gaps = [{"gap_id": g.gap_id, "level_key": g.level_key, "direction": g.direction,
                  "anchor": str(g.anchor), "opened_bar": g.opened_bar, "status": g.status,
                  "closed_bar": g.closed_bar, "test_count": g.test_count,
+                 "next_test_index": g.test_count + 1,
                  "tests": copy.deepcopy(g.tests)} for g in self.gaps.values()]
         targets = [{"target_id": t.target_id, "price": str(t.price), "formula": t.formula,
                     "anchor_refs": list(t.anchor_refs), "available_at": t.available_at,

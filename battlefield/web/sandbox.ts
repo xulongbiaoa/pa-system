@@ -107,6 +107,21 @@ function positionBands() {
 }
 
 // ---------- 图表 ----------
+
+function renderHeader() {
+  const m = snap!.meta;
+  const ageMin = Math.max(0, Math.round((Date.now() - m.cursor_close_ms) / 60000));
+  const lb = $("liveBadge");
+  if (ageMin <= 17) { lb.textContent = "● LIVE"; lb.style.color = "#2fbf71"; }
+  else if (ageMin <= 35) { lb.textContent = `● 延迟 ${ageMin} 分钟`; lb.style.color = "#e8a33d"; }
+  else { lb.textContent = `● 陈旧 ${ageMin} 分钟`; lb.style.color = "#f0564f"; }
+  $("dataTime").textContent =
+    `最新已收盘 K 线 ${fmtTc(m.cursor_close_ms)} · 战场快照生成 ${fmtTc(m.generated_at_ms)} · AI 简报基于 rev ${m.ai.last_read_cursor ?? "—"}（UTC+8） · ${m.window}`;
+  $("tokenBadge").textContent = m.token;
+  $("aiBadge").textContent = m.ai.stale ? "AI 待复核（基于旧快照）"
+    : `AI 已复核至 ${fmtTc(m.cursor_close_ms, false)}`;
+}
+
 function renderChart() {
   const bars = snap!.bars;
   if (chart) { chart.remove(); chart = null; }
@@ -166,13 +181,19 @@ function renderPlan() {
   const plans: AnyObj[] = snap!.watch_plans;
   if (!plans.length) { $("planBody").innerHTML = "暂无观察计划。"; return; }
   const p = plans[plans.length - 1];
+  const proposals: AnyObj[] = snap!.candidate_proposals || [];
+  const cand = proposals.length ? proposals[proposals.length - 1] : null;
+  const candText = cand ? (cand.text || cand.setup || cand.reason || "已立候选（提案分区）") : null;
+  const execText = cand ? (cand.entry_trigger || cand.entry || cand.trigger || null) : null;
   const step = (n: number, cls: string, title: string, desc: string, extra = "") =>
     `<div class="step ${cls}"><span class="n">${n}</span><div><div class="st">${title}</div><div class="sd">${desc}</div></div>${extra}</div>`;
   $("planBody").innerHTML = `<div class="steps">` +
     step(1, "done", "观察位置", p.watch_level || "—") +
     step(2, "act", "等待行为", p.watch_behavior || "—", `<span class="waitB">WAIT</span>`) +
-    step(3, "", "入场触发", p.entry_trigger || "—") +
-    step(4, "", "取消条件", p.cancel_if || "—") + `</div>`;
+    step(3, "", "复核触发", `${p.entry_trigger || "—"}<br><span style="color:#55707f;font-size:11.5px">满足后唤醒 AI 复核，不是入场指令</span>`) +
+    step(4, cand ? "done" : "", "候选条件", candText || "等待——尚无候选，复核通过后才立") +
+    step(5, execText ? "done" : "", "订单触发", execText || "等待——候选未立，无可执行触发") +
+    step(6, "", "取消条件", p.cancel_if || "—") + `</div>`;
 }
 
 // ---------- 底部：时间线 + 多空对照 ----------
@@ -231,9 +252,7 @@ async function load(sym: string) { curSymbol = sym;
   const m = snap!.meta, bars = snap!.bars, last = bars[bars.length - 1];
   const prev = bars[bars.length - 2] || last;
   const chg = last.c - prev.c, pct = (chg / prev.c * 100);
-  $("dataTime").textContent = `数据时间 ${fmtTc(m.cursor_close_ms)}（UTC+8） · ${m.window}`;
-  $("tokenBadge").textContent = m.token;
-  $("aiBadge").textContent = m.ai.stale ? "AI 参谋 · 待复核" : "AI 参谋运行中 · 已复核至当前";
+  renderHeader();
   $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span>` +
     `<span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span>` +
     `<span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>` +
@@ -256,9 +275,7 @@ setInterval(async () => {
   try {
     const fresh = await (await fetch(`data24/${curSymbol}.json?t=${Date.now()}`)).json();
     if (!snap || fresh.meta.token !== snap.meta.token) { snap = fresh; const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1]; const prev = bars[bars.length - 2] || last; const chg = last.c - prev.c, pct = (chg / prev.c * 100);
-      $("dataTime").textContent = `数据时间 ${fmtTc(m.cursor_close_ms)}（UTC+8） · ${m.window}`;
-      $("tokenBadge").textContent = m.token;
-      $("aiBadge").textContent = m.ai.stale ? "AI 参谋 · 待复核" : "AI 参谋运行中 · 已复核至当前";
+      renderHeader();
       $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span><span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span><span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>`;
       buildZones(); renderChart(); renderBrief(); renderPlan(); renderTimeline(); renderCompare();
       $("footLine").textContent = `快照 ${m.token} · rev ${m.state_revision} · 生成 ${fmtTc(m.generated_at_ms)} · ${m.source} · 缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;

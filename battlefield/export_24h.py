@@ -197,6 +197,7 @@ def finalize(sym: str, tolerant: bool = False):
         "hypotheses": repo.kernel.hypotheses,
         "watch_plans": repo.kernel.watch_plans,
         "brain_outputs": outputs,
+        "candidate_proposals": scene["candidate_proposals"],
         "sides": {"up": side("up"), "down": side("down")},
         "contests_count": len(scene["contests"]),
         "as_known": [],

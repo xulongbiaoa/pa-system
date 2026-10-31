@@ -146,3 +146,34 @@ def test_supersede_keeps_history():
     h1, h2 = kernel.hypotheses
     assert h1["status"] == "superseded" and h2["status"] == "active"
     assert h2["supersedes"] == "H1"
+
+
+def test_test_label_out_of_range_rejected():
+    """简报里的测试编号必须由事件生成：点名缺口后写越界 T 编号 = 契约错误。"""
+    kernel, repo = repo_at_b6()
+    gid = gap_id_of(kernel)
+    cnt = list(kernel.gaps.values())[0].test_count
+    bad = {"read_cursor": 7, "action": "WAIT_BEHAVIOR",
+           "hypothesis_ops": [{"op": "add", "text": f"{gid} 已完成 T{cnt + 2} 测试",
+                               "support_refs": [gid], "counter_refs": [], "reason": "x"}],
+           "watch_plan": None, "candidate": None}
+    s = BrainSession(repo, RecordedAdapter([bad]))
+    res = s.run_once()
+    assert res["status"] == "contract_error" and "测试编号越界" in res["detail"]
+    assert not kernel.hypotheses  # 不落盘
+
+
+def test_test_label_current_and_next_allowed():
+    """已测编号与预告下一次（test_count+1，含中文「第N次」）合法。"""
+    kernel, repo = repo_at_b6()
+    gid = gap_id_of(kernel)
+    cnt = list(kernel.gaps.values())[0].test_count
+    cn = {1: "一", 2: "二", 3: "三", 4: "四", 5: "五"}.get(cnt + 1, "三")
+    ok = {"read_cursor": 7, "action": "WAIT_BEHAVIOR",
+          "hypothesis_ops": [{"op": "add",
+                              "text": f"{gid} 已测至 T{cnt}，等第{cn}次回补测试",
+                              "support_refs": [gid], "counter_refs": [], "reason": "x"}],
+          "watch_plan": None, "candidate": None}
+    s = BrainSession(repo, RecordedAdapter([ok]))
+    res = s.run_once()
+    assert res["status"] == "ok", res

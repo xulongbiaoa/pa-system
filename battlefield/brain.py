@@ -57,6 +57,47 @@ class CallableAdapter:
         return self._fn(package)
 
 
+_CN_NUM = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+_GAP_RE = None
+_T_RE = None
+_CN_RE = None
+
+
+def _check_test_labels(k, hyp_ops, plan, candidate) -> None:
+    """测试编号一致性（用户 2026-10-31 点名）：简报文本里点名某缺口时，出现的
+    T 编号与「第N次」必须属于该缺口的规范编号集——已发生的 1..test_count，
+    加预告下一次 test_count+1。编号由事件（TEST_STARTED 的 test_index）生成，
+    模型不许自由编写；越界即契约错误、整份不落盘。按句归属（多缺口同句从严）。"""
+    import re
+    global _GAP_RE, _T_RE, _CN_RE
+    if _GAP_RE is None:
+        _GAP_RE = re.compile(r"GAP-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*")
+        _T_RE = re.compile(r"(?<![A-Za-z0-9])T(\d+)(?!\d)")
+        _CN_RE = re.compile(r"第([一二三四五六七八九十])次")
+    texts: list = []
+    for op in hyp_ops or []:
+        texts += [op.get("text") or "", op.get("reason") or ""]
+    if plan:
+        texts += [plan.get(f) or "" for f in
+                  ("watch_level", "watch_behavior", "entry_trigger", "cancel_if")]
+    if candidate:
+        texts += [v for v in candidate.values() if isinstance(v, str)]
+    allowed_by_gap = {gid: set(range(1, g.test_count + 2))
+                      for gid, g in k.gaps.items()}
+    for text in texts:
+        for sent in re.split(r"[。；;！!？?\n]", text):
+            mentioned = [g for g in _GAP_RE.findall(sent) if g in allowed_by_gap]
+            if not mentioned:
+                continue
+            nums = [int(m) for m in _T_RE.findall(sent)]
+            nums += [_CN_NUM[m] for m in _CN_RE.findall(sent)]
+            for n in nums:
+                for gid in mentioned:
+                    if n not in allowed_by_gap[gid]:
+                        raise ModelContractError(
+                            f"测试编号越界: {gid} 已测 {len(allowed_by_gap[gid]) - 1} 次，"
+                            f"合法编号 {sorted(allowed_by_gap[gid])}，文本写了 T{n}")
+
 def _check_refs(kernel, refs) -> None:
     """引用核验：queries 的 ValueError 在大脑层统一转成契约错误。"""
     try:
@@ -172,6 +213,7 @@ class BrainSession:
             if not refs:
                 raise ModelContractError("候选必须带可核验引用")
             _check_refs(k, refs)
+        _check_test_labels(k, hyp_ops, plan, candidate)
 
         # —— 再统一落盘（只写提案分区） ——
         applied = {"hypotheses_changed": [], "watch_plan_added": None,
