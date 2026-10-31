@@ -1,0 +1,442 @@
+[
+ {
+  "eid": "fw-BTCUSDT-15m-1792682100000",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "decision_t": 1792682100000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792682100000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-15m-1792682100000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-15m-1793373300000",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "decision_t": 1793373300000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793373300000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-15m-1793373300000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-15m-1793383200000",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "decision_t": 1793383200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793383200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-15m-1793383200000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-15m-1793393100000",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "decision_t": 1793393100000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793393100000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-15m-1793393100000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-15m-1793403000000",
+  "symbol": "BTCUSDT",
+  "interval": "15m",
+  "decision_t": 1793403000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793403000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-15m-1793403000000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-1h-1790463600000",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "decision_t": 1790463600000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1790463600000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-1h-1790463600000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-1h-1791464400000",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "decision_t": 1791464400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1791464400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-1h-1791464400000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-1h-1792335600000",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "decision_t": 1792335600000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1792335600000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-1h-1792335600000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-1h-1793239200000",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "decision_t": 1793239200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1793239200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-1h-1793239200000.json"
+ },
+ {
+  "eid": "fw-BTCUSDT-1h-1793250000000",
+  "symbol": "BTCUSDT",
+  "interval": "1h",
+  "decision_t": 1793250000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1793250000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-BTCUSDT-1h-1793250000000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-15m-1792678500000",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "decision_t": 1792678500000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1792678500000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-15m-1792678500000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-15m-1792920600000",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "decision_t": 1792920600000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1792920600000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-15m-1792920600000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-15m-1792926900000",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "decision_t": 1792926900000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1792926900000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-15m-1792926900000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-15m-1793365200000",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "decision_t": 1793365200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1793365200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-15m-1793365200000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-15m-1793385900000",
+  "symbol": "DOGEUSDT",
+  "interval": "15m",
+  "decision_t": 1793385900000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1793385900000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-15m-1793385900000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-1h-1792314000000",
+  "symbol": "DOGEUSDT",
+  "interval": "1h",
+  "decision_t": 1792314000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1792314000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-1h-1792314000000.json"
+ },
+ {
+  "eid": "fw-DOGEUSDT-1h-1793318400000",
+  "symbol": "DOGEUSDT",
+  "interval": "1h",
+  "decision_t": 1793318400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1793318400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-DOGEUSDT-1h-1793318400000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792648800000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792648800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792648800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792648800000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792654200000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792654200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792654200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792654200000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792655100000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792655100000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792655100000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792655100000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792678500000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792678500000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792678500000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792678500000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792922400000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792922400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792922400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792922400000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792926000000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792926000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792926000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792926000000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1792945800000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1792945800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792945800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1792945800000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1793363400000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1793363400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793363400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1793363400000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1793389500000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1793389500000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793389500000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1793389500000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-15m-1793400300000",
+  "symbol": "ETHUSDT",
+  "interval": "15m",
+  "decision_t": 1793400300000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793400300000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-15m-1793400300000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-1h-1790449200000",
+  "symbol": "ETHUSDT",
+  "interval": "1h",
+  "decision_t": 1790449200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1790449200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-1h-1790449200000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-1h-1792231200000",
+  "symbol": "ETHUSDT",
+  "interval": "1h",
+  "decision_t": 1792231200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1792231200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-1h-1792231200000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-1h-1792321200000",
+  "symbol": "ETHUSDT",
+  "interval": "1h",
+  "decision_t": 1792321200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1792321200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-1h-1792321200000.json"
+ },
+ {
+  "eid": "fw-ETHUSDT-1h-1793278800000",
+  "symbol": "ETHUSDT",
+  "interval": "1h",
+  "decision_t": 1793278800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1793278800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-ETHUSDT-1h-1793278800000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-15m-1792663200000",
+  "symbol": "LINKUSDT",
+  "interval": "15m",
+  "decision_t": 1792663200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792663200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-15m-1792663200000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-15m-1792671300000",
+  "symbol": "LINKUSDT",
+  "interval": "15m",
+  "decision_t": 1792671300000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792671300000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-15m-1792671300000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-15m-1793125800000",
+  "symbol": "LINKUSDT",
+  "interval": "15m",
+  "decision_t": 1793125800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793125800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-15m-1793125800000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-15m-1793363400000",
+  "symbol": "LINKUSDT",
+  "interval": "15m",
+  "decision_t": 1793363400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793363400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-15m-1793363400000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-15m-1793373300000",
+  "symbol": "LINKUSDT",
+  "interval": "15m",
+  "decision_t": 1793373300000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793373300000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-15m-1793373300000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-1h-1790452800000",
+  "symbol": "LINKUSDT",
+  "interval": "1h",
+  "decision_t": 1790452800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-1h-1790452800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-1h-1790452800000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-1h-1792328400000",
+  "symbol": "LINKUSDT",
+  "interval": "1h",
+  "decision_t": 1792328400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-1h-1792328400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-1h-1792328400000.json"
+ },
+ {
+  "eid": "fw-LINKUSDT-1h-1793307600000",
+  "symbol": "LINKUSDT",
+  "interval": "1h",
+  "decision_t": 1793307600000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-1h-1793307600000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-LINKUSDT-1h-1793307600000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1792675800000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1792675800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1792675800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1792675800000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1792921500000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1792921500000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1792921500000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1792921500000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1792926000000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1792926000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1792926000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1792926000000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1793365200000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1793365200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793365200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1793365200000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1793390400000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1793390400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793390400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1793390400000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-15m-1793414700000",
+  "symbol": "SOLUSDT",
+  "interval": "15m",
+  "decision_t": 1793414700000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793414700000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-15m-1793414700000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-1h-1792328400000",
+  "symbol": "SOLUSDT",
+  "interval": "1h",
+  "decision_t": 1792328400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1792328400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-1h-1792328400000.json"
+ },
+ {
+  "eid": "fw-SOLUSDT-1h-1793336400000",
+  "symbol": "SOLUSDT",
+  "interval": "1h",
+  "decision_t": 1793336400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1793336400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-SOLUSDT-1h-1793336400000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-15m-1793370600000",
+  "symbol": "XRPUSDT",
+  "interval": "15m",
+  "decision_t": 1793370600000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1793370600000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-15m-1793370600000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-15m-1793409300000",
+  "symbol": "XRPUSDT",
+  "interval": "15m",
+  "decision_t": 1793409300000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1793409300000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-15m-1793409300000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1790395200000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1790395200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1790395200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1790395200000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1791511200000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1791511200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1791511200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1791511200000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1792231200000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1792231200000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1792231200000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1792231200000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1792314000000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1792314000000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1792314000000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1792314000000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1793246400000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1793246400000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1793246400000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1793246400000.json"
+ },
+ {
+  "eid": "fw-XRPUSDT-1h-1793260800000",
+  "symbol": "XRPUSDT",
+  "interval": "1h",
+  "decision_t": 1793260800000,
+  "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1793260800000.json",
+  "map": "/home/hatch/workspace/pa-system/eval/forward/maps/fw-XRPUSDT-1h-1793260800000.json"
+ }
+]
