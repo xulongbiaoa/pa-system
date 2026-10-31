@@ -1,3 +1,7 @@
+## 2026-10-31 事件器 v1 第一步落地：事实事件纯函数 + 尝试状态机（分支 codex/gap-trading-design）
+- 新增 runtime/events.py（零依赖、纯函数）：WatchLevel 位置契约（原始带 + 观察带、等于边界不算越界、无隐含容差）、10 类事实事件、AttemptTracker 双向尝试状态机（attempt_id 确定性生成、event_id 幂等、retest_sequence 只在分离后返回时递增、冷启动不追认、同根多顺序事件标 intrabar_order_unknown）。只报事实，不接 gate、不改任何门槛；E12/E13/E14 属机会/调度/gate 层，留 P1。
+- 验收：runtime/tests/test_events.py 16 项全过（E01–E11 + 下破镜像 + 边界相等 + 无前根 + 宽观察带）；全仓 207 passed + 1 skipped。
+- 与设计接口的偏差已在模块 docstring 登记：单尝试入参改为 AttemptTracker 双向持有（E08 双破需要），语义等价。
 ## 2026-10-31 设计 v2.2 P0 落地：订单成交语义修复 + 存量审计（分支 codex/gap-trading-design）
 - 用户裁定：缺口改造方案 v1 待商榷挂起；v2.2 与事件器 v1 先做。第一批 = P0 成交语义：replay 新增 stop_market（触及触发才成交、跳空按开盘价、未触发/前提先失效留档、成交根触止损/目标标 ambiguous、入场按市价费率）；market 改真语义（决策后首根开盘成交，不再按计划 entry 无条件成交）；limit 不动。schema 枚举加 stop_market，prompt_builder / campaign_prompt / router 入场分工同步改写（顺势 stop 触发写 stop_market、到达分支 entry_style 对齐）。gate 无需改：H1 的 min 口径对 stop 计划自动取触发价锚定 RR、费率按市价，审计中已核。
 - 测试：新增 test_stop_replay 9 项；test_replay_scale 2 项 fixture 按新 market 语义修正首根开盘价。全仓 191 passed + 1 skipped（原 182+9）。
