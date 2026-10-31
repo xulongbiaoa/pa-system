@@ -1,3 +1,7 @@
+## 2026-10-31 出手率解剖：瓶颈在候选落笔之前，不在 gate
+- eval/forward_anatomy.py 对影子 76 份判读做漏斗统计（报告 eval/reports/forward-output-anatomy-2026-10-31.md）：候选总共只写出 2 个（均 qualified、均过 gate、均 tracked 解析），pending 却有 267 条（B3 109）；gate 至今拒绝 0 个影子候选，RR 缺项仅 7 条。
+- 主漏点 A：71 份 fortress no_trade 机械复核，决策收盘在地图点位带内仅 20（28%）——「位置不对」大体属实；但前向在带率约 30% 与 event-ab 受控实验 80% 的落差未解释（快照长度/lag/冻结后漂移待查），先查落差、不动执法容差。
+- 主漏点 B：在带仍不出手的缺项以「触发未齐」156 条为第二大头——冻结分支触发条件偏严、到达常差一步，与执行盲考 v2「多等一根」同型；修在画图遍预写口径，不在到达遍。
 ## 2026-10-31 扫盘入队预检落地（用户拍板）：trigger_missing 从源头归零
 - forward_batch_scan 入队前按全快照口径跑 compute_trigger（与 trigger 子命令同一函数）：fortress 算不出触发根 → 不入队、不写快照，记 eval/forward/batch-rejected.jsonl（按 eid 去重）。已卡 6 个 legacy 事件摘出队列、同档存档。
 - 验证重扫：9 picked → 入队 4（自带 map_bar）、预检拒绝 5（4 个 legacy 被重新挖出又被当场拦下 + 1 个全新同病事件）；队列 trigger_missing 计数 0，未判队列 = 5（1 gap-confirm + 4 新入队）。175 passed。
