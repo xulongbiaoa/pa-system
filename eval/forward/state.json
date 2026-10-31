@@ -4397,7 +4397,27 @@
    "decision_t": 1793416500000,
    "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793416500000.json",
    "gap_price": 11.548,
-   "attempts": 1
+   "attempts": 1,
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "触发不合格：决策根为阴线、CLV收近低点，非顺向阳实体收盘信号K",
+      "回吐深度比0.5357已达50%降级线，A1卡面要求降级为观察",
+      "信号K未证明大半截不在EMA错侧：末收11.52略低于EMA 11.5259"
+     ],
+     "setup": "A1",
+     "watch": "等回踩第二腿在EMA/11.459-11.565一带不再创新低，并出现阳实体收盘、收回EMA上方的合格信号K后再审；等的是止跌信号事实，代价是入场价可能高于现价"
+    },
+    {
+     "missing": [
+      "R3到达行为未 met：敞开缺口attempts均为0，无回补未遂后反向跟进、无第二次回补未遂、无到达后顺势强信号K",
+      "决策根为阴线，无顺势到达行为"
+     ],
+     "setup": "G1",
+     "watch": "等价格到达缺口锚线落点区并出现回补未遂后反向跟进或顺势强信号K后再审G1"
+    }
+   ]
   },
   "fw-BTCUSDT-15m-1792925100000": {
    "event": "fw-BTCUSDT-15m-1792925100000",
@@ -4424,7 +4444,26 @@
      "anchors": 3
     }
    ],
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792925100000.json"
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792925100000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "决策根为阴线收于带内下沿，无新的收回带内后阳线跟进或顺势强信号K",
+      "此前一次跌破回收的反弹止于80418.68、未及P3且已回落重压带内，失败确认成色已衰减，不构成决策根当下的触发"
+     ],
+     "setup": "B3",
+     "watch": "等P1（80276.1-80340.0）再次跌破后1-3根内收盘收回带内且出现阳线跟进"
+    },
+    {
+     "missing": [
+      "决策根收盘80281.07未收盘跌破P1下沿80276.1",
+      "无跌破后回踩带下沿不过的确认，回踩仅走出一腿、未呈第二腿形态"
+     ],
+     "setup": "B2",
+     "watch": "等收盘跌破80276.1后回踩P1带下沿不过且出现阴线跟进"
+    }
+   ]
   },
   "fw-BTCUSDT-1h-1792335600000": {
    "event": "fw-BTCUSDT-1h-1792335600000",
@@ -4451,7 +4490,34 @@
      "anchors": 3
     }
    ],
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1792335600000.json"
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1792335600000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "决策根收盘81178.18不在P2测试区内：P2为79800.0-80331.52，±0.25×段均幅205.35625即±51.34，现价距P2上沿仍846.66",
+      "P2刺破后1-3根内收盘收回带内并阳K跟进的翻面触发未发生"
+     ],
+     "setup": "B3",
+     "watch": "等价格到达P2（79800.0-80331.52）±51.34测试区，刺破80331.52下沿后1-3根内收盘收回带内并出现阳K跟进"
+    },
+    {
+     "missing": [
+      "决策根收盘81178.18不在P2测试区内：距缺口锚80115.99达1062.19，超出±51.34到达带",
+      "R3到达行为未发生：80115.99一带无回补未遂后顺势强阳K收在锚上方"
+     ],
+     "setup": "G1",
+     "watch": "等价格到达80115.99±51.34落点区，出现回补未遂后顺势强阳K收在锚上方，再逐项审R1/R2/R3与V1-V3"
+    },
+    {
+     "missing": [
+      "决策根收盘81178.18不在P3测试区内：P3为81984.28-82295.47，±51.34，现价距P3下沿仍806.10，已离开翻面位向区间中部下行，此时入场属追价非翻面位执行",
+      "决策根为小阳K（非P3带内收回后的阴K跟进触发根）"
+     ],
+     "setup": "B3",
+     "watch": "等价格重新回到P3（81984.28-82295.47）±51.34测试区，冲上82078.0-82295.47后1-3根内收盘跌回81984.28下方并有阴K跟进"
+    }
+   ]
   },
   "fw-ETHUSDT-15m-1792655100000": {
    "event": "fw-ETHUSDT-15m-1792655100000",
@@ -4472,7 +4538,35 @@
      "anchors": 4
     }
    ],
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792655100000.json"
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792655100000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "P2跌破失败未成立：盘中最低2426.19仅进入2425.12-2426.99带内，未收盘跌破2425.12后收回",
+      "阳线跟进未出现：决策根为近十字小实体，实体占比0.0016且与前根完全重叠",
+      "决策根收盘2430.27不在P2带2425.12-2426.99±1.61内"
+     ],
+     "setup": "B3",
+     "watch": "等价格再测P2 2425.12-2426.99，跌破后1至3根内收回带上方并有阳线跟进，且决策收盘回到该带测试区内"
+    },
+    {
+     "missing": [
+      "P2收盘有效跌破2425.12未发生，决策根收盘2430.27仍在2425.12上方",
+      "跌破后的阴线跟进未发生"
+     ],
+     "setup": "B1",
+     "watch": "等收盘有效跌破P2 2425.12并有阴线跟进，且决策收盘落在该点测试区内再审顺势空"
+    },
+    {
+     "missing": [
+      "反弹未到达P3 2460.2-2475.96决胜点测试区",
+      "P3带内第二腿顺向阴实体信号K未出现"
+     ],
+     "setup": "A2",
+     "watch": "等反弹走出第二腿到达P3 2460.2-2475.96，出现顺向阴实体信号K且不创新高再审顺势空"
+    }
+   ]
   },
   "fw-LINKUSDT-15m-1792671300000": {
    "event": "fw-LINKUSDT-15m-1792671300000",
@@ -4493,7 +4587,295 @@
      "anchors": 3
     }
    ],
-   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792671300000.json"
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792671300000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "反弹仅一腿，未走出第二腿",
+      "决策收盘12.049不在P2区间12.159至12.258加减0.010的测试区内",
+      "决策根非阴实体信号K，实体占比约2.8%且与前根高度重叠",
+      "趋势MM已达，地图顺势分支按其条款关闭，不许标qualified"
+     ],
+     "setup": "A2",
+     "watch": "等两腿反弹进入P2 12.159至12.258并出现阴实体信号K且盘中不创反弹新高"
+    },
+    {
+     "missing": [
+      "回踩未到达被破P1翻面线12.129，反弹高点仅约12.098至12.104",
+      "回踩未呈第二腿形态，第一触碰不入场"
+     ],
+     "setup": "B2",
+     "watch": "等价格回踩12.129翻面位并走出第二腿形态后，按A2合格级审顺向实体收盘与盘中反向新极值"
+    },
+    {
+     "missing": [
+      "下破12.129后1至3根回收窗口已过且未收回P1带内",
+      "无收回带内后的反向跟进阳线"
+     ],
+     "setup": "B3",
+     "watch": "原窗口已失效不追认；仅当价格重新收盘站回12.159之上并有向上跟进时，按新到达事件重审"
+    },
+    {
+     "missing": [
+      "R3到达行为缺失：未到达缺口锚12.411所在的P4落点区",
+      "R2落点叠加在当前价位不成立：决策收盘12.049远离12.411锚线"
+     ],
+     "setup": "G1",
+     "watch": "等价格到达P4 12.364至12.474测试缺口锚12.411，并出现回补未遂后反向跟进或落点顺势侧强信号K"
+    }
+   ]
+  },
+  "fw-BTCUSDT-15m-1792682100000": {
+   "event": "fw-BTCUSDT-15m-1792682100000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 180,
+   "decision_t": 1792682100000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 163,
+   "map_lag": 17,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 81545.05,
+     "hi": 81667.77,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 81667.77,
+     "hi": 81844.53,
+     "anchors": 3
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792682100000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "顺向跟进未成立：决策根为小阳线而非强阴线收盘跟进",
+      "决策收盘81545.05不在P1点81718.0的±0.25×段均幅（约48.7）测试区内，距点约173点"
+     ],
+     "setup": "B1",
+     "watch": "等后续1-3根内出现强阴线收盘在81718.0下方跟进，且价格回到P1测试区附近时再审B1"
+    },
+    {
+     "missing": [
+      "未收回翻面位：决策收盘81545.05仍在81718.0下方，未收盘收回位内",
+      "无反向跟进：决策根仅小阳线实体约34%，不足以认定反向跟进"
+     ],
+     "setup": "B3",
+     "watch": "等跌破后1-3根窗口内收盘收回81718.0上方并出现反向跟进时再审P1的B3翻面"
+    },
+    {
+     "missing": [
+      "位置不在测试区：决策收盘远离P2点82178.2，超出±0.25×段均幅",
+      "第二腿触发未在决策根成立：附件pullback legs=1、two_legs=false，决策根亦非P2下方的顺向阴线实体收盘"
+     ],
+     "setup": "A2",
+     "watch": "等价格回到P2点82178.2测试区、反弹第二腿在该点下方以顺向阴线实体收盘且不创反弹新高时再审A2"
+    }
+   ]
+  },
+  "fw-SOLUSDT-15m-1793124000000": {
+   "event": "fw-SOLUSDT-15m-1793124000000",
+   "symbol": "SOLUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 671,
+   "decision_t": 1793124000000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 670,
+   "map_lag": 1,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 100.53,
+     "hi": 100.53,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 659
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793124000000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "P4冲边后虽有收盘跌回100.93下方,但阴线跟进未出现:决策根为小阳线收100.87、实体占比低且收在上部,不是空头反向跟进K",
+      "触发K成色不合格:决策根方向与翻面方向相反,无法认定突破失败翻面已触发"
+     ],
+     "setup": "B3",
+     "watch": "等价格再处P4(100.93-101.87)测试区、冲边后1-3根内收盘收回100.93下方并出现有方向实体的阴线跟进,再审P4翻面空"
+    },
+    {
+     "missing": [
+      "强阳收盘站上102.96并有跟进未发生",
+      "突破后回踩守住102.27上方未发生"
+     ],
+     "setup": "B2",
+     "watch": "等强阳收盘站上102.96并跟进、回踩守住102.27上方,再审P5顺势突破多"
+    }
+   ]
+  },
+  "fw-XRPUSDT-15m-1792680300000": {
+   "event": "fw-XRPUSDT-15m-1792680300000",
+   "symbol": "XRPUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 178,
+   "decision_t": 1792680300000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 167,
+   "map_lag": 11,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 1.3208,
+     "hi": 1.3208,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 176
+    },
+    {
+     "kind": "fortress",
+     "lo": 1.3193,
+     "hi": 1.3204,
+     "anchors": 3
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1792680300000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "回踩尚未走出第二腿：附件pullback legs=1、two_legs=false",
+      "尚无回踩第二腿完成后的顺向阴实体收盘触发"
+     ],
+     "setup": "B2",
+     "watch": "跌破P3后回踩1.3248-1.3278翻面位（P3），走出第二腿并以阴实体收盘且盘中不创反弹新高"
+    },
+    {
+     "missing": [
+      "对P3的跌破未在1-3根内收盘收回1.3278上方：决策根收盘1.3242仍在1.3278下方",
+      "无收回后的反向跟进"
+     ],
+     "setup": "B3",
+     "watch": "P3跌破后1-3根内收盘收回1.3278上方并出现反向跟进"
+    },
+    {
+     "missing": [
+      "反弹未在决策根进入P4要塞1.3291-1.3394测试区：决策根收盘1.3242不在该带±0.25×段均幅内",
+      "反弹未走出第二腿",
+      "无P4带内顺向阴实体信号K"
+     ],
+     "setup": "A2",
+     "watch": "反弹进入1.3291-1.3394（P4）并走出第二腿后，以顺向阴实体收盘且盘中不创反弹新高"
+    },
+    {
+     "missing": [
+      "价格未下探P2带1.317-1.3178",
+      "无下探后1-3根内收盘收回1.3178上方及反向跟进"
+     ],
+     "setup": "B3",
+     "watch": "下探1.317-1.3178（P2）后1-3根内收盘收回1.3178上方并出现反向跟进"
+    },
+    {
+     "missing": [
+      "R3到达行为未成立：敞开缺口attempts均为0，无回补未遂后反向跟进、无第二次回补未遂",
+      "决策根非强信号K：实体占比0.4531、与前根重叠0.9846"
+     ],
+     "setup": "G1",
+     "watch": "在1.3208/1.3178缺口锚与P3/P2落点区出现回补未遂后反向跟进或1-3根内顺势强信号K"
+    }
+   ]
+  },
+  "fw-BTCUSDT-15m-1792926000000": {
+   "event": "fw-BTCUSDT-15m-1792926000000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 451,
+   "decision_t": 1792926000000,
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 440,
+   "map_lag": 11,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 80245.75,
+     "hi": 80356.16,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 80392.6,
+     "hi": 80500.0,
+     "anchors": 5
+    }
+   ],
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792926000000.json",
+   "status": "judged_no_trade",
+   "pendings": [
+    {
+     "missing": [
+      "收盘有效跌破P1并有阴跟进未成立：决策根为阳线、收80337.28仅贴80340.0下方2.72点，无阴实体跟进",
+      "反抽收不回带内的确认未成立"
+     ],
+     "setup": "B2",
+     "watch": "等P1（80276.1-80340.0）被收盘跌破并出现阴跟进、反抽收不回80340.0上方时再按B2审"
+    },
+    {
+     "missing": [
+      "跌破P1后1-3根内收盘收回80340.0上方未成立：决策根收80337.28仍在80340.0下方",
+      "阳跟进强信号未成立：决策根阳线实体约41%、收盘位于振幅中部，非强阳收复"
+     ],
+     "setup": "B3",
+     "watch": "等跌破P1后1-3根内收盘收回80340.0上方并有阳跟进时再按B3审；收盘跌破80125.0则本分支失效"
+    },
+    {
+     "missing": [
+      "价格未到达P2测试区：决策根收80337.28距P2 80542.0-80650.01超过0.25×段均幅",
+      "P2受阻的合格阴信号K未出现",
+      "反弹第二腿未由图读确认完整"
+     ],
+     "setup": "A2",
+     "watch": "等反弹上探P2（80542.0-80650.01）受阻、出现合格阴信号K且不创新高时再按A2审"
+    }
+   ]
+  },
+  "fw-ETHUSDT-15m-1793413800000": {
+   "event": "fw-ETHUSDT-15m-1793413800000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 492,
+   "decision_t": 1793413800000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793413800000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 444,
+   "map_lag": 48,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2234.19,
+     "hi": 2242.13,
+     "anchors": 7
+    },
+    {
+     "kind": "fortress",
+     "lo": 2241.71,
+     "hi": 2246.19,
+     "anchors": 3
+    }
+   ]
   }
  },
  "tracked": {},
