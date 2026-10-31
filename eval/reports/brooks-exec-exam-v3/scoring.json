@@ -1,0 +1,417 @@
+{
+ "dp1": {
+  "date": "2026-10-19",
+  "signal_bar": 8,
+  "brooks": {
+   "basis": "箭头在bar8(白反转K)下；bar7长尾探7727.50为陷阱低点；入场=bar8高7736.75+0.25；止损=陷阱低点下；目标=楔旗上沿/60分EMA区7750",
+   "date": "2026-10-19",
+   "entry": 7737.0,
+   "setup_brooks": "Bear Trap 牛楔旗反转买入",
+   "side": "long",
+   "signal_bar": 8,
+   "stop": 7727.25,
+   "target": 7750.0,
+   "replay": {
+    "filled": true,
+    "r": 1.3333,
+    "exit_reason": "target",
+    "exit_bar": 1,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "no_trade",
+   "no_trade_reason": "无命中",
+   "pending": [
+    {
+     "missing": [
+      "无明确的区间沿口/决胜点突破事件可供裁定失败：当前是趋势内逐级下行，不是区间突破，翻面位无从锚定",
+      "触发未成立：尚无收盘收回被破位加反向跟进，决策根高点 7736.75 未过前一根高点 7737.0",
+      "当前位置在本段下跌中部，无预画要塞沿口作决胜点"
+     ],
+     "setup": "B3",
+     "watch": "等价格收盘站上 7737 并跟进，或回踩 7731 一带守住出现第二次多头尝试时，重审突破失败翻面"
+    },
+    {
+     "missing": [
+      "老趋势不成立且不可证：可见窗口仅 8 根，下跌腿刚自图左缘展开，趋势年龄与腿数不足以认定老趋势",
+      "无两腿衰竭尝试的完整记录，目前仅有一次探低回收",
+      "无 TBTL：趋势线未被收盘突破，更无回测失败，价格仍在下移的 EMA 下方"
+     ],
+     "setup": "C1",
+     "watch": "等趋势线被收盘突破且回测失败、并出现第二腿衰竭尝试后，再全新审 MTR"
+    }
+   ],
+   "uncertainty": [
+    "窗口仅 8 根 K 线，图左缘之前的结构不可见：趋势年龄、更早摆动点与缺口账本无法从图上核实，附件 swings/gaps/fortress 亦全为空或未定，本次定性仅据可见 8 根的 LH/LL 序列与下移 EMA",
+    "附件 trend 机器标签为「未定」，与图读的下降定性冲突，按规程以图为准；未定特征未被引作任何放行或否决证据",
+    "第 6 根 7727.5 的长下影也可读作卖压衰竭的第一征兆，与主假设存在张力，故列入备选假设而非直接排除"
+   ]
+  }
+ },
+ "dp2": {
+  "date": "2026-10-19",
+  "signal_bar": 30,
+  "brooks": {
+   "basis": "箭头在bar30(容差±1:29/30)；入场=bar30低7762.25-0.25；止损=楔顶bar26高7773.25上；目标=60分EMA灰虚线7756",
+   "date": "2026-10-19",
+   "entry": 7762.0,
+   "setup_brooks": "MM Bull Wedge Flag 顶 + Bear Spike & Channel 中盘反转做空",
+   "side": "short",
+   "signal_bar": 30,
+   "stop": 7773.5,
+   "target": 7756.0,
+   "replay": {
+    "filled": true,
+    "r": 0.5217,
+    "exit_reason": "target",
+    "exit_bar": 1,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "no_trade",
+   "no_trade_reason": "无命中",
+   "pending": [
+    {
+     "missing": [
+      "回调仅走出第一腿（附件 legs=1、two_legs=false；图读 26–29 根为连续下移的同一腿，27 根长下影只是腿内停顿）",
+      "无合格级多头信号 K：决策根为阴线、收盘近全段低点（clv -0.70）——不是多等一根确认，是信号本身不存在"
+     ],
+     "setup": "A1",
+     "watch": "等回调走出第二腿，在 7755–7760 带或 EMA 一带止跌并出现阳实体收盘信号 K，再按 stop 触发写候选"
+    },
+    {
+     "missing": [
+      "价格尚未回踩到被破位翻面带（现价 7763.25，带在 7755–7760）",
+      "回踩未呈第二腿形态，第一触碰不入场"
+     ],
+     "setup": "B2",
+     "watch": "回踩落入 7755–7760 带并走出第二腿止跌形态后，并入 A1 按合格级审"
+    },
+    {
+     "missing": [
+      "R3 到达行为未出现：价格尚未进入缺口锚 7757 ±1.56 区（回调最低 7762.25），账本 attempts=0",
+      "R1/R2 材料在（敞开口缺口 7757 套空头、与要塞带 7755–7760 及被破前高同址叠加），但只有位置没有到达行为，不许抢跑"
+     ],
+     "setup": "G1",
+     "watch": "价格回落进入 7755.4–7758.6 区，区内出现回补未遂后反向跟进或顺势强信号 K（二次回补失败更佳）"
+    }
+   ],
+   "uncertainty": [
+    "趋势 MM 口径分歧：附件候选一 7768.25 已被价格越过、候选二 7786.5 未达（mm 置信=边界）；以续攻投影 7786.5 未达为准，不标趋势成熟、顺势菜单不关",
+    "回调腿数以图读+附件一致认定为单腿：26–29 根阴线序列无反向摆动点，不构成 A1 要求的第二腿",
+    "上方 7773.25 为单点锚要塞（far_undefined、仅测 1 次），属哨位性质，不作封顶目标引用"
+   ]
+  }
+ },
+ "dp3": {
+  "date": "2026-10-19",
+  "signal_bar": 63,
+  "brooks": {
+   "basis": "箭头质心x与bar63中心对齐(容差±1:62/63)；入场=bar63高7744+0.25；止损=双底低点7735.50下；目标=60分EMA 7751.87取7751.50",
+   "date": "2026-10-19",
+   "entry": 7744.25,
+   "setup_brooks": "Double Bottom(7735.50/7736.75) + Wedge Bottom 买入",
+   "side": "long",
+   "signal_bar": 63,
+   "stop": 7735.25,
+   "target": 7751.5,
+   "replay": {
+    "filled": true,
+    "r": 0.8056,
+    "exit_reason": "target",
+    "exit_bar": 7,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "trade",
+   "side": "long",
+   "setup": "G1",
+   "plan": {
+    "cap_reason": "首目标被7755.0-7756.75要塞带（3锚、多次测试）封顶，只能按目标序列取位，无法按2:1越过该带画目标",
+    "entry": 7744.0,
+    "exit_mode": "scale",
+    "order_type": "market",
+    "risk_frac": 0.01,
+    "stop": 7733.5,
+    "stop_basis": 7735.5,
+    "targets": [
+     7755.0,
+     7763.75
+    ],
+    "void": {
+     "level": 7734.75,
+     "side": "below"
+    }
+   },
+   "replay": {
+    "filled": true,
+    "r": -1.0,
+    "exit_reason": "scale",
+    "tranches": [
+     {
+      "filled": true,
+      "r": -1.0,
+      "exit_reason": "stop",
+      "exit_bar": 15
+     },
+     {
+      "filled": true,
+      "r": -1.0,
+      "exit_reason": "stop",
+      "exit_bar": 15
+     }
+    ],
+    "exit_mode": "scale"
+   }
+  }
+ },
+ "dp4": {
+  "date": "2026-10-20",
+  "signal_bar": 4,
+  "brooks": {
+   "basis": "绿箭头阶梯第一支在bar4(巨阳反转K,低7710.25为更低双底)；入场=bar4高7731.25+0.25；止损=双底低点下；目标=MM Opening Range虚线7750",
+   "date": "2026-10-20",
+   "entry": 7731.5,
+   "setup_brooks": "Lower Low Double Bottom / 昨日低点假突破 V型反转买入",
+   "side": "long",
+   "signal_bar": 4,
+   "stop": 7709.75,
+   "target": 7750.0,
+   "replay": {
+    "filled": true,
+    "r": 0.8506,
+    "exit_reason": "target",
+    "exit_bar": 3,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "trade",
+   "side": "long",
+   "setup": "B3",
+   "plan": {
+    "cap_reason": "首目标被区间上沿7731.25封顶（idx1高点7730.25与idx3高点7731.25构成双高），首目标毛RR不足设计目标2:1；次目标7752.25为区间高度21.0自上沿的MM投影。",
+    "entry": 7718.75,
+    "exit_mode": "scale",
+    "order_type": "limit",
+    "risk_frac": 0.01,
+    "stop": 7709.5,
+    "stop_basis": 7710.25,
+    "targets": [
+     7731.25,
+     7752.25
+    ],
+    "void": {
+     "level": 7718.75,
+     "side": "below"
+    },
+    "void_if": {
+     "level": 7718.75,
+     "side": "below"
+    }
+   },
+   "replay": {
+    "filled": false,
+    "exit_reason": "unfilled",
+    "exit_mode": "scale"
+   }
+  }
+ },
+ "dp5": {
+  "date": "2026-10-20",
+  "signal_bar": 18,
+  "brooks": {
+   "basis": "红箭头在bar18(第二顶长上影,高7790.50对bar13高7791.50)；由bar21巨黑K倒数定位；入场=bar18低7779.25-0.25；止损=双顶高点上；目标=顶部区间下沿/50%回撤区7757",
+   "date": "2026-10-20",
+   "entry": 7779.0,
+   "setup_brooks": "Double Top Failed Breakout of Yesterday's High 做空",
+   "side": "short",
+   "signal_bar": 18,
+   "stop": 7791.75,
+   "target": 7757.0,
+   "replay": {
+    "filled": true,
+    "r": 1.7255,
+    "exit_reason": "target",
+    "exit_bar": 3,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "no_trade",
+   "no_trade_reason": "无命中",
+   "pending": [
+    {
+     "missing": [
+      "突破事件未发生：区间上沿 7791.5 尚无收盘突破（bar12 仅影线刺破 7786 后收回，距今已 5 根，超出 1–3 根回收窗口）",
+      "无收回位内加反向跟进的触发 K"
+     ],
+     "setup": "B3",
+     "watch": "价格收盘上破 7791.5 后 1–3 根内收回 7786 下方并出现带方向实体的反向跟进 K，届时在翻面位审空头候选"
+    },
+    {
+     "missing": [
+      "TBTL 未成立：上升趋势线与 EMA 均未被破，无回测失败",
+      "两腿衰竭尝试不足：顶部仅浅幅回落（7776 一带即被买回），未见逆势方两次走远均失败",
+      "无合格级反转方向信号 K（决策根为小实体带上影的十字星，实体占比 0.12）"
+     ],
+     "setup": "C1",
+     "watch": "先出现趋势线收盘破位且回测失败，再看第二次下探衰竭与原趋势极值区合格空头信号 K，三件套齐备才开审"
+    }
+   ],
+   "uncertainty": [
+    "附件 trend/ema/mm/trend_age 置信均为未定，语境与成色以图读为准：bar3–11 强势上升腿、bar12–17 顶部横盘",
+    "窗口仅 18 根，更大级别结构不可见，趋势总年龄与趋势 MM 是否已达无法确认，成熟度认定保留",
+    "顶部区间仅 6 根、上沿 7791.5 只被影线刺破一次，区间成熟度有限，B3 的区间前提弱于典型样本"
+   ]
+  }
+ },
+ "dp6": {
+  "date": "2026-10-20",
+  "signal_bar": 58,
+  "brooks": {
+   "basis": "红箭头两支在bar56/58区(容差±2)；取第二支bar58(黑K收在EMA下)；入场=bar58低7762.50-0.25；止损=楔顶bar53高7768.50上；目标=嵌套楔/双底绿虚线7751",
+   "date": "2026-10-20",
+   "entry": 7762.25,
+   "setup_brooks": "Wedge Top 做空(无尽回调区间上部)",
+   "side": "short",
+   "signal_bar": 58,
+   "stop": 7768.75,
+   "target": 7751.0,
+   "replay": {
+    "filled": true,
+    "r": 1.7308,
+    "exit_reason": "target",
+    "exit_bar": 5,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "no_trade",
+   "no_trade_reason": "位置不对",
+   "pending": [
+    {
+     "missing": [
+      "上沿突破失败未成立：bar52 探 7768.5 后虽有回落，但未在 1–3 根窗口内收盘明确收回沿口内并走出反向跟进，其后价格又回到 7762–7767 上沿带内",
+      "触发 K 方向实体与跟进不足（末根与前根重叠 0.93）"
+     ],
+     "setup": "B3",
+     "watch": "价格再探 7768.5 上方后收盘收回 7764 下方且次根续跌，或收盘跌出上沿带并跟进"
+    },
+    {
+     "missing": [
+      "R3 到达行为缺失：现价 7762.75 距敞开缺口锚线 7778.5 约 16 点，价格未进入锚线 ±0.25×段均幅（约 ±1.2）落点区，区内无回补未遂或强信号 K",
+      "R2 落点叠加未在当前位置成立：当前位置属区间中部踩踏带（7759.5–7762.75，crosses=7、trampled），非预画决胜点"
+     ],
+     "setup": "G1",
+     "watch": "价格上行进入 7777–7780 锚线区并出现回补未遂后反向行为，或在 7785–7787 要塞带出现明确拒绝"
+    },
+    {
+     "missing": [
+      "三件套不齐：顶部双顶与大阴破位后价格只横盘未走出反转下行腿，两腿衰竭尝试与回测失败的完整结构在现价位置不成立，且现价不在原趋势极值区"
+     ],
+     "setup": "C1",
+     "watch": "价格回到 7785–7791 极值区再现衰竭，或跌破 7747 后回测失败走出下行腿"
+    }
+   ],
+   "uncertainty": [
+    "附件 trend 机器标签为「上升/确定」，与图读冲突：图上冲高见顶后已横盘约 37 根、EMA 走平，语境以图读「震荡」为准",
+    "账本一致性为「冲突」、敞开缺口仅一条（7778.5，套多头，attempts=0），回补方向有账但价格尚未到达锚线区，G1 只能挂起",
+    "末根为收低的小阴线但与前根高度重叠，既非区间下沿承接信号、也非上沿失败跟进，成色不足以单独定性"
+   ]
+  }
+ },
+ "dp7": {
+  "date": "2026-10-21",
+  "signal_bar": 12,
+  "brooks": {
+   "basis": "绿箭头在印刷编号12的K下(bar9低7751为底,bar12阳K收7761)；入场=bar12高7764+0.25；止损=底7751下；目标=杯柄颈线虚线7780.75取7780",
+   "date": "2026-10-21",
+   "entry": 7764.25,
+   "setup_brooks": "Bear Trap Double Bottom 买入(杯柄底部)",
+   "side": "long",
+   "signal_bar": 12,
+   "stop": 7750.75,
+   "target": 7780.0,
+   "replay": {
+    "filled": true,
+    "r": 1.1667,
+    "exit_reason": "target",
+    "exit_bar": 9,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "no_trade",
+   "no_trade_reason": "无命中",
+   "pending": [
+    {
+     "missing": [
+      "老趋势：当前下跌仅一腿共8根，年龄与腿数不足",
+      "两腿衰竭尝试：空方尚无两次走远失败的衰竭结构",
+      "TBTL：无先行趋势被破并回测失败"
+     ],
+     "setup": "C1",
+     "watch": "等下跌先走成老趋势并出现两腿衰竭与趋势线突破回测失败、价格落在原趋势极值区时再审"
+    }
+   ],
+   "uncertainty": [
+    "附件trend标签为未定，与图读冲突：图上为区间下破加大实体跟进加弱回抽，图读认定年轻下降段，按规程以图为准",
+    "区间突破失败先验约80%（Brooks v13），与本段下破的实体强度相冲突，方向置信打折",
+    "B3回收窗口为破位后1至3根，现已走满且价格未收回翻面位7766上方，失败面本轮不成立；H2仅作接管假设保留",
+    "下跌仅一腿（7780.75至7751，29.75点），附件MM候选7721.25为边界置信，未经图读验证"
+   ]
+  }
+ },
+ "dp8": {
+  "date": "2026-10-21",
+  "signal_bar": 64,
+  "brooks": {
+   "basis": "红箭头在bar64(巨黑K收低7798.50)正上方,由bar65长下影白K倒数定位；入场=bar64低7798.50-0.25；止损=楔顶bar58高7812.25上；目标=Double Bottom虚线7795.75",
+   "date": "2026-10-21",
+   "entry": 7798.25,
+   "setup_brooks": "Wedge Top 跌破做空",
+   "side": "short",
+   "signal_bar": 64,
+   "stop": 7812.5,
+   "target": 7795.75,
+   "replay": {
+    "filled": true,
+    "r": 0.1754,
+    "exit_reason": "target",
+    "exit_bar": 1,
+    "exit_mode": "full"
+   }
+  },
+  "blind": {
+   "decision": "trade",
+   "side": "short",
+   "setup": "B3",
+   "plan": {
+    "entry": 7809.5,
+    "exit_mode": "scale",
+    "order_type": "limit",
+    "risk_frac": 0.01,
+    "stop": 7814.0,
+    "stop_basis": 7812.25,
+    "targets": [
+     7790.0,
+     7780.75,
+     7766.75
+    ],
+    "void_if": {
+     "level": 7812.25,
+     "side": "above"
+    }
+   },
+   "replay": {
+    "filled": false,
+    "exit_reason": "unfilled",
+    "exit_mode": "scale"
+   }
+  }
+ }
+}

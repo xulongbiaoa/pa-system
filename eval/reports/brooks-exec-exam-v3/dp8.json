@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7798.5,
+ "stop": 0,
+ "target": 0,
+ "reason": "[无命中] 高位紧区间震荡，末根强空头K只是下破尝试，失败与否须在1-3根回收窗口内裁定"
+}

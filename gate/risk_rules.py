@@ -203,8 +203,14 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
     else:
         kind = "L" if plan["side"] == "long" else "H"
         tol = max(0.15 * seg_avg, 0.001 * abs(basis))
-        if not any(s["kind"] == kind and abs(s["anchor"] - basis) <= tol
-                   for s in swings):
+        same_kind = [s for s in swings if s["kind"] == kind]
+        if not same_kind:
+            # 附件无同向摆动点（短窗包常见）：数据侧没有结构记录可核，
+            # 存在性检查无从执行——沉默不许行使否决权（感知门教训，
+            # 盲考 v3 dp4 实证），按图读点名放行并留痕。
+            notes.append(f"H2 stop_basis {basis} 无附件同向摆动点可核对"
+                         "（附件无结构记录），按图读点名采信")
+        elif not any(abs(s["anchor"] - basis) <= tol for s in same_kind):
             hard.append({"rule": "H2", "detail":
                          f"声明的结构极值 {basis} 在附件摆动点中不存在"
                          f"（{kind} 类、容差 ±{tol:.4g} 内无匹配）"})

@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7763.25,
+ "stop": 0,
+ "target": 0,
+ "reason": "[位置不对] 上升趋势未破，现为7773.25高点后的单腿回调，待回踩决胜点走出第二腿后顺势续涨赴7786.5"
+}

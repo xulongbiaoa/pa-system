@@ -1,0 +1,10 @@
+{
+ "decision": "no_trade",
+ "side": null,
+ "setup": "",
+ "entry_type": "market",
+ "entry": 7729.0,
+ "stop": 0,
+ "target": 0,
+ "reason": "[感知未定] 仅4根K线在7722附近横向拉锯，无趋势序列与决胜点，属震荡且背景不足"
+}

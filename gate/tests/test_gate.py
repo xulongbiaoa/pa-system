@@ -118,6 +118,16 @@ def test_h2_round_level_reject_any_price_scale():
     assert not any(h["rule"] == "H2" for h in adjudicate(off, p, bars_left=50)["hard_hits"])
 
 
+def test_h2_basis_unverifiable_when_pack_has_no_same_kind_swings():
+    # 短窗包无同向摆动点：存在性检查无从执行，沉默不许否决（v3 dp4）
+    p = _pack()
+    p["swings"] = {"major": [], "minor": []}
+    plan = _plan(stop=96.9, stop_basis=97.05)
+    r = adjudicate(plan, p, bars_left=50)
+    assert not any(h["rule"] == "H2" for h in r["hard_hits"])
+    assert any("H2" in n for n in r["notes"])
+
+
 def test_h2_missing_stop_basis_reject():
     # 眼主导 H2：未点名止损所依结构极值 = 无从核对，拒
     p = _plan()

@@ -1,0 +1,93 @@
+{
+ "dp1": {
+  "format_errors": [],
+  "context": "下降",
+  "n_candidates": 0,
+  "no_trade_reason": "无命中"
+ },
+ "dp2": {
+  "format_errors": [],
+  "context": "上升",
+  "n_candidates": 0,
+  "no_trade_reason": "无命中"
+ },
+ "dp3": {
+  "format_errors": [
+   "plan 缺字段 void_if"
+  ],
+  "context": "下降",
+  "n_candidates": 1,
+  "no_trade_reason": null,
+  "setup": "G1",
+  "side": "long",
+  "gate": "reject",
+  "hard": [
+   "H1"
+  ],
+  "hard_details": [
+   "净RR=0.178168 < 1.5（首目标）"
+  ],
+  "notes": [
+   "H6 未生效：未提供台账"
+  ]
+ },
+ "dp4": {
+  "format_errors": [],
+  "context": "震荡",
+  "n_candidates": 1,
+  "no_trade_reason": null,
+  "setup": "B3",
+  "side": "long",
+  "gate": "reject",
+  "hard": [
+   "H1"
+  ],
+  "hard_details": [
+   "净RR=0.483898 < 1.5（首目标）"
+  ],
+  "notes": [
+   "H1 按限价入场价 7718.75 计价（2026-10-31 裁定）；现价口径净RR -0.126912 仅作对照",
+   "H2 stop_basis 7710.25 无附件同向摆动点可核对（附件无结构记录），按图读点名采信",
+   "H6 未生效：未提供台账"
+  ]
+ },
+ "dp5": {
+  "format_errors": [],
+  "context": "震荡",
+  "n_candidates": 0,
+  "no_trade_reason": "无命中"
+ },
+ "dp6": {
+  "format_errors": [],
+  "context": "震荡",
+  "n_candidates": 0,
+  "no_trade_reason": "位置不对"
+ },
+ "dp7": {
+  "format_errors": [],
+  "context": "下降",
+  "n_candidates": 0,
+  "no_trade_reason": "无命中"
+ },
+ "dp8": {
+  "format_errors": [
+   "plan 缺结构化 void（前提失效必须可执行，自由文本 void_if 不算）"
+  ],
+  "context": "震荡",
+  "n_candidates": 1,
+  "no_trade_reason": null,
+  "setup": "B3",
+  "side": "short",
+  "gate": "reject",
+  "hard": [
+   "H1"
+  ],
+  "hard_details": [
+   "净RR=1.409009 < 1.5（首目标）"
+  ],
+  "notes": [
+   "H1 按限价入场价 7809.5 计价（2026-10-31 裁定）；现价口径净RR 0.145298 仅作对照",
+   "H6 未生效：未提供台账"
+  ]
+ }
+}
