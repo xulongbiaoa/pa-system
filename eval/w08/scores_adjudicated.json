@@ -1,0 +1,11 @@
+{
+  "note": "score.py 原始分 + 人工裁定：J2 recall 按 level 文本含关键锚价/level_key 判定（自动评分的精确字段匹配漏判两例）；F7/F6 对直接组含口径差异，单列。",
+  "battlefield_BTCUSDT": {"fact_errors": 3, "fact_total": 20, "errors": ["F1.close", "F3.distance", "F4.distance"], "recall": true, "false_release": 0, "sequence_errors": 0, "unknowns": 0,
+    "protocol": "违规：F1 收盘价取自包外旧演示 digest 与 shadow bars（包内无 last_close 字段所致）；F1 子项判错且来源不洁净"},
+  "battlefield_ETHUSDT": {"fact_errors": 2, "fact_total": 18, "errors": ["F7up.level", "F7up.net"], "recall": true, "false_release": 0, "sequence_errors": 0, "unknowns": 0,
+    "protocol": "合规（先整读截断后改用脚本消化同一文件）"},
+  "direct_BTCUSDT": {"fact_errors": 12, "fact_total": 20, "errors": ["F2.count", "F5.anchor", "F5.count", "F5.start_ms", "F5.end_ms", "F6.direction", "F6.net", "F6.giveback", "F7up.level", "F7up.net", "F7down.level", "F7down.net"], "recall": true, "false_release": 0, "sequence_errors": 0, "unknowns": 0,
+    "protocol": "轻微违规：F1 曾查 shadow bars 核对（值与自有材料一致，F1 判对保留）"},
+  "direct_ETHUSDT": {"fact_errors": 14, "fact_total": 18, "errors": ["F2.count", "F3.anchor", "F3.distance", "F5.anchor", "F5.count", "F5.start_ms", "F5.end_ms", "F6.direction", "F6.net", "F6.giveback", "F7up.level", "F7up.net", "F7down.level", "F7down.net"], "recall": false, "false_release": 0, "sequence_errors": 0, "unknowns": 0,
+    "protocol": "合规"}
+}

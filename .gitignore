@@ -14,3 +14,7 @@ eval/gold/judgments/
 # 本地 agent 工作区（记忆与运行态），不进版本库
 .workbuddy-ai/
 shadow/
+
+# W08 冻结语料与 W09 导出数据（可由 prepare_data.py / export_web.py 重生成）
+eval/w08/data/
+battlefield/web/data/

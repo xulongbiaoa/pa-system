@@ -1,0 +1,77 @@
+[
+ {
+  "arm": "battlefield",
+  "symbol": "BTCUSDT",
+  "fact_errors": [
+   "F1.close",
+   "f3_above.distance",
+   "f4_below.distance"
+  ],
+  "fact_total": 20,
+  "fact_error_count": 3,
+  "recall": false,
+  "j3": "WAIT",
+  "unknowns": []
+ },
+ {
+  "arm": "battlefield",
+  "symbol": "ETHUSDT",
+  "fact_errors": [
+   "f7_up_last.level",
+   "f7_up_last.net"
+  ],
+  "fact_total": 18,
+  "fact_error_count": 2,
+  "recall": false,
+  "j3": "WAIT",
+  "unknowns": []
+ },
+ {
+  "arm": "direct",
+  "symbol": "BTCUSDT",
+  "fact_errors": [
+   "F2.count",
+   "F5.anchor",
+   "F5.count",
+   "F5.start_ms",
+   "F5.end_ms",
+   "F6.direction",
+   "F6.net",
+   "F6.giveback",
+   "f7_up_last.level",
+   "f7_up_last.net",
+   "f7_down_last.level",
+   "f7_down_last.net"
+  ],
+  "fact_total": 20,
+  "fact_error_count": 12,
+  "recall": true,
+  "j3": "WAIT",
+  "unknowns": []
+ },
+ {
+  "arm": "direct",
+  "symbol": "ETHUSDT",
+  "fact_errors": [
+   "F2.count",
+   "f3_above.anchor",
+   "f3_above.distance",
+   "F5.anchor",
+   "F5.count",
+   "F5.start_ms",
+   "F5.end_ms",
+   "F6.direction",
+   "F6.net",
+   "F6.giveback",
+   "f7_up_last.level",
+   "f7_up_last.net",
+   "f7_down_last.level",
+   "f7_down_last.net"
+  ],
+  "fact_total": 18,
+  "fact_error_count": 14,
+  "recall": false,
+  "j3": "WAIT",
+  "unknowns": []
+ }
+]

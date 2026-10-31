@@ -70,10 +70,14 @@ def build_task_package(repo: InMemoryRepository, since_revision: int) -> dict:
     token = make_token(repo)
     qs = QueryService(repo, token)
     k = repo.kernel
+    last = k.bars[-1] if k.bars else None
     return {
         "token": token,
         "snapshot_revision": k.revision,
         "cursor": k.cursor,
+        "last_bar": ({"open_time": last.open_time, "close_time": last.close_time,
+                      "open": str(last.open), "high": str(last.high),
+                      "low": str(last.low), "close": str(last.close)} if last else None),
         "scene": qs.get_scene(),
         "changes": qs.get_changes(since_revision),
         "side_up": qs.get_side_activity("up"),

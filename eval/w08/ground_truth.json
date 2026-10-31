@@ -1,0 +1,114 @@
+{
+ "BTCUSDT": {
+  "symbol": "BTCUSDT",
+  "token": "BTCUSDT|15m|r999|1793443499999",
+  "last_close": "77500.00000000",
+  "last_bar_open_time": 1793442600000,
+  "open_gap_count": 58,
+  "nearest_above": {
+   "gap_id": "GAP-SWM-L-116-598",
+   "anchor": "78297.05000000",
+   "direction": "down",
+   "test_count": 0,
+   "distance": "797.05000000"
+  },
+  "nearest_below": {
+   "gap_id": "GAP-SWM-H-125-606",
+   "anchor": "77188.51000000",
+   "direction": "up",
+   "test_count": 2,
+   "distance": "311.49000000"
+  },
+  "most_tested_open_gap": {
+   "gap_id": "GAP-SWM-H-125-606",
+   "anchor": "77188.51000000",
+   "direction": "up",
+   "test_count": 2,
+   "distance": "311.49000000",
+   "tests": [
+    {
+     "started_bar": "binance-vision/BTCUSDT/15m/1793432700000",
+     "ended_bar": "binance-vision/BTCUSDT/15m/1793434500000"
+    },
+    {
+     "started_bar": "binance-vision/BTCUSDT/15m/1793435400000",
+     "ended_bar": "binance-vision/BTCUSDT/15m/1793437200000"
+    }
+   ]
+  },
+  "latest_closed_segment": {
+   "segment_id": "SEG-2166",
+   "level_key": "SWM-H-129@v1",
+   "direction": "up",
+   "net_progress": "47.99000000",
+   "giveback_ratio": "0.3144285714285714285714285714"
+  },
+  "side_up_last": {
+   "segment_id": "SEG-2166",
+   "level_key": "SWM-H-129@v1",
+   "direction": "up",
+   "net_progress": "47.99000000",
+   "giveback_ratio": "0.3144285714285714285714285714"
+  },
+  "side_down_last": {
+   "segment_id": "SEG-2161",
+   "level_key": "SWM-L-119@v1",
+   "direction": "down",
+   "net_progress": "80.14000000",
+   "giveback_ratio": "0.3167362946542757268309318783"
+  }
+ },
+ "ETHUSDT": {
+  "symbol": "ETHUSDT",
+  "token": "ETHUSDT|15m|r999|1793443499999",
+  "last_close": "2246.51000000",
+  "last_bar_open_time": 1793442600000,
+  "open_gap_count": 55,
+  "nearest_above": {
+   "gap_id": "GAP-SWM-L-47-482",
+   "anchor": "2282.46000000",
+   "direction": "down",
+   "test_count": 0,
+   "distance": "35.95000000"
+  },
+  "nearest_below": null,
+  "most_tested_open_gap": {
+   "gap_id": "GAP-SWM-L-8-8",
+   "anchor": "2503.49000000",
+   "direction": "down",
+   "test_count": 2,
+   "distance": "256.98000000",
+   "tests": [
+    {
+     "started_bar": "binance-vision/ETHUSDT/15m/1792614600000",
+     "ended_bar": "binance-vision/ETHUSDT/15m/1792615500000"
+    },
+    {
+     "started_bar": "binance-vision/ETHUSDT/15m/1792617300000",
+     "ended_bar": "binance-vision/ETHUSDT/15m/1792620900000"
+    }
+   ]
+  },
+  "latest_closed_segment": {
+   "segment_id": "SEG-1714",
+   "level_key": "SW-H-264@v1",
+   "direction": "up",
+   "net_progress": "1.72000000",
+   "giveback_ratio": "0.3653136531365313653136531365"
+  },
+  "side_up_last": {
+   "segment_id": "SEG-1714",
+   "level_key": "SW-H-264@v1",
+   "direction": "up",
+   "net_progress": "1.72000000",
+   "giveback_ratio": "0.3653136531365313653136531365"
+  },
+  "side_down_last": {
+   "segment_id": "SEG-1704",
+   "level_key": "SW-L-239@v1",
+   "direction": "down",
+   "net_progress": "2.08000000",
+   "giveback_ratio": "0.6950146627565982404692082111"
+  }
+ }
+}

@@ -28,8 +28,12 @@ def scene_package(repo: InMemoryRepository, since_revision: int = 0) -> dict:
     """给大脑的一份完整状态包：全局 scene + 双角色活动线 + 增量 changes。"""
     qs = QueryService(repo, make_token(repo))
     scene = qs.get_scene()
+    last = repo.kernel.bars[-1] if repo.kernel.bars else None
     return {
         "token": make_token(repo),
+        "last_bar": ({"open_time": last.open_time, "close_time": last.close_time,
+                      "open": str(last.open), "high": str(last.high),
+                      "low": str(last.low), "close": str(last.close)} if last else None),
         "scene": scene,
         "side_up": qs.get_side_activity("up"),
         "side_down": qs.get_side_activity("down"),

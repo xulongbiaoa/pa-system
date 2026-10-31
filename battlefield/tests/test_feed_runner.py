@@ -47,3 +47,16 @@ def test_runner_gap_opens_on_confirmed_swing():
     assert pkg["side_up"]["recorded"] is True
     text = summarize(pkg)
     assert "开放缺口" in text
+
+
+def test_scene_package_carries_last_bar():
+    # W08 发现：状态包缺最新收盘价，判读员被迫包外找价并出错——包必须自带 last_bar
+    from battlefield.feed import parse_klines
+    raw = [[1700000000000 + i * 900000, "100", "101", "99", "100.5", "1",
+            1700000000000 + i * 900000 + 899999] for i in range(30)]
+    bars = parse_klines(raw, "BTCUSDT", "15m", now_ms=1700000000000 + 30 * 900000)
+    repo = build_battlefield("BTCUSDT", "15m", 900_000, bars)
+    pkg = scene_package(repo)
+    assert pkg["last_bar"] is not None
+    assert pkg["last_bar"]["close"] == "100.5"
+    assert pkg["last_bar"]["open_time"] == bars[-1].open_time
