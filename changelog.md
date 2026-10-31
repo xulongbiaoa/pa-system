@@ -453,3 +453,15 @@ v1 纯眼执行同样 1/7），定版为**眼主导**：识别全部归图读，
 已钉（test_h2_basis_unverifiable_when_pack_has_no_same_kind_swings）。
 全量 175 passed + 1 skipped。dp4 修复后仍被 H1 拒（净 RR 0.48），
 结论不变。盲考 v3 全文见 eval/reports/brooks-exec-exam-v3/SCORECARD.md。
+
+## 2026-10-31 · v3 三条后续纪律（用户拍板「三条都立」）
+
+- 定价纪律：提示与 router 双落——写候选前先算首目标净 RR，取不到
+  1.5 地板只有三条路（改取序列下一站 / cap_reason 点名封顶 / 不标
+  qualified 写 pending）；H1/H8 执法不变，此条管判读层的事前自查。
+- void 双件示例：提示里给出 void_if 文本 + 结构化 void 的成对示例
+  （v3 两份判读各漏一半）。
+- 禁候选降格：卡面条件齐的候选必须进 candidates，不许只写进
+  hypotheses 接管条件观望（v3 dp7 实证）；条件不齐的缺项写
+  pending_conditions。此条为提示纪律，无机械执法（无法自动侦测
+  「本该写的候选」），靠后续考试与影子落账复核。
