@@ -265,10 +265,14 @@ class Battlefield:
             if not rt.test_open and rt.band_side == gap_side and in_band:
                 self._test_seq += 1
                 rt.test_open = True
-                rt.test_id = f"T{self._test_seq}"
+                # 全场流水仅作内部身份：禁止 T 前缀——单缺口测试编号只有
+                # test_index 一套（1..test_count），两套 T 编号并存曾让判读员
+                # 照抄流水号写错简报（2026-10-31 拒收事件）。
+                rt.test_id = f"X{self._test_seq}"
                 rt.test_from_side = gap_side
                 gap.test_count += 1
-                rec = {"test_id": rt.test_id, "gap_id": gap.gap_id, "started_bar": bar.id,
+                rec = {"test_id": rt.test_id, "test_index": gap.test_count,
+                       "gap_id": gap.gap_id, "started_bar": bar.id,
                        "outcome": "open", "proxy": None}
                 gap.tests.append(rec)
                 out.append(self._emit("TEST_STARTED", bar, level_key=key,
