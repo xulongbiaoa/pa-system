@@ -1,197 +1,249 @@
 const CST = 8 * 3600;
 let snap = null;
-let symbol = "BTCUSDT";
-let edgeWalls = [];
+let chart = null, candleSeries = null;
 const $ = (id) => document.getElementById(id);
-const fmtTc = (ms) => {
+const fmtTc = (ms, withDay = true) => {
     const d = new Date(ms + CST * 1000);
     const p = (n) => String(n).padStart(2, "0");
-    return `${d.getUTCMonth() + 1}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+    return `${withDay ? `${d.getUTCMonth() + 1}-${p(d.getUTCDate())} ` : ""}${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
 };
-const fmtPx = (x) => x >= 1000 ? x.toFixed(2) : x.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
-function gapSemantics(g) {
-    if (g.direction === "up")
-        return { color: "#1f7a5c", guard: "多方", trapped: "空方被套于锚下", attacker: "空方自上回补攻城" };
-    return { color: "#bc3f22", guard: "空方", trapped: "多方被套于锚上", attacker: "多方自下回补攻城" };
-}
-// 沿墙群：从最近的缺口起，同址（相对种子锚 <=0.35%）成群
-function edgeGroup(gapsSortedAsc, px, side) {
-    const cand = side === "below"
-        ? [...gapsSortedAsc].filter(g => g.anchor < px).reverse()
-        : gapsSortedAsc.filter(g => g.anchor > px);
-    if (!cand.length)
-        return null;
-    const seed = cand[0].anchor;
-    const members = cand.filter(g => Math.abs(g.anchor - seed) / seed <= 0.0035);
-    const tests = members.reduce((s, g) => s + g.test_count, 0);
-    return {
-        side, members, seed,
-        lo: Math.min(...members.map(g => g.anchor)), hi: Math.max(...members.map(g => g.anchor)),
-        tests, grade: (tests >= 2 || members.length >= 5) ? "要塞" : "据点",
-        color: gapSemantics(members[0]).color,
-        mixed: new Set(members.map(g => g.direction)).size > 1,
-    };
-}
-function wallTitle(w) {
-    const g0 = w.members[0];
-    const sem = gapSemantics(g0);
-    const siege = w.tests > 0 ? `已挡攻城 ⚔×${w.tests}` : "尚未被攻";
-    return `${fmtPx(w.lo)}${w.hi !== w.lo ? "–" + fmtPx(w.hi) : ""} · ${w.mixed ? "双向" : sem.guard + "方"}沿墙·${w.grade} · ${w.members.length}座缺口 · ${siege}`;
-}
-function drawBoard() {
+const fmtPx = (x) => x >= 1000 ? x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : String(Math.round(x * 100) / 100);
+const fmtNum = (x) => x == null ? "—" : (Math.abs(x) >= 100 ? x.toFixed(0) : x.toFixed(2));
+const fmtDur = (bars) => {
+    const mins = bars * 15;
+    return mins >= 60 ? `${Math.floor(mins / 60)} 小时${mins % 60 ? ` ${mins % 60} 分` : ""}` : `${mins} 分钟`;
+};
+// ---------- 带与锚线（展示聚合） ----------
+function buildZones() {
     const bars = snap.bars;
     const px = bars[bars.length - 1].c;
-    const gapsAsc = [...snap.open_gaps].sort((a, b) => a.anchor - b.anchor);
-    const lower = edgeGroup(gapsAsc, px, "below");
-    const upper = edgeGroup(gapsAsc, px, "above");
-    edgeWalls = [lower, upper].filter(Boolean);
-    const outerBelow = gapsAsc.filter(g => lower && g.anchor < lower.lo).length + (lower ? 0 : 0);
-    const outerAbove = gapsAsc.filter(g => upper && g.anchor > upper.hi).length;
-    const belowCount = gapsAsc.filter(g => g.anchor < px).length;
-    const aboveCount = gapsAsc.filter(g => g.anchor > px).length;
-    const bandLo = lower ? lower.lo : px * 0.985;
-    const bandHi = upper ? upper.hi : px * 1.015;
-    const topPrice = bandHi * 1.006, botPrice = bandLo * 0.994;
-    const W = 1060, H = 700, X0 = 170, X1 = 640;
-    const y = (p) => H - (p - botPrice) / (topPrice - botPrice) * H;
-    let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;background:#fff;border:1px solid #ddd8cb">`;
-    // 波段外折叠条
-    svg += `<rect x="${X0}" y="${y(topPrice)}" width="${X1 - X0}" height="${Math.max(y(bandHi) - y(topPrice), 26)}" fill="#f7f4ec" stroke="#ddd8cb"/>
-    <text x="${X0 + 10}" y="${y(topPrice) + 20}" font-size="12" fill="#666">波段外 · 上方另有 ${Math.max(aboveCount - (upper ? upper.members.length : 0), 0)} 堵墙（里程参考，不在当前战场）</text>`;
-    svg += `<rect x="${X0}" y="${y(bandLo)}" width="${X1 - X0}" height="${Math.max(y(botPrice) - y(bandLo), 26)}" fill="#f7f4ec" stroke="#ddd8cb"/>
-    <text x="${X0 + 10}" y="${y(bandLo) + 20}" font-size="12" fill="#666">波段外 · 下方另有 ${Math.max(belowCount - (lower ? lower.members.length : 0), 0)} 堵墙${lower && belowCount - lower.members.length === 0 ? "——下沿一破，下方再无开放缺口" : ""}</text>`;
-    // 当前波段（唯一的城）
-    const posPct = ((px - bandLo) / (bandHi - bandLo) * 100).toFixed(0);
-    const thickPct = ((bandHi - bandLo) / px * 100).toFixed(2);
-    svg += `<rect x="${X0}" y="${y(bandHi)}" width="${X1 - X0}" height="${y(bandLo) - y(bandHi)}" fill="#fdf3e3" stroke="#b07d2b" stroke-width="2"/>
-    <text x="${X0 + 12}" y="${y(bandHi) + 24}" font-size="15" font-weight="700" fill="#16140f">当前波段（争夺中）</text>
-    <text x="${X0 + 12}" y="${y(bandHi) + 44}" font-size="12" fill="#555">城厚 ${thickPct}% · 现价位于城内 ${posPct}% 处（自下沿起）</text>`;
-    // 城内地形：波段内 major 摆动位（只是地形，不是墙）；标签按像素去重防叠字
-    let lastLabelY = -100;
-    const terrain = snap.levels
-        .filter(lv => lv.kind === "swing_major" && lv.lo != null && lv.lo > bandLo && lv.lo < bandHi && Math.abs(lv.lo - px) / px >= 0.0008)
-        .sort((a, b) => b.lo - a.lo);
-    for (const lv of terrain) {
-        svg += `<line x1="${X0 + 6}" y1="${y(lv.lo)}" x2="${X1 - 6}" y2="${y(lv.lo)}" stroke="#c9c2ae" stroke-width="1" stroke-dasharray="3 5"/>`;
-        if (Math.abs(y(lv.lo) - lastLabelY) >= 12) {
-            svg += `<text x="${X1 - 10}" y="${y(lv.lo) - 3}" font-size="10" fill="#a39a83" text-anchor="end">${lv.level_key} ${fmtPx(lv.lo)}</text>`;
-            lastLabelY = y(lv.lo);
+    const zones = [];
+    const gapByLevel = new Map();
+    for (const g of snap.open_gaps)
+        gapByLevel.set(g.level_key, g);
+    const lvByKey = new Map();
+    for (const lv of snap.levels)
+        lvByKey.set(lv.level_key, lv);
+    const nearestGap = (side) => {
+        const cand = snap.open_gaps.filter((g) => side === "below" ? g.anchor < px : g.anchor > px)
+            .sort((a, b) => side === "below" ? b.anchor - a.anchor : a.anchor - b.anchor);
+        return cand[0] || null;
+    };
+    const nearestLevel = (side) => {
+        const cand = snap.levels.filter((l) => l.kind === "swing_major" && l.lo != null &&
+            (side === "below" ? l.lo < px : l.lo > px))
+            .sort((a, b) => side === "below" ? b.lo - a.lo : a.lo - b.lo);
+        return cand[0] || null;
+    };
+    for (const side of ["below", "above"]) {
+        const gap = nearestGap(side);
+        const isSupport = side === "below";
+        if (gap) {
+            const lv = lvByKey.get(gap.level_key);
+            const far = isSupport ? (lv?.watch_hi ?? gap.anchor * 1.0018) : (lv?.watch_lo ?? gap.anchor * 0.9982);
+            zones.push({
+                side, kind: isSupport ? "支撑区" : "阻力区", hasGap: true,
+                bandLo: isSupport ? gap.anchor : far, bandHi: isSupport ? far : gap.anchor,
+                anchor: gap.anchor, anchorEdge: isSupport ? "bottom" : "top",
+                gap, color: isSupport ? "47,191,113" : "240,86,79",
+                anchorColor: isSupport ? "#2fbf71" : "#f0564f",
+            });
+        }
+        else {
+            const lv = nearestLevel(side);
+            if (lv)
+                zones.push({
+                    side, kind: isSupport ? "支撑带" : "阻力带", hasGap: false,
+                    bandLo: lv.watch_lo ?? lv.lo, bandHi: lv.watch_hi ?? lv.hi, anchor: null,
+                    gap: null, color: "110,140,170", anchorColor: "", level: lv,
+                });
         }
     }
-    // 沿墙：厚带 + 垛口 + 标签
-    const drawWall = (w, tag) => {
-        if (!w) {
-            const yy = tag === "上沿" ? y(bandHi) : y(bandLo);
-            return `<text x="${X1 + 12}" y="${yy + 4}" font-size="12.5" fill="#b07d2b" font-weight="700">${tag}无墙（该侧无开放缺口）</text>`;
+    window._zones = zones;
+    return zones;
+}
+function positionBands() {
+    if (!candleSeries || !snap)
+        return;
+    const host = $("bands");
+    host.innerHTML = "";
+    const zones = window._zones || [];
+    for (const z of zones) {
+        const yTop = candleSeries.priceToCoordinate(z.bandHi);
+        const yBot = candleSeries.priceToCoordinate(z.bandLo);
+        if (yTop == null || yBot == null)
+            continue;
+        const div = document.createElement("div");
+        div.className = "band";
+        div.style.top = `${yTop}px`;
+        div.style.height = `${Math.max(yBot - yTop, 3)}px`;
+        div.style.background = `rgba(${z.color},.13)`;
+        div.style.borderTop = z.anchorEdge === "top" ? "none" : `1px dashed rgba(${z.color},.5)`;
+        div.style.borderBottom = z.anchorEdge === "bottom" ? "none" : `1px dashed rgba(${z.color},.5)`;
+        const siege = z.gap ? (z.gap.test_count > 0 ? ` · 已挡攻城 ⚔×${z.gap.test_count}` : " · 尚未被攻") : "";
+        div.innerHTML = `<span class="blabel" style="color:rgba(${z.color},1);${z.anchorEdge === "top" ? "top:3px" : "bottom:3px"}">${z.kind} ${fmtPx(z.bandLo)} – ${fmtPx(z.bandHi)}</span>` +
+            (z.hasGap ? `<span class="alabel" style="${z.anchorEdge === "bottom" ? "bottom:-8px" : "top:-8px"}">${z.gap.gap_id} ${z.gap.direction === "up" ? "向上" : "向下"}缺口</span>` : `<span class="alabel">无缺口（${z.level.level_key}）</span>`);
+        host.appendChild(div);
+        if (z.hasGap) {
+            const yA = candleSeries.priceToCoordinate(z.anchor);
+            if (yA != null) {
+                const line = document.createElement("div");
+                line.className = "anchorLine";
+                line.style.top = `${yA}px`;
+                line.style.borderTop = `2px solid ${z.anchorColor}`;
+                host.appendChild(line);
+            }
         }
-        const yT = y(w.hi), yB = y(w.lo);
-        const hBand = Math.max(yB - yT, 9);
-        let cren = "";
-        for (let x = X0; x < X1 - 12; x += 18)
-            cren += `<rect x="${x}" y="${yT - 5}" width="9" height="5" fill="${w.color}"/>`;
-        return `<g class="wall" data-tag="${tag}" style="cursor:pointer">${cren}
-      <rect class="wallBody" x="${X0}" y="${yT}" width="${X1 - X0}" height="${hBand}" fill="${w.color}"/>
-      <text x="${X1 + 12}" y="${yT + hBand / 2 + 4}" font-size="12" fill="${w.color}" font-weight="700">${tag} ${wallTitle(w)}</text></g>`;
+    }
+}
+// ---------- 图表 ----------
+function renderChart() {
+    const bars = snap.bars;
+    if (chart) {
+        chart.remove();
+        chart = null;
+    }
+    chart = LightweightCharts.createChart($("chart"), {
+        layout: { background: { color: "transparent" }, textColor: "#7e97ab", fontSize: 11, attributionLogo: false },
+        grid: { vertLines: { color: "rgba(38,64,87,.35)" }, horzLines: { color: "rgba(38,64,87,.35)" } },
+        rightPriceScale: { borderColor: "#24455e" },
+        timeScale: { borderColor: "#24455e", timeVisible: true, secondsVisible: false,
+            tickMarkFormatter: (t) => fmtTc(t * 1000, false) },
+        localization: { locale: "zh-CN", timeFormatter: (t) => fmtTc(t * 1000) },
+    });
+    candleSeries = chart.addCandlestickSeries({
+        upColor: "#22b573", downColor: "#e5484d", borderVisible: false,
+        wickUpColor: "#22b573", wickDownColor: "#e5484d",
+        priceFormat: { type: "price", precision: snap.meta.symbol === "BTCUSDT" ? 1 : 2, minMove: snap.meta.symbol === "BTCUSDT" ? 0.1 : 0.01 },
+    });
+    candleSeries.setData(bars.map((b) => ({ time: Math.floor(b.t / 1000), open: b.o, high: b.h, low: b.l, close: b.c })));
+    const last = bars[bars.length - 1];
+    candleSeries.createPriceLine({ price: last.c, color: "#e8a33d", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" });
+    // 测试标记 T1/T2…：开放缺口 + 最近关账缺口的回补测试起点
+    const markers = [];
+    const allGaps = [...snap.open_gaps];
+    for (const g of allGaps)
+        (g.tests || []).forEach((t, i) => {
+            if (!t.started_ms)
+                return;
+            markers.push({
+                time: Math.floor(t.started_ms / 1000), position: g.direction === "up" ? "belowBar" : "aboveBar",
+                shape: "circle", color: g.direction === "up" ? "#2fbf71" : "#f0564f", text: `T${i + 1}`,
+            });
+        });
+    markers.sort((a, b) => a.time - b.time);
+    if (markers.length)
+        candleSeries.setMarkers(markers);
+    chart.timeScale().fitContent();
+    chart.timeScale().subscribeVisibleLogicalRangeChange(positionBands);
+    setTimeout(positionBands, 60);
+}
+// ---------- 右栏 ----------
+function renderBrief() {
+    const hyps = snap.hypotheses;
+    const fmtRefs = (refs) => refs && refs.length ? refs.join("、") : "—";
+    if (!hyps.length) {
+        $("hypBody").innerHTML = "暂无假设。";
+        return;
+    }
+    const [main, ...rest] = hyps;
+    const backup = rest[0];
+    $("hypBody").innerHTML = `
+    <div class="hypMain"><div class="t">主要观点（当前假设 ${main.hyp_id}）</div><div>${main.text || ""}</div></div>
+    <div class="evT">支持证据</div>
+    ${[main].map(h => `<div class="evItem"><span class="n">✓</span><span>${fmtRefs(h.support_refs)}</span></div>`).join("")}
+    <div class="evT red">反证因素</div>
+    <div class="evItem"><span class="n">!</span><span>${fmtRefs(main.counter_refs)}</span></div>
+    ${backup ? `<div class="evT">备推演（${backup.hyp_id}）</div><div style="color:#c6dcee;font-size:12.5px">${backup.text || ""}</div>` : ""}`;
+    $("hypUpd").textContent = `更新于 ${fmtTc(snap.meta.generated_at_ms, false)}`;
+}
+function renderPlan() {
+    const plans = snap.watch_plans;
+    if (!plans.length) {
+        $("planBody").innerHTML = "暂无观察计划。";
+        return;
+    }
+    const p = plans[plans.length - 1];
+    const step = (n, cls, title, desc, extra = "") => `<div class="step ${cls}"><span class="n">${n}</span><div><div class="st">${title}</div><div class="sd">${desc}</div></div>${extra}</div>`;
+    $("planBody").innerHTML = `<div class="steps">` +
+        step(1, "done", "观察位置", p.watch_level || "—") +
+        step(2, "act", "等待行为", p.watch_behavior || "—", `<span class="waitB">WAIT</span>`) +
+        step(3, "", "入场触发", p.entry_trigger || "—") +
+        step(4, "", "取消条件", p.cancel_if || "—") + `</div>`;
+}
+// ---------- 底部：时间线 + 多空对照 ----------
+function sparkline(barMs) {
+    const bars = snap.bars;
+    let idx = bars.findIndex((b) => b.t >= barMs - 1);
+    if (idx < 0)
+        idx = bars.length - 1;
+    const win = bars.slice(Math.max(0, idx - 8), Math.min(bars.length, idx + 9));
+    if (win.length < 2)
+        return "";
+    const cs = win.map((b) => b.c);
+    const mn = Math.min(...cs), mx = Math.max(...cs), rg = (mx - mn) || 1;
+    const pts = cs.map((c, i) => `${(i / (cs.length - 1) * 86).toFixed(1)},${(30 - (c - mn) / rg * 26).toFixed(1)}`).join(" ");
+    const upNet = cs[cs.length - 1] >= cs[0];
+    return `<svg width="86" height="32"><polyline points="${pts}" fill="none" stroke="${upNet ? "#22b573" : "#e5484d"}" stroke-width="1.4"/></svg>`;
+}
+function renderTimeline() {
+    const TITLE = {
+        GAP_OPENED: e => ["缺口建立", `形成 ${e.payload?.gap_id || ""} 锚 ${e.payload?.anchor ? fmtPx(Number(e.payload.anchor)) : ""}`],
+        TEST_STARTED: e => [`测试（T${e.payload?.test_index || ""}）`, `${e.payload?.gap_id || ""} 回补测试开始`],
+        TEST_ENDED: e => ["测试结束", `${e.payload?.gap_id || ""} · ${e.payload?.outcome === "anchor_touched" ? "触锚" : "被拒（代理口径）"}`],
+        GAP_CLOSED: e => ["缺口回补", `${e.payload?.gap_id || ""} 触锚关账（城破）`],
     };
-    svg += drawWall(upper, "上沿") + drawWall(lower, "下沿");
-    // 现价旗
-    svg += `<line x1="${X0 - 8}" y1="${y(px)}" x2="${X1 + 8}" y2="${y(px)}" stroke="#16140f" stroke-width="1.4" stroke-dasharray="7 4"/>
-    <text x="${X1 + 12}" y="${y(px) - 8}" font-size="13" font-weight="700" fill="#16140f">⚑ 现价 ${fmtPx(px)}</text>`;
-    // 双军最近一击（城内行动道）
-    const lane = (sideKey, x) => {
-        const sd = snap.sides[sideKey];
-        if (!sd || !sd.segments.length)
-            return "";
-        const seg = [...sd.segments].reverse().find((g) => !g.open) || sd.segments[sd.segments.length - 1];
-        if (seg.p0 == null || seg.net_progress == null)
-            return "";
+    const story = snap.events.filter((e) => TITLE[e.type]).slice(-5);
+    $("tlBody").innerHTML = story.length ? story.map((e) => {
+        const [t, s] = TITLE[e.type](e);
+        return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot"></div><div class="tt">${t}</div><div class="ts">${s}</div>${sparkline(e.bar_open_ms)}</div>`;
+    }).join("") : "24h 内无缺口事件。";
+}
+function renderCompare() {
+    const pick = (sideKey) => {
+        const segs = snap.sides[sideKey].segments || [];
+        return [...segs].reverse().find(s => !s.open) || segs[segs.length - 1] || null;
+    };
+    const cell = (seg, kind) => {
+        if (!seg)
+            return "—";
         const dir = seg.direction === "up" ? 1 : -1;
-        const p0 = Math.max(Math.min(seg.p0, bandHi), bandLo);
-        const ext = Math.max(Math.min(seg.p0 + dir * (seg.favorable ?? seg.net_progress), bandHi), bandLo);
-        const end = Math.max(Math.min(seg.p0 + dir * seg.net_progress, bandHi), bandLo);
-        const bend = sideKey === "up" ? x + 16 : x - 16;
-        const col = sideKey === "up" ? "#1f7a5c" : "#bc3f22";
-        return `<g><polyline points="${x},${y(p0)} ${bend},${y(ext)} ${x},${y(end)}" fill="none" stroke="${col}" stroke-width="2.4" ${seg.open ? 'stroke-dasharray="5 3"' : ""}/>
-      <circle cx="${x}" cy="${y(end)}" r="4.5" fill="${col}"/></g>`;
+        if (kind === "prog")
+            return `${seg.direction === "up" ? "+" : "−"}${fmtNum(seg.net_progress)}（${fmtPx(seg.p0)} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
+        if (kind === "give")
+            return `${fmtNum(seg.giveback)}（极值 ${fmtPx(seg.p0 + dir * (seg.favorable ?? 0))} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
+        return `${fmtDur(seg.elapsed_bars ?? 0)}${seg.open ? "（进行中）" : ""}`;
     };
-    svg += lane("up", 62) + lane("down", 122);
-    svg += `<text x="62" y="16" font-size="11" fill="#1f7a5c" text-anchor="middle">多方道</text>
-          <text x="122" y="16" font-size="11" fill="#bc3f22" text-anchor="middle">空方道</text>`;
-    svg += "</svg>";
-    const chip = (sideKey) => {
-        const sd = snap.sides[sideKey];
-        if (!sd || !sd.segments.length)
-            return "";
-        const seg = [...sd.segments].reverse().find((g) => !g.open) || sd.segments[sd.segments.length - 1];
-        const col = sideKey === "up" ? "#1f7a5c" : "#bc3f22";
-        return `<span style="color:${col};font-weight:700">${sideKey === "up" ? "多方" : "空方"}最近一击</span> ${seg.segment_id} @${seg.level_key}${seg.open ? "（进行中）" : ""}：净推进 ${seg.net_progress ?? "—"}，回吐 ${seg.giveback ?? "—"}（回吐比 ${seg.giveback_ratio != null ? Number(seg.giveback_ratio).toFixed(2) : "—"}），用时 ${seg.elapsed_bars ?? "—"} 根`;
-    };
-    $("laneChips").innerHTML = [chip("up"), chip("down")].filter(Boolean).join("　·　");
-    $("board").innerHTML = svg;
-    document.querySelectorAll(".wall").forEach(n => n.addEventListener("click", () => {
-        const w = n.dataset.tag === "上沿" ? upper : lower;
-        if (w)
-            showWall(w, n.dataset.tag);
-    }));
-    showBand(lower, upper, px, bandLo, bandHi);
+    const up = pick("up"), dn = pick("down");
+    $("cmpBody").innerHTML = `<table class="cmp"><tr><th></th><th class="up">多方（上涨）</th><th class="down">空方（下跌）</th></tr>
+    <tr><td>推进幅度</td><td class="up">${cell(up, "prog")}</td><td class="down">${cell(dn, "prog")}</td></tr>
+    <tr><td>回撤幅度</td><td>${cell(up, "give")}</td><td>${cell(dn, "give")}</td></tr>
+    <tr><td>持续时间</td><td>${cell(up, "dur")}</td><td>${cell(dn, "dur")}</td></tr></table>`;
 }
-function showWall(w, tag) {
-    $("detailBody").innerHTML = `<b>${tag}沿墙 · ${wallTitle(w)}</b><br>` +
-        w.members.map((g) => {
-            const sem = gapSemantics(g);
-            return `<div class="seg">${g.gap_id} @${g.level_key}：锚 ${fmtPx(g.anchor)}，${g.direction === "up" ? "向上" : "向下"}缺口，立账 ${g.opened_ms ? fmtTc(g.opened_ms) : "—"}<br>
-        <span class="meta">守军=${sem.guard}方 · ${sem.trapped} · ${sem.attacker} · 已攻 ${g.test_count} 次</span></div>`;
-        }).join("");
-}
-function showBand(lower, upper, px, bandLo, bandHi) {
-    const line = (w, tag) => w
-        ? `<div class="seg"><b>${tag}</b>${wallTitle(w)}</div>`
-        : `<div class="seg"><b>${tag}</b>无开放缺口（无墙）</div>`;
-    $("detailBody").innerHTML =
-        `<b>当前波段总览</b>（${fmtPx(bandLo)}${!lower ? "（展示下界）" : ""} – ${fmtPx(bandHi)}${!upper ? "（展示上界）" : ""}，现价 ${fmtPx(px)}）<br>` +
-            line(upper, "上沿") + line(lower, "下沿") +
-            `<div class="meta">只看两沿的理由：波段边缘是成交最密、被套库存最厚的地方；波段内与波段外的缺口不在当前战场。点任一沿墙看逐座缺口。</div>`;
-}
-function renderPanels() {
-    const m = snap.meta;
-    $("metaLine").innerHTML =
-        `<span class="badge">${m.token}</span><span class="badge">${m.window || ""}</span><span class="badge">rev ${m.state_revision}</span>` +
-            `<span class="badge">最新收盘 ${fmtTc(m.cursor_close_ms)}</span>` +
-            (m.ai.stale ? `<span class="badge stale">AI 基于旧快照，待复核</span>` : `<span class="badge">AI 已复核至当前</span>`);
-    $("hypBody").innerHTML = snap.hypotheses.length ? snap.hypotheses.map((h) => `
-    <div class="hyp ${h.status || ""}"><b>${h.hyp_id}</b> · ${h.status || ""}
-      <div>${h.text || ""}</div>
-      <div class="meta">支持：${(h.support_refs || []).join("、") || "—"}<br>反证：${(h.counter_refs || []).join("、") || "—"}</div>
-    </div>`).join("") : "暂无假设。";
-    $("planBody").innerHTML = snap.watch_plans.length ? snap.watch_plans.map((p) => `
-    <div><div class="seg"><b>计划</b>${p.plan_id}（${p.status || ""}）</div>
-    <div class="seg"><b>观察位置</b>${p.watch_level || "—"}</div>
-    <div class="seg"><b>等待行为</b>${p.watch_behavior || "—"}</div>
-    <div class="seg"><b>入场触发</b>${p.entry_trigger || "—"}</div>
-    <div class="seg"><b>取消条件</b>${p.cancel_if || "—"}</div></div>`).join("") : "暂无观察计划。";
-    $("brokenBody").innerHTML = snap.closed_gaps_recent.length ? [...snap.closed_gaps_recent].reverse().map((g) => `<div class="seg">💥 ${g.gap_id}：锚 ${fmtPx(g.anchor)}，${g.direction === "up" ? "向上" : "向下"}缺口，生前被攻 ${g.test_count} 次后关账（城破）</div>`).join("") : "近期无破城。";
-    $("tlBody").innerHTML = [...snap.events].reverse().slice(0, 60).map((e) => `<div class="ev" data-lvl="${e.level_key || ""}"><b>${e.type}</b> ${e.level_key || ""} <span class="meta">${e.event_id}</span></div>`).join("");
-    document.querySelectorAll(".ev").forEach(n => n.addEventListener("click", () => {
-        const lvl = n.dataset.lvl;
-        const w = edgeWalls.find(x => x.members.some((g) => g.level_key === lvl));
-        if (w) {
-            showWall(w, w.side === "above" ? "上沿" : "下沿");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        else
-            $("detailBody").innerHTML = `事件关联位置 ${lvl} 不在波段两沿（属波段内地形或波段外），不在当前战场重点内。`;
-    }));
-    $("footLine").textContent =
-        `快照 ${m.token} · 生成 ${fmtTc(m.generated_at_ms)}（账本重放重建）· ${m.symbol} ${m.timeframe} 共 ${m.bars_count} 根 · ${m.source} · 沙盘只读，无下单入口`;
-}
+// ---------- 装配 ----------
 async function load(sym) {
-    symbol = sym;
     $("symBTC").classList.toggle("on", sym === "BTCUSDT");
     $("symETH").classList.toggle("on", sym === "ETHUSDT");
     snap = await (await fetch(`data24/${sym}.json`)).json();
-    drawBoard();
-    renderPanels();
+    const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1];
+    const prev = bars[bars.length - 2] || last;
+    const chg = last.c - prev.c, pct = (chg / prev.c * 100);
+    $("dataTime").textContent = `数据时间 ${fmtTc(m.cursor_close_ms)}（UTC+8） · ${m.window}`;
+    $("tokenBadge").textContent = m.token;
+    $("aiBadge").textContent = m.ai.stale ? "AI 参谋 · 待复核" : "AI 参谋运行中 · 已复核至当前";
+    $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span>` +
+        `<span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span>` +
+        `<span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>` +
+        ``;
+    buildZones();
+    renderChart();
+    renderBrief();
+    renderPlan();
+    renderTimeline();
+    renderCompare();
+    $("footLine").textContent = `快照 ${m.token} · rev ${m.state_revision} · 生成 ${fmtTc(m.generated_at_ms)} · ${m.source} · 缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
 }
+window.addEventListener("resize", positionBands);
 $("symBTC").addEventListener("click", () => load("BTCUSDT"));
 $("symETH").addEventListener("click", () => load("ETHUSDT"));
 load("BTCUSDT");

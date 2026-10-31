@@ -1,73 +1,109 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>虚拟战场 · 战略沙盘（W09）</title>
+<title>PA 战略沙盘 · 虚拟战场</title>
 <style>
-  :root { --ink:#16140f; --paper:#fbfaf6; --line:#ddd8cb; --panel:#f1ede1;
-          --up:#1f7a5c; --down:#bc3f22; --warn:#b07d2b; }
   * { box-sizing: border-box; }
-  body { margin:0; font-family:"Noto Serif SC", serif; background:var(--paper); color:var(--ink); }
-  header { padding:10px 14px; border-bottom:2px solid var(--ink); display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-  header h1 { font-size:17px; margin:0 12px 0 0; }
-  .meta { font-size:12px; color:#444; }
-  .badge { display:inline-block; padding:1px 7px; border:1px solid var(--ink); border-radius:9px; font-size:11px; margin-right:5px; background:#fff; }
-  .badge.stale { border-color:var(--warn); color:var(--warn); font-weight:700; }
-  button { font:inherit; font-size:13px; background:#fff; border:1px solid var(--ink); padding:3px 10px; cursor:pointer; }
-  button.on { background:var(--ink); color:#fff; }
-  a.tab { font-size:13px; color:var(--ink); text-decoration:none; border:1px solid var(--ink); padding:3px 10px; background:#fff; }
-  main { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:0; }
-  #boardWrap { padding:10px 6px 6px 10px; border-right:1px solid var(--line); }
-  #board { width:100%; }
-  .legend { font-size:12.5px; padding:4px 2px 8px; display:flex; gap:16px; flex-wrap:wrap; }
-  .sw { display:inline-block; width:22px; height:9px; vertical-align:middle; margin-right:5px; border:1px solid var(--ink); }
-  aside { padding:10px 12px; display:flex; flex-direction:column; gap:12px; max-height:calc(100vh - 58px); overflow:auto; }
-  section { border:1px solid var(--line); background:#fff; }
-  section h2 { font-size:13.5px; margin:0; padding:7px 10px; background:var(--panel); border-bottom:1px solid var(--line); }
-  section .body { padding:8px 10px; font-size:12.8px; line-height:1.55; }
-  .hyp { border-left:3px solid var(--ink); padding:4px 8px; margin-bottom:8px; background:#fffdf6; }
-  .hyp.challenged { border-left-color:var(--warn); } .hyp.superseded { opacity:.55; }
-  .ref { color:#1a4f8a; cursor:pointer; text-decoration:underline dotted; }
-  .seg { margin:3px 0; } .seg b { display:inline-block; min-width:64px; }
-  .ev { padding:5px 6px; border-bottom:1px dashed var(--line); cursor:pointer; }
-  .ev:hover { background:var(--panel); }
-  footer { padding:8px 14px; font-size:11.5px; color:#555; border-top:1px solid var(--line); }
-  .wallFlash { animation: fl 1.2s ease-in-out 2; }
-  @keyframes fl { 50% { opacity:.25; } }
-  @media (max-width: 900px) { main { grid-template-columns:1fr; } aside { max-height:none; } }
+  body { margin: 0; background: #0a141f; color: #dcebf7; font: 13px/1.55 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  a { color: #3fa9f5; text-decoration: none; }
+  .topbar { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: #0d1b29; border-bottom: 1px solid #1c3448; flex-wrap: wrap; }
+  .logo { font-size: 17px; font-weight: 800; letter-spacing: .5px; }
+  .logo .pa { color: #3fa9f5; font-style: italic; margin-right: 6px; }
+  .seg { display: flex; border: 1px solid #24455e; border-radius: 6px; overflow: hidden; }
+  .seg button { background: transparent; color: #9db8cc; border: 0; padding: 4px 12px; cursor: pointer; font-size: 12.5px; }
+  .seg button.on { background: #1b3a52; color: #fff; }
+  .live { color: #2fbf71; font-weight: 700; font-size: 12px; }
+  .muted { color: #7e97ab; font-size: 12px; }
+  .badge { border: 1px solid #24455e; border-radius: 20px; padding: 2px 10px; font-size: 11.5px; color: #9db8cc; background: #0e2233; }
+  .badge.ai { color: #35c4b5; border-color: #175048; }
+  .layout { display: grid; grid-template-columns: 92px 1fr 348px; gap: 10px; padding: 10px; align-items: start; }
+  .rail { background: #0d1b29; border: 1px solid #1c3448; border-radius: 10px; padding: 8px 0; }
+  .rail div { padding: 9px 12px; color: #7e97ab; font-size: 12.5px; border-left: 3px solid transparent; }
+  .rail div.on { color: #fff; background: #12293d; border-left-color: #3fa9f5; }
+  .rail div.soon { opacity: .45; }
+  .card { background: #0d1b29; border: 1px solid #1c3448; border-radius: 10px; padding: 10px 12px; }
+  .card h3 { margin: 0 0 8px; font-size: 14px; display: flex; align-items: center; gap: 7px; }
+  .card h3 .r { margin-left: auto; font-size: 11.5px; color: #7e97ab; font-weight: 400; }
+  #chartWrap { position: relative; height: 430px; }
+  #chart { position: absolute; inset: 0; }
+  .band { position: absolute; left: 0; right: 58px; pointer-events: none; }
+  .band .blabel { position: absolute; right: 8px; font-size: 11.5px; font-weight: 700; text-shadow: 0 1px 3px #000; }
+  .band .alabel { position: absolute; left: 8px; font-size: 11px; color: #eaf4fd; background: rgba(6,17,27,.75); padding: 0 6px; border-radius: 3px; white-space: nowrap; }
+  .anchorLine { position: absolute; left: 0; right: 58px; height: 0; pointer-events: none; }
+  .ohlc { font-size: 12px; color: #9db8cc; margin-bottom: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .ohlc b { color: #dcebf7; }
+  .up { color: #2fbf71; } .down { color: #f0564f; }
+  .hypMain { background: rgba(47,191,113,.10); border: 1px solid #175048; border-radius: 8px; padding: 8px 10px; margin-bottom: 9px; }
+  .hypMain .t { color: #35c4b5; font-weight: 700; font-size: 12px; margin-bottom: 3px; }
+  .evT { color: #9db8cc; font-weight: 700; font-size: 12px; margin: 7px 0 3px; }
+  .evT.red { color: #f0564f; }
+  .evItem { display: flex; gap: 8px; margin: 3px 0; color: #c6dcee; font-size: 12.5px; }
+  .evItem .n { flex: none; width: 17px; height: 17px; border-radius: 50%; border: 1px solid #3d5a73; color: #9db8cc; font-size: 10.5px; text-align: center; line-height: 16px; margin-top: 1px; }
+  .step { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed #1c3448; }
+  .step:last-child { border-bottom: 0; }
+  .step .n { flex: none; width: 22px; height: 22px; border-radius: 50%; text-align: center; line-height: 21px; font-weight: 700; font-size: 12px; background: #1b3a52; color: #9db8cc; border: 1px solid #2a4d6d; }
+  .step.done .n { background: #14532d; color: #7ee2ae; border-color: #1d7a46; }
+  .step.act .n { background: #6b4e12; color: #ffd97a; border-color: #a67c1f; }
+  .step .st { font-weight: 700; font-size: 12.5px; }
+  .step .sd { color: #9db8cc; font-size: 12.5px; }
+  .waitB { margin-left: auto; flex: none; border: 1px solid #a67c1f; color: #ffd97a; border-radius: 4px; font-size: 10.5px; padding: 0 6px; height: fit-content; }
+  .bottomRow { display: grid; grid-template-columns: 1fr 330px; gap: 10px; margin-top: 10px; }
+  .tl { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; position: relative; margin-top: 4px; }
+  .tl:before { content: ""; position: absolute; left: 4%; right: 4%; top: 26px; border-top: 1px solid #2a4d6d; }
+  .tl .node { text-align: center; position: relative; }
+  .tl .tm { color: #7e97ab; font-size: 11px; height: 26px; }
+  .tl .dot { width: 9px; height: 9px; border-radius: 50%; background: #3fa9f5; margin: 0 auto 5px; position: relative; z-index: 1; box-shadow: 0 0 0 3px #0d1b29; }
+  .tl .tt { font-weight: 700; font-size: 12.5px; }
+  .tl .ts { color: #7e97ab; font-size: 11.5px; min-height: 30px; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.cmp th, table.cmp td { padding: 5px 4px; border-bottom: 1px solid #1c3448; text-align: right; }
+  table.cmp th:first-child, table.cmp td:first-child { text-align: left; color: #9db8cc; }
+  .foot { color: #55707f; font-size: 11.5px; padding: 2px 12px 12px; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } .bottomRow { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<header>
-  <h1>虚拟战场 · 战略沙盘</h1>
-  <span>
-    <button id="symBTC" class="on">BTCUSDT 15m</button>
-    <button id="symETH">ETHUSDT 15m</button>
-  </span>
-  <a class="tab" href="index.html">K 线核验页 →</a>
-  <span class="meta" id="metaLine">加载中…</span>
-</header>
-<main>
-  <div id="boardWrap">
-    <div id="board"></div>
-    <div id="laneChips" style="font-size:12.5px;padding:6px 2px 0"></div>
-    <div class="legend">
-      <span><span class="sw" style="background:#1f7a5c"></span>多方沿墙（向上缺口：空方被套于锚下）</span>
-      <span><span class="sw" style="background:#bc3f22"></span>空方沿墙（向下缺口：多方被套于锚上）</span>
-      <span>⚔ = 攻城（回补测试）次数</span>
-    </div>
-    <div class="meta">只画当前波段的上下沿缺口——波段边缘成交最密、被套库存最厚；波段外的缺口只折叠计数作里程参考。守军、攻城次数全部来自缺口账本事实，本页不生成控制率、兵力或胜率。点沿墙看逐座缺口。</div>
+  <div class="topbar">
+    <div class="logo"><span class="pa">PA</span>战略沙盘</div>
+    <div class="seg"><button id="symBTC" class="on">BTCUSDT</button><button id="symETH">ETHUSDT</button></div>
+    <div class="seg"><button class="on">15m</button></div>
+    <span class="live">● LIVE</span>
+    <span class="muted" id="dataTime"></span>
+    <span style="flex:1"></span>
+    <span class="badge" id="tokenBadge"></span>
+    <span class="badge ai" id="aiBadge"></span>
+    <a class="badge" href="index.html">K 线核验页 →</a>
   </div>
-  <aside>
-    <section><h2>选中对象</h2><div class="body" id="detailBody">点沙盘上的城墙或城池，这里显示它的账本事实。</div></section>
-    <section><h2>参谋简报（当前假设）</h2><div class="body" id="hypBody"></div></section>
-    <section><h2>作战计划卡</h2><div class="body" id="planBody"></div></section>
-    <section><h2>破城记录（最近关账缺口）</h2><div class="body" id="brokenBody"></div></section>
-    <section><h2>战役时间线</h2><div class="body" id="tlBody" style="padding:4px 6px"></div></section>
-  </aside>
-</main>
-<footer id="footLine"></footer>
-<script src="sandbox.js"></script>
+
+  <div class="layout">
+    <div class="rail">
+      <div class="on">▦ 实时观战</div>
+      <div class="soon">◷ 历史推演</div>
+      <div class="soon">▤ 战后复盘</div>
+      <div class="soon">▦ 术语库</div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="ohlc" id="ohlcLine"></div>
+        <div id="chartWrap"><div id="chart"></div><div id="bands"></div></div>
+      </div>
+      <div class="bottomRow">
+        <div class="card"><h3>◎ 事件时间线</h3><div class="tl" id="tlBody"></div></div>
+        <div class="card"><h3>▥ 多空行动对照<span class="r">最近一段（已结束优先）</span></h3><div id="cmpBody"></div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card"><h3>◉ AI 参谋简报<span class="r" id="hypUpd"></span></h3><div id="hypBody"></div></div>
+      <div class="card"><h3>◎ 观察计划<span class="r">当前状态：● 等待中</span></h3><div id="planBody"></div></div>
+    </div>
+  </div>
+  <div class="foot" id="footLine"></div>
+
+  <script src="lib/lightweight-charts.standalone.production.js"></script>
+  <script src="sandbox.js"></script>
 </body>
 </html>

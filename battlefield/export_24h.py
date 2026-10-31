@@ -120,8 +120,15 @@ def finalize(sym: str):
     last_out = outputs[-1] if outputs else None
     ai_cursor = last_out.get("read_cursor") if last_out else None
 
+    # 事件切片：缺口生命周期事件全量保留（时间线要用），其余取最近 300 条
+    LIFECYCLE = ("GAP_OPENED", "GAP_CLOSED", "TEST_STARTED", "TEST_ENDED")
+    all_events = changes["events"]
+    picked = [e for e in all_events if e["type"] in LIFECYCLE]
+    picked += [e for e in all_events if e["type"] not in LIFECYCLE][-300:]
+    picked_ids = {id(e) for e in picked}
+    picked = [e for e in all_events if id(e) in picked_ids]
     events = []
-    for e in changes["events"][-300:]:
+    for e in picked:
         events.append({
             "event_id": e["event_id"], "type": e["type"], "lens": e.get("lens"),
             "level_key": e.get("level_key"), "direction": e.get("direction"),
