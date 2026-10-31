@@ -53,12 +53,11 @@
     <div id="board"></div>
     <div id="laneChips" style="font-size:12.5px;padding:6px 2px 0"></div>
     <div class="legend">
-      <span><span class="sw" style="background:#1f7a5c"></span>多方城墙（向上缺口，空方被套于墙下）</span>
-      <span><span class="sw" style="background:#bc3f22"></span>空方城墙（向下缺口，多方被套于墙上）</span>
-      <span><span class="sw" style="background:#b07d2b"></span>双向争夺墙</span>
-      <span>⚔ = 该墙经历的攻城（回补测试）次数</span>
+      <span><span class="sw" style="background:#1f7a5c"></span>多方沿墙（向上缺口：空方被套于锚下）</span>
+      <span><span class="sw" style="background:#bc3f22"></span>空方沿墙（向下缺口：多方被套于锚上）</span>
+      <span>⚔ = 攻城（回补测试）次数</span>
     </div>
-    <div class="meta">城池 = 上下两堵缺口墙之间的价格带；墙的厚度、守军与攻城次数全部来自缺口账本事实，本页不生成控制率、兵力或胜率。点城墙或城池看详情。</div>
+    <div class="meta">只画当前波段的上下沿缺口——波段边缘成交最密、被套库存最厚；波段外的缺口只折叠计数作里程参考。守军、攻城次数全部来自缺口账本事实，本页不生成控制率、兵力或胜率。点沿墙看逐座缺口。</div>
   </div>
   <aside>
     <section><h2>选中对象</h2><div class="body" id="detailBody">点沙盘上的城墙或城池，这里显示它的账本事实。</div></section>
