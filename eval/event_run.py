@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 
-from gate.risk_rules import adjudicate  # noqa: E402
+from judge.service import DecisionRequest, assess_candidate  # noqa: E402
 from gate.flags import build_flags  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
 from perception.features import load_config  # noqa: E402
@@ -112,10 +112,11 @@ def run(judgments_dir=None, ev_dir=None):
         plan.update({"side": c["side"], "setup": c["setup"],
                      "context": pack["trend"]["label"]})
         merge_candidate_terms(plan, c)
-        verdict = adjudicate(plan, pack, bars_left=LIFECYCLE,
-                             feature_refs=c.get("feature_refs", []),
-                             flags=build_flags(plan, pack),
-                             ledger=ledger, mode="annotation")
+        verdict = assess_candidate(DecisionRequest(
+            snapshot_id=eid, candidate={"plan": plan}, feature_pack=pack,
+            bars_left=LIFECYCLE, feature_refs=tuple(c.get("feature_refs", [])),
+            flags=build_flags(plan, pack), ledger=ledger,
+            mode="annotation")).gate
         if verdict["verdict"] == "reject":
             rep["gate_reject"] += 1
             for h in verdict["hard_hits"]:

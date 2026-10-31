@@ -30,7 +30,7 @@ from judge.pa_cli import pack_at                               # noqa: E402
 from judge.prompt_builder import build_prompt                  # noqa: E402
 from judge.campaign_prompt import build_map_prompt, build_arrival_prompt  # noqa: E402
 from judge.validate import validate_judgment                   # noqa: E402
-from gate.risk_rules import adjudicate                         # noqa: E402
+from judge.service import DecisionRequest, assess_candidate    # noqa: E402
 from gate.flags import build_flags                             # noqa: E402
 from eval.replay import simulate_plan, summarize               # noqa: E402
 from eval.pilot_run import merge_candidate_terms               # noqa: E402
@@ -165,10 +165,12 @@ def run_arm(outdir, arm):
                                  <= pt["hi"] + 0.25 * seg_avg)
                 if not tested:
                     rep["violations"] += 1
-            verdict = adjudicate(plan, pack, bars_left=LIFECYCLE,
-                                 feature_refs=c.get("feature_refs", []),
-                                 flags=build_flags(plan, pack),
-                                 ledger=None, mode="annotation")
+            verdict = assess_candidate(DecisionRequest(
+                snapshot_id=sid, candidate={"plan": plan}, feature_pack=pack,
+                bars_left=LIFECYCLE,
+                feature_refs=tuple(c.get("feature_refs", [])),
+                flags=build_flags(plan, pack), ledger=None,
+                mode="annotation")).gate
             if verdict["verdict"] == "reject":
                 rep["gate_reject"] += 1
                 for h in verdict["hard_hits"]:

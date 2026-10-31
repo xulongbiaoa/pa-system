@@ -1,3 +1,8 @@
+## 2026-10-31 T03 统一决策服务 + T06 模型适配器契约落地（分支 codex/gap-trading-design）
+- judge/service.py：assess_candidate(DecisionRequest) 显式入参（快照/候选/条件结果/特征包/台账/策略版本/模式），服务内不读任何隐式最新状态；DecisionResult 四态（eligible/waiting/rejected/invalid_input），gate 硬拒绝原样进 rule_hits 与 gate 原文，runner 不许改写成笼统 no_trade；条件未齐先 waiting 不进 gate 定价；H6 无台账结构化标 unavailable（不冒充通过）。
+- 等价迁移：pa_cli、forward_shadow、campaign_run、event_run 四处 adjudicate 直调改走服务（.gate 原文消费，输出字节不变，等价测试以同一夹具断言 service.gate == adjudicate 直调结果）。冻结实验 harness（branch_ab/touch_ab/event_ab/pilot_run/gold_run）有意不迁：其存量结果的复现路径保持原样，迁移与否等各自复跑时再议，已在此登记为边界而非漂移。
+- judge/model_client.py：plan_scene/assess_behavior 双入口契约——输入带 snapshot_id/chart_hash/策略版本/revision，输出必须回显，revision 不符抛 StaleAssessment（迟到不覆盖）、回显错抛 ModelContractError、无录制/不可用抛 ModelUnavailable，三者都是任务层系统结果、绝不记策略 no_trade。RecordedAdapter（深拷贝回放）与 CallableAdapter（真实 API/子代理桥接注入点）均走同一校验；SDK 不进 perception/gate。
+- 测试 +10（service 5 + model_client 5），全仓 239 passed + 1 skipped。未做：T05 PostgreSQL、T07 真实前向影子接线（机会/事件/桥的在线组装）、T08 执行沙盒、T10 Gold 样本量。
 ## 2026-10-31 P1 机会状态机核心落地：状态机 + 文件存储 + waits 桥（分支 codex/gap-trading-design）
 - runtime/opportunities.py（纯逻辑）：§15 全状态转移（取消/否决优先于成立、同快照取消优先；READY 定价无效回 WAITING 标 SPACE_INSUFFICIENT、非反证；提交后取消只置 cancel_requested 走撤单确认）；§22 三计数分开（assessment 只计 revision 匹配的已接受评估、迟到只落审计；test_sequence 只由测试边界涨；unknown_streak 按条件计、API 错误不沾）；unknown 双政策（review_hold 停复核不关确定性取消、operational_expire 标运营终结不冒充策略拒绝，政策与上限必填无默认）；双 recheck 模式（new_evidence 相关变化即唤醒、leave_then_return 离开武装→返回才算新测试；模式是冻结属性，兜底新根唤醒不覆盖 leave_then_return 条件）；预算用尽标 deferred 不丢事实。
 - runtime/opportunity_store.py：文件存储迁移桥梁——进程锁独占（第二写者 StoreLocked）、状态+任务同一存储单元、tmp+fsync+os.replace 原子替换；任务按 request_key 唯一。只供研究/影子，真实执行等 PostgreSQL（§22.4 边界已写进模块）。

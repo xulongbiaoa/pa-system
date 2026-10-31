@@ -13,7 +13,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "eval"))
 
-from gate.risk_rules import adjudicate  # noqa: E402
+from judge.service import DecisionRequest, assess_candidate  # noqa: E402
 from gate.flags import build_flags  # noqa: E402
 from judge.prompt_builder import build_prompt  # noqa: E402
 from judge.validate import validate_judgment  # noqa: E402
@@ -80,12 +80,12 @@ def main():
         # 不传 context 则 H6 恒不生效（原实现漏了这一步，2026-10-30 复核）。
         plan.update({"side": c["side"], "setup": c["setup"],
                      "context": pack["trend"]["label"]})
-        verdict = adjudicate(
-            plan, pack, bars_left=len(seg["bars"]) - decision,
-            feature_refs=c.get("feature_refs", []),
+        verdict = assess_candidate(DecisionRequest(
+            snapshot_id=seg.get("id", ""), candidate={"plan": plan},
+            feature_pack=pack, bars_left=len(seg["bars"]) - decision,
+            feature_refs=tuple(c.get("feature_refs", [])),
             flags=build_flags(plan, pack),
-            ledger=load_ledger(),
-        )
+            ledger=load_ledger())).gate
         print(json.dumps(verdict, ensure_ascii=False, indent=1))
     else:
         print("unknown command:", cmd)
