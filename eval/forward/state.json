@@ -1740,6 +1740,783 @@
      "watch": "等待价格重新到达P2并出现1-3根内收盘收回11.879下方加空头跟进，或新地图确认"
     }
    ]
+  },
+  "fw-BTCUSDT-15m-1792922400000": {
+   "event": "fw-BTCUSDT-15m-1792922400000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 455,
+   "decision_t": 1792922400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1792922400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 448,
+   "map_lag": 7,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 80245.75,
+     "hi": 80356.16,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 80392.6,
+     "hi": 80500.0,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-BTCUSDT-1h-1791464400000": {
+   "event": "fw-BTCUSDT-1h-1791464400000",
+   "symbol": "BTCUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 459,
+   "decision_t": 1791464400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-1h-1791464400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 447,
+   "map_lag": 12,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 81720.0,
+     "hi": 81720.0,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 45
+    },
+    {
+     "kind": "fortress",
+     "lo": 81914.01,
+     "hi": 81914.01,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 82506.01,
+     "hi": 82757.0,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-ETHUSDT-15m-1792648800000": {
+   "event": "fw-ETHUSDT-15m-1792648800000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 151,
+   "decision_t": 1792648800000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792648800000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 133,
+   "map_lag": 18,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2435.53,
+     "hi": 2440.98,
+     "anchors": 4
+    },
+    {
+     "kind": "fortress",
+     "lo": 2439.12,
+     "hi": 2446.31,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 2443.32,
+     "hi": 2452.93,
+     "anchors": 9
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-ETHUSDT-1h-1790449200000": {
+   "event": "fw-ETHUSDT-1h-1790449200000",
+   "symbol": "ETHUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 177,
+   "decision_t": 1790449200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1790449200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 147,
+   "map_lag": 30,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2687.98,
+     "hi": 2696.95,
+     "anchors": 13
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-SOLUSDT-15m-1792921500000": {
+   "event": "fw-SOLUSDT-15m-1792921500000",
+   "symbol": "SOLUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 454,
+   "decision_t": 1792921500000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1792921500000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 454,
+   "map_lag": 0,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 101.06,
+     "hi": 101.45,
+     "anchors": 7
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-SOLUSDT-1h-1790427600000": {
+   "event": "fw-SOLUSDT-1h-1790427600000",
+   "symbol": "SOLUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 171,
+   "decision_t": 1790427600000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1790427600000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 161,
+   "map_lag": 10,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 119.45,
+     "hi": 120.52,
+     "anchors": 6
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-DOGEUSDT-15m-1792920600000": {
+   "event": "fw-DOGEUSDT-15m-1792920600000",
+   "symbol": "DOGEUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 453,
+   "decision_t": 1792920600000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-15m-1792920600000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 447,
+   "map_lag": 6,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 0.07639,
+     "hi": 0.07662,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-DOGEUSDT-1h-1790373600000": {
+   "event": "fw-DOGEUSDT-1h-1790373600000",
+   "symbol": "DOGEUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 156,
+   "decision_t": 1790373600000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1790373600000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 141,
+   "map_lag": 15,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 0.09995,
+     "hi": 0.09995,
+     "trapped": "long",
+     "attempts": 0,
+     "opened_at": 99
+    },
+    {
+     "kind": "gap",
+     "lo": 0.09764,
+     "hi": 0.09764,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 155
+    },
+    {
+     "kind": "fortress",
+     "lo": 0.09622,
+     "hi": 0.09784,
+     "anchors": 7
+    },
+    {
+     "kind": "fortress",
+     "lo": 0.09784,
+     "hi": 0.09942,
+     "anchors": 6
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-15m-1792665900000": {
+   "event": "fw-XRPUSDT-15m-1792665900000",
+   "symbol": "XRPUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 170,
+   "decision_t": 1792665900000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1792665900000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 160,
+   "map_lag": 10,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 1.3234,
+     "hi": 1.3292,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-1h-1790395200000": {
+   "event": "fw-XRPUSDT-1h-1790395200000",
+   "symbol": "XRPUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 162,
+   "decision_t": 1790395200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1790395200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 141,
+   "map_lag": 21,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 1.5492,
+     "hi": 1.5492,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 155
+    },
+    {
+     "kind": "fortress",
+     "lo": 1.5647,
+     "hi": 1.589,
+     "anchors": 6
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-LINKUSDT-15m-1792663200000": {
+   "event": "fw-LINKUSDT-15m-1792663200000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 167,
+   "decision_t": 1792663200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792663200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 147,
+   "map_lag": 20,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 12.095,
+     "hi": 12.167,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-LINKUSDT-1h-1790452800000": {
+   "event": "fw-LINKUSDT-1h-1790452800000",
+   "symbol": "LINKUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 178,
+   "decision_t": 1790452800000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-1h-1790452800000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 142,
+   "map_lag": 36,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 14.17,
+     "hi": 14.17,
+     "trapped": "long",
+     "attempts": 0,
+     "opened_at": 177
+    },
+    {
+     "kind": "fortress",
+     "lo": 13.731,
+     "hi": 13.84,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-BTCUSDT-15m-1793129400000": {
+   "event": "fw-BTCUSDT-15m-1793129400000",
+   "symbol": "BTCUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 685,
+   "decision_t": 1793129400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-BTCUSDT-15m-1793129400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": null,
+   "trigger_missing": true
+  },
+  "fw-ETHUSDT-15m-1792922400000": {
+   "event": "fw-ETHUSDT-15m-1792922400000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 455,
+   "decision_t": 1792922400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1792922400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 447,
+   "map_lag": 8,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2333.08,
+     "hi": 2339.62,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-ETHUSDT-1h-1792231200000": {
+   "event": "fw-ETHUSDT-1h-1792231200000",
+   "symbol": "ETHUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 672,
+   "decision_t": 1792231200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1792231200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 660,
+   "map_lag": 12,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2425.23,
+     "hi": 2433.27,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-SOLUSDT-15m-1793121300000": {
+   "event": "fw-SOLUSDT-15m-1793121300000",
+   "symbol": "SOLUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 676,
+   "decision_t": 1793121300000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-15m-1793121300000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": null,
+   "trigger_missing": true
+  },
+  "fw-SOLUSDT-1h-1792238400000": {
+   "event": "fw-SOLUSDT-1h-1792238400000",
+   "symbol": "SOLUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 674,
+   "decision_t": 1792238400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1792238400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 653,
+   "map_lag": 21,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 103.28,
+     "hi": 103.88,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 104.77,
+     "hi": 105.15,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-DOGEUSDT-1h-1792238400000": {
+   "event": "fw-DOGEUSDT-1h-1792238400000",
+   "symbol": "DOGEUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 674,
+   "decision_t": 1792238400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1792238400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 653,
+   "map_lag": 21,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 0.08037,
+     "hi": 0.08037,
+     "trapped": "long",
+     "attempts": 0,
+     "opened_at": 673
+    },
+    {
+     "kind": "fortress",
+     "lo": 0.07977,
+     "hi": 0.08023,
+     "anchors": 5
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-15m-1792926000000": {
+   "event": "fw-XRPUSDT-15m-1792926000000",
+   "symbol": "XRPUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 459,
+   "decision_t": 1792926000000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1792926000000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 437,
+   "map_lag": 22,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 1.2941,
+     "hi": 1.3009,
+     "anchors": 7
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-1h-1791511200000": {
+   "event": "fw-XRPUSDT-1h-1791511200000",
+   "symbol": "XRPUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 472,
+   "decision_t": 1791511200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1791511200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 465,
+   "map_lag": 7,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 1.3829,
+     "hi": 1.3976,
+     "anchors": 5
+    },
+    {
+     "kind": "fortress",
+     "lo": 1.3958,
+     "hi": 1.4143,
+     "anchors": 6
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-LINKUSDT-15m-1792930500000": {
+   "event": "fw-LINKUSDT-15m-1792930500000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 464,
+   "decision_t": 1792930500000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1792930500000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 441,
+   "map_lag": 23,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 11.317,
+     "hi": 11.358,
+     "anchors": 3
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-LINKUSDT-1h-1792328400000": {
+   "event": "fw-LINKUSDT-1h-1792328400000",
+   "symbol": "LINKUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 699,
+   "decision_t": 1792328400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-1h-1792328400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 673,
+   "map_lag": 26,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 12.03,
+     "hi": 12.03,
+     "trapped": "long",
+     "attempts": 0,
+     "opened_at": 698
+    },
+    {
+     "kind": "fortress",
+     "lo": 11.856,
+     "hi": 11.856,
+     "anchors": 4
+    },
+    {
+     "kind": "fortress",
+     "lo": 12.005,
+     "hi": 12.149,
+     "anchors": 9
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-ETHUSDT-15m-1793140200000": {
+   "event": "fw-ETHUSDT-15m-1793140200000",
+   "symbol": "ETHUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 697,
+   "decision_t": 1793140200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-15m-1793140200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 666,
+   "map_lag": 31,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2337.76,
+     "hi": 2347.0,
+     "anchors": 11
+    },
+    {
+     "kind": "fortress",
+     "lo": 2346.21,
+     "hi": 2353.45,
+     "anchors": 8
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-ETHUSDT-1h-1792321200000": {
+   "event": "fw-ETHUSDT-1h-1792321200000",
+   "symbol": "ETHUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 697,
+   "decision_t": 1792321200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-ETHUSDT-1h-1792321200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 675,
+   "map_lag": 22,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 2402.82,
+     "hi": 2416.14,
+     "anchors": 6
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-SOLUSDT-1h-1792328400000": {
+   "event": "fw-SOLUSDT-1h-1792328400000",
+   "symbol": "SOLUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 699,
+   "decision_t": 1792328400000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-SOLUSDT-1h-1792328400000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 674,
+   "map_lag": 25,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 102.3,
+     "hi": 102.3,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 683
+    },
+    {
+     "kind": "fortress",
+     "lo": 102.96,
+     "hi": 103.33,
+     "anchors": 4
+    },
+    {
+     "kind": "fortress",
+     "lo": 103.19,
+     "hi": 104.11,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-DOGEUSDT-1h-1792314000000": {
+   "event": "fw-DOGEUSDT-1h-1792314000000",
+   "symbol": "DOGEUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 695,
+   "decision_t": 1792314000000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-DOGEUSDT-1h-1792314000000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 653,
+   "map_lag": 42,
+   "levels": [
+    {
+     "kind": "gap",
+     "lo": 0.079,
+     "hi": 0.079,
+     "trapped": "short",
+     "attempts": 0,
+     "opened_at": 694
+    },
+    {
+     "kind": "fortress",
+     "lo": 0.07928,
+     "hi": 0.07968,
+     "anchors": 3
+    },
+    {
+     "kind": "fortress",
+     "lo": 0.07968,
+     "hi": 0.08048,
+     "anchors": 9
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-15m-1793136600000": {
+   "event": "fw-XRPUSDT-15m-1793136600000",
+   "symbol": "XRPUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 693,
+   "decision_t": 1793136600000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-15m-1793136600000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": null,
+   "trigger_missing": true
+  },
+  "fw-XRPUSDT-1h-1792231200000": {
+   "event": "fw-XRPUSDT-1h-1792231200000",
+   "symbol": "XRPUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 672,
+   "decision_t": 1792231200000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1792231200000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 659,
+   "map_lag": 13,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 1.3101,
+     "hi": 1.3139,
+     "anchors": 4
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-LINKUSDT-15m-1793125800000": {
+   "event": "fw-LINKUSDT-15m-1793125800000",
+   "symbol": "LINKUSDT",
+   "interval": "15m",
+   "kind": "fortress",
+   "bar": 681,
+   "decision_t": 1793125800000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-LINKUSDT-15m-1793125800000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 668,
+   "map_lag": 13,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 11.495,
+     "hi": 11.565,
+     "anchors": 12
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
+  },
+  "fw-XRPUSDT-1h-1792314000000": {
+   "event": "fw-XRPUSDT-1h-1792314000000",
+   "symbol": "XRPUSDT",
+   "interval": "1h",
+   "kind": "fortress",
+   "bar": 695,
+   "decision_t": 1792314000000,
+   "snapshot": "/home/hatch/workspace/pa-system/eval/forward/events/fw-XRPUSDT-1h-1792314000000.json",
+   "gap_price": null,
+   "attempts": null,
+   "map_bar": 653,
+   "map_lag": 42,
+   "levels": [
+    {
+     "kind": "fortress",
+     "lo": 1.2879,
+     "hi": 1.2976,
+     "anchors": 5
+    },
+    {
+     "kind": "fortress",
+     "lo": 1.2998,
+     "hi": 1.309,
+     "anchors": 7
+    }
+   ],
+   "trigger_fallback": "last_outside_run"
   }
  },
  "tracked": {},

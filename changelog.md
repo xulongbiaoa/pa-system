@@ -1,3 +1,7 @@
+## 2026-10-31 对齐条款：点位命中率 45% → 80%
+- 用户拍板给 MAP 任务加对齐条款：附件要塞带/缺口锚必须纳入点位或写 rejected_anchors 给理由；战役腿 MM 投影必报（无从投影须在 uncertainty 说明）；决胜点来源口径由「只许已存在结构」改为「结构 + 投影」两类，点数上限 5 → 7。改 judge/campaign_prompt.py 一处，实验臂与影子共用。
+- evmap 20 事件同触发根只重画地图：命中率 maps 20% → maps-evmap 45% → maps-evmap2 80%（16/20）；rejected_anchors 20/20 使用、投影合规 20/20（18 画出 + 2 合法豁免）；裁决 eval/reports/evmap2-alignment-verdict-2026-10-31.md。
+- 同日用户指令删除 pa-forward-shadow cron：影子改按需批量制（长窗拉数、全窗挖事件、全流程判读、当场解析生命周期），批量扫盘轮同日启动（上限 60 事件）。
 # 变更日志 changelog.md（不进 AI 上下文；记录版本史与被取消的规则及原因）
 
 ## 2026-10-31 · 第三臂（AUTO+地图附件）裁决：拦截与纪律满分，产量塌方
