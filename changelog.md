@@ -1,3 +1,8 @@
+## 2026-10-31 验证批定稿（分支 codex/gap-trading-design）：考试复考 + 影子新批 + due 桥首消费
+- 错误空仓卷复考（语料冻结、现行提示重判）：漏检 0/8、陷阱误放 0/8、纯加码空仓 0 均持平；片段误放 3/8（v1 为 2/8，X16/X23 在第二点位/第二读法上认定 B3 收回成立而误放）为唯一恶化轴，先记观察不立规；X15 争议题本轮经方向规则拦截+复核改判落空。
+- 影子新批：判读 16、候选 2（均 B3 多限价）、violation 1、tracked 1 解析 −1.0888R；累计 tracked 3、sum_r −2.3155。B3 多头限价跨实验已解析 5 笔全亏，维持待证伪。
+- due 桥首消费：dispatch 全量 110 个 due 建机会+任务；最早 24 个按冻结条件集在 due 根重判：still_missing 21（多为价格未真正走到冻结位置、回 open 续等）/ ready 2（只登记不回放）/ invalidated 1；剩余 due 88。due 非终态闭环实证跑通。
+- anatomy 增量（85→101 份）：本批 92 条新 missing 依据引用率 100%（extra 仅 1）、纯加码空仓 0；候选 2→4、gate 累计拒影子候选仍 0——问责侧兑现、产量侧未改善，不宣称绩效变好。报告 eval/reports/verification-batch-2026-10-31.md。
 ## 2026-10-31 T07 在线影子引擎组装落地（分支 codex/gap-trading-design；T05 PostgreSQL 按用户指令暂缓）
 - runtime/levels.py：三类位置来源统一成 WatchLevel——地图点（source=model）、要塞带与缺口锚（source=machine，细类看 FORT/GAP 前缀）；缺口锚原始带=锚线本身、观察带 ±0.25×段均幅（观察窗非执法带）。
 - runtime/shadow_engine.py：逐根已收盘 K 线驱动全链——事件器 detect+advance 出事实事件 → 绑定机会 note_bar 双模式记账（绑定位置出新事实事件亦作新证据唤醒）→ 唤醒登记唯一 rejudge 任务 → 注入的评估器消费任务、apply_assessment 推进状态 → READY 带计划走统一决策服务 → eligible 模拟订单链走完并登记 tracked 持仓（沿用现行「登记—后解析」口径，不另造成交语义）；rejected 机会以 GATE_REJECTED 终结。全程审计链（level_event/wake/assessment/decision/position_opened，带 bar_t 与 revision，可选 JSONL 落盘）。

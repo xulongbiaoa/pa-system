@@ -5,3 +5,5 @@
 {"eid": "fw-SOLUSDT-15m-1793120400000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793120400000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
 {"eid": "fw-SOLUSDT-15m-1793146500000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793146500000, "reason": "legacy_trigger_missing_removed_2026-10-31"}
 {"eid": "fw-SOLUSDT-15m-1793122200000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793122200000, "reason": "precheck_trigger_missing_full_snapshot"}
+{"eid": "fw-SOLUSDT-15m-1793135700000", "symbol": "SOLUSDT", "interval": "15m", "decision_t": 1793135700000, "reason": "precheck_trigger_missing_full_snapshot"}
+{"eid": "fw-XRPUSDT-15m-1793160900000", "symbol": "XRPUSDT", "interval": "15m", "decision_t": 1793160900000, "reason": "precheck_trigger_missing_full_snapshot"}

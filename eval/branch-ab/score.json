@@ -1,31 +1,19 @@
 {
  "population": 55,
  "judged": 55,
- "format_errors": 0,
- "candidates": 8,
- "qualified": 8,
+ "format_errors": 1,
+ "candidates": 7,
+ "qualified": 7,
  "qualified_by_setup": {
-  "A2": 1,
   "B3": 7
  },
  "violations": [],
  "gate_reject": {
   "H2": 3
  },
- "tracked": 5,
+ "tracked": 4,
  "unresolved": 1,
  "trades": [
-  {
-   "event": "fw-BTCUSDT-15m-1793403000000",
-   "setup": "A2",
-   "side": "long",
-   "entry": 77384.02,
-   "order_type": "market",
-   "outcome": "traded",
-   "r": -0.1628847370162884,
-   "exit_reason": "scale:window_end,window_end,window_end",
-   "exit_bar": 23
-  },
   {
    "event": "fw-LINKUSDT-15m-1793373300000",
    "setup": "B3",
@@ -64,16 +52,16 @@
   44,
   55
  ],
- "resolved_events": 4,
- "sum_r": 0.8333,
- "per_opportunity_r": 0.2083,
+ "resolved_events": 3,
+ "sum_r": 0.9962,
+ "per_opportunity_r": 0.3321,
  "trigger_stats_old": {
   "branches": 350,
   "req_counts": {
-   "不创新极值": 51,
-   "腿数结构": 86,
-   "收盘越界": 298,
    "成色门槛": 110,
+   "不创新极值": 51,
+   "收盘越界": 298,
+   "腿数结构": 86,
    "跟进确认": 220,
    "区间触及": 2
   },
@@ -89,8 +77,8 @@
  "trigger_stats_new": {
   "branches": 451,
   "req_counts": {
-   "收盘越界": 451,
    "成色门槛": 134,
+   "收盘越界": 451,
    "区间触及": 275,
    "腿数结构": 11,
    "不创新极值": 1,

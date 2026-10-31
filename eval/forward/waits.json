@@ -2965,13 +2965,10 @@
    "决策根不在P3区间容差内"
   ],
   "watch": "P3 2652.32：等下破2652.32后1-3根内收盘收回2652.32上方且有阳线跟进",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790449200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790456400000,
-   "close": 2686.31
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3368,13 +3365,10 @@
    "无当期1-3根内收盘收回1.5755下方加空头跟进K的翻面触发，此前上冲的回收窗口已过期"
   ],
   "watch": "等价格上冲进P5（point_id=P5）1.5755-1.599带后，1-3根内收盘收回1.5755下方并出现空头跟进K",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790395200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790434800000,
-   "close": 1.5525
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3406,13 +3400,10 @@
    "无突破后多头跟进K"
   ],
   "watch": "等价格强实体收盘站上1.599并有跟进K，赴P6 MM投影1.6327（point_id=P5）",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790395200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790434800000,
-   "close": 1.5525
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3444,13 +3435,10 @@
    "无回补缺口锚1.4791未遂后的反向强多头信号K"
   ],
   "watch": "等价格回落进P2（point_id=P2）带、回补缺口锚1.4791未遂并出现强多头信号K收回带上半部",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790395200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790434800000,
-   "close": 1.5525
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3478,13 +3466,10 @@
    "P3处无阴线实体收盘触发"
   ],
   "watch": "等价格反弹进入P3 12.25-12.474后走出第二腿且阴线实体收盘、不创反弹新高",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792663200000,
   "last_checked_t": 1793425500000,
-  "due": {
-   "t": 1792667700000,
-   "close": 12.091
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3615,13 +3600,10 @@
    "带内强多信号K并收在带上沿上方未出现，决策根为阴线"
   ],
   "watch": "等价格回踩P2 13.391-13.499带后出现强多信号K并收在带上沿上方",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790452800000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790463600000,
-   "close": 14.146
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3653,13 +3635,10 @@
    "收盘重新收回13.29下方且反向跟进确认未出现"
   ],
   "watch": "等收盘重新收回P3 13.29下方且出现反向跟进确认突破失败",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790452800000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790463600000,
-   "close": 14.146
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3691,13 +3670,10 @@
    "深度回落至12.297-12.447缺口锚区后二次回补未遂并反向跟进未出现"
   ],
   "watch": "等深度回落至P5 12.297-12.447缺口锚区后二次回补未遂并反向跟进",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790452800000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790463600000,
-   "close": 14.146
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3857,13 +3833,10 @@
    "决策根无盘中跌破2397.73后收回收回并出现阳线反向跟进的触发"
   ],
   "watch": "价格回测P1 2397.73-2418.88，盘中跌破2397.73后收盘收回其上方并出现阳线反向跟进",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792231200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792238400000,
-   "close": 2426.96
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3890,13 +3863,10 @@
    "无阴线跟进确认支撑失守"
   ],
   "watch": "收盘有效跌破2397.73并有阴线跟进确认支撑失守",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792231200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792238400000,
-   "close": 2426.96
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3923,13 +3893,10 @@
    "未在P4内出现衰竭后阴信号K收盘跌回2465.12下方"
   ],
   "watch": "反弹进入P4 2465.12-2535.73后衰竭，阴信号K收盘跌回2465.12下方",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792231200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792238400000,
-   "close": 2426.96
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3961,13 +3928,10 @@
    "尚无跌破后的阴线跟进确认支撑失守"
   ],
   "watch": "等价格收盘跌破P1下沿103.00并出现阴线跟进，point_id=P1",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792238400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792249200000,
-   "close": 103.62
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -3999,13 +3963,10 @@
    "无阳线跟进，下破失败翻面未确认"
   ],
   "watch": "等下探P1后收盘收回104.11上方且出现阳线跟进，point_id=P1",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792238400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792249200000,
-   "close": 103.62
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4037,13 +3998,10 @@
    "R3到达行为未发生：无第二次止跌/回补未遂后强阳收回102.11上方"
   ],
   "watch": "等价格到达P2后出现第二次止跌或回补未遂，并有强阳收回102.11上方，point_id=P2",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792238400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792249200000,
-   "close": 103.62
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4075,13 +4033,10 @@
    "反弹回吐深度比0.5953逾50%，按A2卡降级观察；且当前位置在P1支撑带内不许追空"
   ],
   "watch": "等后续反弹真正到达P4后出现合格阴信号K且不收复107.86，point_id=P4",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792238400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792249200000,
-   "close": 103.62
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4259,13 +4214,10 @@
    "无到达1.3119后跌势失败、收盘收回其上并反向跟进强阳线的触发"
   ],
   "watch": "等价格到达P1点1.3119附近后跌势失败、收盘收回其上并出现反向跟进强阳线",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1791511200000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1791741600000,
-   "close": 1.409
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4679,13 +4631,10 @@
    "反弹第二腿未成立（附件pullback legs=1、two_legs=false），阴线实体收盘触发未出现"
   ],
   "watch": "等反弹进入P1、冲高不创新高后出现阴线实体收盘且收在105.09下方",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792328400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792342800000,
-   "close": 102.14
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4722,13 +4671,10 @@
    "破位后下一根跟进K继续收低的确认未出现"
   ],
   "watch": "等收盘跌破102.75且下一根跟进K继续收低确认破位",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792328400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792342800000,
-   "close": 102.14
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -4765,14 +4711,16 @@
    "决策收盘102.96距P4点位102.75为0.21，超出±0.25×段均幅0.546即±0.14的容差，按地图纪律只许pending不许qualified"
   ],
   "watch": "等回收窗口1至3根内出现阳线跟进且收盘守住102.75上方",
-  "status": "due",
+  "status": "cancelled",
   "registered_decision_t": 1792328400000,
   "last_checked_t": 1793422800000,
   "due": {
    "t": 1792342800000,
    "close": 102.14
   },
-  "closed": null,
+  "closed": {
+   "proxy": "rejudge_invalidated"
+  },
   "history": [
    {
     "scan_t": 1793422800000,
@@ -4808,13 +4756,10 @@
    "101.37一带缺口回补未遂与反向阳线跟进均未出现，R3到达行为缺失"
   ],
   "watch": "等价格到达101.03一带、回补未遂后出现反向阳线跟进并收盘回到101.37上方",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1792328400000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1792342800000,
-   "close": 102.14
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -5554,12 +5499,16 @@
   "watch": "等价格在 P4 2240.0-2257.88 内滞涨并出现合格空方信号 K 收回带下沿之下、伴衰竭与反向跟进时再审 B2 空，point_id=P4",
   "status": "open",
   "registered_decision_t": 1793379600000,
-  "last_checked_t": 1793425500000,
+  "last_checked_t": 1793431800000,
   "due": null,
   "closed": null,
   "history": [
    {
     "scan_t": 1793425500000,
+    "result": null
+   },
+   {
+    "scan_t": 1793431800000,
     "result": null
    }
   ]
@@ -5589,12 +5538,16 @@
   "watch": "等价格下探 P2 2209.34 附近或 P1 2190.19-2206.03 带内，刺破后收回带内并出现多方跟进时再审 B3 多，point_id=P2/P1",
   "status": "open",
   "registered_decision_t": 1793379600000,
-  "last_checked_t": 1793425500000,
+  "last_checked_t": 1793431800000,
   "due": null,
   "closed": null,
   "history": [
    {
     "scan_t": 1793425500000,
+    "result": null
+   },
+   {
+    "scan_t": 1793431800000,
     "result": null
    }
   ]
@@ -5624,12 +5577,16 @@
   "watch": "等价格到达 P5 2295.88-2323.75 或 P6 2337.1-2354.06 缺口要塞区并出现明确到达行为时再审 G1",
   "status": "open",
   "registered_decision_t": 1793379600000,
-  "last_checked_t": 1793425500000,
+  "last_checked_t": 1793431800000,
   "due": null,
   "closed": null,
   "history": [
    {
     "scan_t": 1793425500000,
+    "result": null
+   },
+   {
+    "scan_t": 1793431800000,
     "result": null
    }
   ]
@@ -6060,13 +6017,10 @@
    "尚无跌破83604.26后1-3根内收盘收回84038.00上方并出现多头跟进K"
   ],
   "watch": "等价格回探P2决胜点83604.26-84038.00并出现下破失败后收回84038.00上方",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790463600000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790470800000,
-   "close": 84495.01
-  },
+  "due": null,
   "closed": null,
   "history": [
    {
@@ -6093,13 +6047,10 @@
    "尚无下一根跟进K收在高位且未收回带内"
   ],
   "watch": "等收盘强势突破84870.00且下一根跟进K收在高位、未收回P1带内",
-  "status": "due",
+  "status": "open",
   "registered_decision_t": 1790463600000,
   "last_checked_t": 1793422800000,
-  "due": {
-   "t": 1790470800000,
-   "close": 84495.01
-  },
+  "due": null,
   "closed": null,
   "history": [
    {

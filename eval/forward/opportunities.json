@@ -1,0 +1,6569 @@
+{
+ "opportunities": {
+  "fw-BTCUSDT-15m-1793393100000::B3": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P3：决策根收盘76938.01不在P3带77252.14-77436.43±66.54测试区77185.60-77502.97内，只许pending不许qualified"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格已在P3带下方，决策根不在带内，无跌入带后1-3根内收盘收回77436.43上方并阳线跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793393100000::B1": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P4：决策根收盘76938.01不在P4测试区76583.48-76716.56内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘在76650.02上方，未出现强阴实体收盘跌破76650.02且续创新低的跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793393100000::A2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P1：决策根收盘76938.01远离P1带78185.38-78577.31±66.54测试区，未到达决胜点"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无反弹第二腿到达P1/P2后不再创新高并以阴实体收盘收回带下的触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-1h-1793239200000::B3": {
+   "opportunity_id": "fw-BTCUSDT-1h-1793239200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘79964.0不在P2带81558.01-81621.17±78.01内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无冲破81621.17后1-3根内收盘收回81621.17下方的失败触发"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无阴线反向跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-1h-1793383200000::B1": {
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收盘强势跌破76650.02未发生：决策根盘中低76325.98后收76661.13仍在其上"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破后下一根跟进阴线且不收回该位上方未发生"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-1h-1793383200000::B3": {
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破后1-3根内阳线反向跟进未出现：决策根为阴实体收盘76661.13"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "仅盘中刺破后收回其上，无阳线反向跟进确认"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-1h-1793383200000::A2": {
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘76661.13不在P2的78554.01-79033.28带±162.30容差内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹第二腿转弱触发未出现，附件回调仅1腿、two_legs为false"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793363400000::B2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P1未在决策根测试区内：决策根收盘2230.55不在P1 2248.16-2257.88 ±2.33（0.25×段均幅9.3095）内，价格已离开P1进入赶路区，不许追空"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根处无P1带下沿下方新收的阴线信号K可作当下触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793363400000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P4未到达：决策根收盘2230.55不在P4 2298.42-2314.63 ±2.33内，且H2收复P1的接管条件未发生"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无到达P4后冲高收回该带内并向下跟进的翻面触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793363400000::A1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P3未到达：决策根收盘2230.55不在P3 2190.19-2200.0 ±2.33内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无收盘跌破2190.19并向下跟进的强阴线触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793389500000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793389500000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2240.32不在P2点2190.19±2.89内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未发生盘中跌破2190.19后1至3根内收盘收回2190.19上方并出现多头跟进的突破失败触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-15m-1793390400000::A2": {
+   "opportunity_id": "fw-SOLUSDT-15m-1793390400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P3 [96.07,96.78]要塞带"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无回补缺口未遂后的阴线实体收盘与反向跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-15m-1793390400000::B2": {
+   "opportunity_id": "fw-SOLUSDT-15m-1793390400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未收盘跌破93.7"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无跌破后回踩94.06下沿不能收回的第二腿回踩形态"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1793365200000::B2": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1793365200000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘0.07568不在P3 [0.07742,0.07742]±0.25×段均幅0.0003425（即±0.000086）内，未到达决胜点"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无P3回测失败、收盘收回0.07742下方并有跟进阴线的触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1793365200000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1793365200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘0.07568不在P4 [0.08054,0.0809]±0.25×段均幅0.0003425（即±0.000086）内，未到达决胜点"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无上冲P4后1-3根内收盘收回0.08054下方并出现反向跟进的触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1793385900000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1793385900000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘0.07488不在P2点0.0722±0.25×段均幅0.000395（容差约0.000099）内，尚未到达该支撑"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回测0.0722时下破未遂、收盘收回0.0722之上的触发未发生"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-1h-1793318400000::B1": {
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P1：决策根收盘0.07435不在P1 [0.07478, 0.07569] ±0.25×段均幅0.00100内（扩展区间[0.07453, 0.07594]），收盘已在扩展下限下方，只许pending不许qualified"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收盘跌破0.07478后的跟进阴线尚未确认：决策根为首根收破K，振幅0.00328、body_pct 0.2774、CLV 0.311且带长下影至0.0722，非干净阴实体跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-1h-1793318400000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P1：决策根收盘0.07435不在P1扩展区间[0.07453, 0.07594]内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根未在跌入P1后1-3根内收盘收回0.07569上方，决策根为阴线且收破0.07478，无阳线跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-1h-1793318400000::B2": {
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P2：反弹未到达P2 [0.07727, 0.07946]测试区，决策根收盘0.07435远在P2下方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩P2带下沿后第二腿形态与阴实体收在0.07727下方均未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-1h-1793318400000::A2": {
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "point_id=P3：反弹第二腿未到达P3 [0.08065, 0.08089]测试区，决策根收盘0.07435远在P3下方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P3处阴实体收盘信号K未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1793370600000::B3": {
+   "opportunity_id": "fw-XRPUSDT-15m-1793370600000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘 1.2429 不在 P2 [1.283,1.2868] ±0.0018 内，价格未到达 P2、未回补敞开缺口 1.283"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回补后 1-3 根内收回 1.283 下方并有反向跟进阴线的触发未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1793370600000::B2": {
+   "opportunity_id": "fw-XRPUSDT-15m-1793370600000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘 1.2429 不在 P1 [1.2709,1.2752] ±0.0018 内，价格未到达 P1 测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "带内第二腿衰竭与合格空头信号 K（顺向阴实体收盘、收在带内下方）未出现；附件 pullback legs=1、two_legs=false，第二腿未走出"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793363400000::B2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘11.067不在P3区间11.199-11.457±0.25×段均幅0.07085内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P3要塞内衰竭与强空信号K及第二次入场未在决策根确认"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793363400000::B3": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未越过11.457"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "越过后1-3根内收盘收回要塞内并反向跟进未发生"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793363400000::B1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘11.067不在P2区间10.613-10.639±0.25×段均幅0.07085内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩P2止跌与强多信号K未发生"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793372400000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2252.19不在P2带2190.19-2205.38的±0.25×段均幅区间[2187.28,2208.29]内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "下探后收盘收回2205.38上方并出现买方跟进K缺失"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793372400000::A2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2252.19不在P2到达区间内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "强实体K收盘跌破2190.19及空头跟进缺失"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793372400000::G1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2252.19不在P3带2298.42-2319.73的±0.25×段均幅区间[2295.51,2322.64]内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "缺口锚2298.0一带回补未遂、收盘转弱及空头跟进等R3到达行为缺失"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793400300000::B2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未回落至P4"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无收盘有效跌破2204.57并带跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793400300000::A1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无强实体收盘突破2257.88"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无突破后跟进守住带外"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793400300000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未测试P2"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无跌破2190.19后1-3根内收回收回2200.0之上并多头跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793400300000::A2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无收盘有效跌破2190.19"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无跟进阴线扩展"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1793400300000::G1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未回补进入P3叠加带"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无到达后明显受阻或强空信号K"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未成立"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1793370600000::B2": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1793370600000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未到达P2要塞带0.07595-0.07792，决策根收盘0.07561距带下沿超出0.25倍段均幅容差"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无空头信号K且无反弹跟进失败"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1793370600000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1793370600000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未复测P4极值支撑0.0722"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无收盘收回0.0722上方并多头跟进的向下突破失败"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793373300000::B2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘11.159不在P4区间11.199-11.485±0.25×段均幅0.0887即±0.0222内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚未在P4带内形成确认的LH与收盘落在带内的合格空头信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793373300000::A1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无强实体收盘突破11.485"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无突破后跟进与回踩不破带上沿"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793373300000::B3": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未进入11.556-11.698缺口区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无回补未遂后1-3根内收盘跌回11.556下方并反向跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793373300000::C1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::C1",
+   "setup": "C1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未二次回踩10.273"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无抬高的低点与合格牛头信号K"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "MTR三件套未齐"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1792922400000::A1": {
+   "opportunity_id": "fw-BTCUSDT-15m-1792922400000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P2分支触发未齐：下跌第二腿虽在80175.75一带止跌并连出阳K，但信号K未收回80430.45上方，决策收盘80400.27、最高80418.68均在其下"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "位置不合规则1：决策收盘80400.27距P2点位80175.75达224.52，不在该点±0.25×段均幅104.93（约26.23）内，只许挂起不许qualified"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1792922400000::A2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1792922400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P4未到达：决策收盘80400.27未进入P4阻力带80488.65-80776.43，且不在该带±0.25×段均幅内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "带内无受阻阴实体信号K，决策根为阳K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-1h-1790449200000::B3": {
+   "opportunity_id": "fw-ETHUSDT-1h-1790449200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未发生下破2652.32事件，无1-3根内收回收回的翻面窗口"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根不在P3区间容差内"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-ETHUSDT-1h-1790449200000::G1": {
+   "opportunity_id": "fw-ETHUSDT-1h-1790449200000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "READY",
+   "revision": 1,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根不在P3区间内：收盘2684.64距P3上沿2672.04为12.60，超出±1.49容差"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未成立：敞开缺口2652.32的attempts为0，区内无回补未遂后阳线跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "READY",
+     "state": "READY",
+     "revision": 1
+    }
+   ]
+  },
+  "fw-SOLUSDT-15m-1792921500000::B2": {
+   "opportunity_id": "fw-SOLUSDT-15m-1792921500000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘100.9不在P1决胜点101.06-101.45的±0.25×段均幅(0.077)范围内，位于P1下方赶路区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未出现反弹进入P1后合格空头信号K并跌破其低点"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-15m-1792921500000::B3": {
+   "opportunity_id": "fw-SOLUSDT-15m-1792921500000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘100.9不在P4决胜点100.40的±0.25×段均幅(0.077)范围内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "到达100.40仅为单次盘中下探(最低100.37)，无第二次下探失败并收回100.51上方的完整触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792920600000::B2": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792920600000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回抽尚未进入P3带0.07646-0.07660的测试区（决策根收盘0.07635在该带下沿减0.25×段均幅0.000278所得0.07639之下）"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回抽未走出第二腿形态（附件pullback腿数=1）"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无顺向阴实体收盘的信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792920600000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792920600000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格尚未到达P1点0.07478的测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无下破后1-3根内收盘收回该位之上的触发"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无多头跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-1h-1790395200000::B3": {
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘1.5568不在P5测试区内（P5为1.5755-1.599，扩展下界约1.5718）"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无当期1-3根内收盘收回1.5755下方加空头跟进K的翻面触发，此前上冲的回收窗口已过期"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-XRPUSDT-1h-1790395200000::A1": {
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无强实体收盘突破P5上沿1.599"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无突破后多头跟进K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-XRPUSDT-1h-1790395200000::G1": {
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未回落进P2 1.4744-1.4956带"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无回补缺口锚1.4791未遂后的反向强多头信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-15m-1792663200000::A2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹未到达P3决胜点12.25-12.474，现价12.081远在P3下方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹仅一腿，未走出第二腿（附件pullback legs=1、two_legs=false，图读亦只见自11.995起两根阳线的一腿反弹）"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P3处无阴线实体收盘触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2",
+      "m3"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-15m-1792663200000::B2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未反弹回踩P4翻面位12.474-12.508"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩未走出第二腿形态，无顺向阴线实体收盘触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1792663200000::B3": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P1跌破后1-3根窗口内未收盘收回12.221上方，窗口已走满、翻面不成立"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P2目标位11.84尚未到达，无到达后跌破失败并收回该位上方的行为"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1792663200000::G1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘12.081不在P1带12.112-12.221±0.0135容差内（容差下限约12.099），落点不在测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "敞开缺口回补未遂次数为0，无第二次回补未遂或到达后顺势强信号K等到达行为"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-1h-1790452800000::B2": {
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P2位置未到达：决策收盘13.965不在P2 13.391-13.499±0.047内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "带内强多信号K并收在带上沿上方未出现，决策根为阴线"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-1h-1790452800000::B3": {
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P3位置未到达：决策收盘13.965不在P3 12.979-13.394±0.047内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收盘重新收回13.29下方且反向跟进确认未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-1h-1790452800000::G1": {
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P5位置未到达：决策收盘13.965不在P5 12.005-12.599±0.047内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "深度回落至12.297-12.447缺口锚区后二次回补未遂并反向跟进未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-ETHUSDT-15m-1792922400000::B2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩尚未到达被破位P1带2333.08-2338.45：决策根收盘2331.0在带下沿容差下界2331.68之外，属带外赶路区，按地图纪律不许qualified"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩第二腿弱势未出现：当前仅自2318.0低点起3根单腿反弹（附件pullback腿数1、未走第二腿），决策根为小阳线，无阴实体收盘信号"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "顺势下方目标P4的MM投影2317.55已被盘中低点2318.0基本到达，带外追空的序列空间已消耗"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792922400000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "到达行为已发生但入场点已离开：2318.0低点进入P4位2317.55容差带并收回2318.38上方、随后3根反弹跟进，但决策根收盘2331.0不在P4容差2316.15-2318.95内，距点约13.5点，按地图纪律不许qualified"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "现价追多止损须置于2316.81下方，向上首个结构位P1下沿2333.08仅约2点，目标序列空间不足"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792922400000::A2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未反弹进入P2带2346.83-2351.36（决策根收盘2331.0距带下沿逾15点），不在决胜点测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "第二腿衰竭与阴实体收盘信号未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792922400000::G1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R1账本方向不成立：敞开缺口全部套多头（trapped_short=0），无套空头敞开缺口供多头回补；空头方向属趋势延续而非缺口回补"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R2/R3未在决策根同时成立：决策根收盘不在任何预画决胜点容差带内"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-1h-1792231200000::B3": {
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2439.57不在P1区间2397.73-2418.88的±1.97内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根无盘中跌破2397.73后收回收回并出现阳线反向跟进的触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-ETHUSDT-1h-1792231200000::B2": {
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无收盘有效跌破2397.73"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无阴线跟进确认支撑失守"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-ETHUSDT-1h-1792231200000::A2": {
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘2439.57不在P4区间2465.12-2535.73的±1.97内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未在P4内出现衰竭后阴信号K收盘跌回2465.12下方"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792238400000::B2": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P1尚未收盘跌破103.00"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚无跌破后的阴线跟进确认支撑失守"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792238400000::B3": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根为强阴收于104.11下方，未收回P1上沿104.11上方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无阳线跟进，下破失败翻面未确认"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792238400000::G1": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P2（100.91-102.11），决策收盘103.94不在该点测试区内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未发生：无第二次止跌/回补未遂后强阳收回102.11上方"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792238400000::A2": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹高点105.28未到达P4（105.72-107.86）测试区，决策收盘不在P4范围内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹回吐深度比0.5953逾50%，按A2卡降级观察；且当前位置在P1支撑带内不许追空"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-XRPUSDT-1h-1791511200000::A2": {
+   "opportunity_id": "fw-XRPUSDT-1h-1791511200000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "READY",
+   "revision": 1,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹仅1腿、第二腿未成形"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘1.3921不在P4区间1.419-1.4387±0.0030测试区内"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无合格阴线信号K且未到达该阻力"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "READY",
+     "state": "READY",
+     "revision": 1
+    }
+   ]
+  },
+  "fw-XRPUSDT-1h-1791511200000::B3": {
+   "opportunity_id": "fw-XRPUSDT-1h-1791511200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P1点1.3119附近：本段最低1.3189、决策根收盘1.3921不在1.3119±0.0030内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无到达1.3119后跌势失败、收盘收回其上并反向跟进强阳线的触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-15m-1792930500000::B2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "强实体收盘跌破P1 11.324尚未发生(决策根收盘11.332仍在该位之上)"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破后下一根向下跟进尚未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1792930500000::B3": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根未跌入P1下方,无1-3根内收盘收回11.324之上的新近回收动作"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收回后的反向向上跟进尚未出现(决策根为强阴收在最低,方向与翻面相反)"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1792930500000::C1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::C1",
+   "setup": "C1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格尚未到达P2 11.206一带(决策根收盘11.332距该位0.126,超出容差)"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "两腿衰竭尝试与TBTL未齐备"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无强阳信号K收在点位顺势侧"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-1h-1792328400000::A2": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未回到P1决胜点104.77-105.67测试区，决策收盘102.96不在该点容差内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹第二腿未成立（附件pullback legs=1、two_legs=false），阴线实体收盘触发未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792328400000::B1": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘102.96未收破P4的102.75（仅盘中低点102.34刺破）"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "破位后下一根跟进K继续收低的确认未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792328400000::B3": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "INVALIDATED",
+   "revision": 1,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根盘中跌破102.75后收盘收回102.75上方，但决策根本身为阴线实体（开104.06收102.96），无阳线跟进"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策收盘102.96距P4点位102.75为0.21，超出±0.25×段均幅0.546即±0.14的容差，按地图纪律只许pending不许qualified"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "REJUDGE_INVALIDATED",
+   "history": [
+    {
+     "kind": "INVALIDATED",
+     "state": "INVALIDATED",
+     "revision": 1,
+     "reason": "REJUDGE_INVALIDATED"
+    }
+   ]
+  },
+  "fw-SOLUSDT-1h-1792328400000::G1": {
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P5的MM投影101.03，决策根最低仅102.34"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "101.37一带缺口回补未遂与反向阳线跟进均未出现，R3到达行为缺失"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-LINKUSDT-15m-1793125800000::A2": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P2决胜点：决策根收盘11.488不在P2区间11.549-11.656±0.25×段均幅内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未出现反弹进入P2后的第二腿与顺向阴线实体收盘触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793125800000::B1": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P1决胜点：决策根收盘11.488不在P1区间11.233-11.345±0.25×段均幅内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未出现收盘跌破11.233且下一根顺向跟进阴线"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-LINKUSDT-15m-1793125800000::B3": {
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未出现跌破P1后1-3根内收盘收回11.345上方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未出现收回后的反向跟进阳线"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793383200000::A2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘77140.01不在P4决胜点78649.67-78884.52±65.33内，也不在P3区77991.89-78577.31±65.33内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹仅1腿，pullback.legs=1、two_legs=false，未走出第二腿"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根最后K实体占比0.2618，无顺向阴实体收盘触发且信号K成色不足"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793383200000::B2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未收盘跌破P1 76650.02"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无破位后回踩被破位走出的第二腿形态"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无回踩第二腿顺向阴实体收盘触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793383200000::B3": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未发生跌破76650.02后1-3根内收盘收回位内的失败裁定"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无反向多头跟进实体K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793383200000::G1": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "敞开缺口锚80472.61距决策价77140.01甚远，落点不在该锚±65.33内且无同址多锚叠加到达"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "缺口attempts=0，无回补未遂后反向跟进或到达后顺势强信号K等到达行为R3"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793403000000::B3": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793403000000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘77364.01不在P2区间76435.88-76970.35±57.83内，已离开回踩到达区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "当前不在假跌破76435.88后1-3根收回窗口内"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1793403000000::G1": {
+   "opportunity_id": "fw-BTCUSDT-15m-1793403000000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R2落点不在预画决胜点：敞开缺口锚80472.61距现价3108.60且上有P5、P6阻力在先"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未发生，缺口attempts=0"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "V3不在预画决胜点"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-1h-1790463600000::B3": {
+   "opportunity_id": "fw-BTCUSDT-1h-1790463600000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格不在P2测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚无跌破83604.26后1-3根内收盘收回84038.00上方并出现多头跟进K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-BTCUSDT-1h-1790463600000::A1": {
+   "opportunity_id": "fw-BTCUSDT-1h-1790463600000::A1",
+   "setup": "A1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚无收盘强势突破84870.00"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚无下一根跟进K收在高位且未收回带内"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 2,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": [
+    {
+     "kind": "ASSESSMENT",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "snapshot_id": null,
+     "n": 2
+    },
+    {
+     "kind": "WAITING",
+     "state": "WAITING_BEHAVIOR",
+     "revision": 0,
+     "open": [
+      "m1",
+      "m2"
+     ],
+     "veto_unknown": []
+    }
+   ]
+  },
+  "fw-XRPUSDT-15m-1792946700000::A2": {
+   "opportunity_id": "fw-XRPUSDT-15m-1792946700000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格尚未到达P5决胜点1.3116-1.3211，决策根收盘1.3075不在该点区间±0.25×段均幅内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P5处第二腿后顺向阴线实体收盘触发未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-15m-1792926000000::B3": {
+   "opportunity_id": "fw-SOLUSDT-15m-1792926000000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P4未到达:决策根收盘100.77不在P4(101.06-101.44)±0.25×段均幅(约±0.06)内,价格处于P4与P1之间的赶路区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P4触发未成立:未见反弹突破101.44后1-3根内收盘收回101.06下方并反向跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-SOLUSDT-15m-1792926000000::G1": {
+   "opportunity_id": "fw-SOLUSDT-15m-1792926000000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未成立:决策根不在任何缺口锚落点区内,最近缺口锚101.20位于P4带内、距收盘100.77约0.43,未见到达区内的回补未遂后反向跟进或顺势强信号K"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R2落点未被测试:价格尚未到达101.20与P4(101.06-101.44)叠加落点"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792926900000::B1": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根收盘0.07657不在P1 0.07681-0.07705±0.25×段均幅0.00023944的测试区内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回抽尚未到达P1下沿0.07681并在其下方失败，P1处无顺向阴信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792926900000::A2": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹仅一腿，未走出第二腿"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根不在P1测试区内"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根为小实体重叠K，非合格顺向阴实体信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792926900000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P2 0.07478"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破P2后1-3根内收回其上方并反向跟进未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792926000000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792926000000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚未到达P6点位2282.46测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "再探2282.46后1-3根内无法收盘跌破并出现多头跟进K未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792926000000::A2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792926000000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹未进入P3点位2346.83-2351.36测试区：决策收盘2328.27不在该带±1.39内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "合格顺向阴线信号K（实体收盘、无盘中反向新极值）未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792946700000::A2": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格尚未到达P5：决策收盘0.07752距P5下沿0.07785为0.00033，超过0.25×段均幅（0.000061）的点位对齐容差"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P5处阴实体信号K未出现"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792946700000::B1": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格不在P1对齐范围内：决策收盘0.07752远离P1带0.07606-0.07621"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收盘跌破0.07606且随后一根跟进创新低未发生"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-DOGEUSDT-15m-1792946700000::B3": {
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "当前不在P1落点对齐范围内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破P1后1-3根内收盘收回0.07621上方并出现反向跟进的当期窗口不存在：此前下探P1已在数十根前发生且价格已反弹至P4，窗口已过"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792945800000::A2": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "点位对齐不符：决策根收盘2343.86不在P4区间2352.63-2383.79±1.55内，距P4下沿8.77"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P1测试后的本轮反弹尚未重新进入P4，反弹第二腿未在P4完成"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根无顺向阴实体信号K：末根实体占比0.0942、与前根重叠1.0，未满足顺向实体收盘且无盘中创新高之外的合格触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792945800000::B1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::B1",
+   "setup": "B1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "未收盘跌破P1下沿2317.49：近期段低2318.0仅测试P1未破"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无跌破后下一根向下跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792945800000::B3": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P1尚未被跌破，无跌破后1-3根内收盘收回2317.49上方加反向跟进的失败事实"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P2 2292.6，无该位下行失败与收回收回其上方的反向强跟进"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "点位对齐不符：决策根收盘2343.86既不在P1区间2317.49-2331.0±1.55内，也不在P2 2292.6±1.55内"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-ETHUSDT-15m-1792945800000::G1": {
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "点位对齐不符：决策根收盘2343.86不在含缺口锚2351.26/2364.31的P4区间2352.63-2383.79±1.55内，落点不在预画决胜点测试区"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根无到达行为：末根为小实体重叠K，无回补未遂后反向跟进或顺势强信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1792680300000::B2": {
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "回踩尚未走出第二腿：附件pullback legs=1、two_legs=false"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "尚无回踩第二腿完成后的顺向阴实体收盘触发"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1792680300000::B3": {
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未下探P2带1.317-1.3178"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无下探后1-3根内收盘收回1.3178上方及反向跟进"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1792680300000::A2": {
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹未在决策根进入P4要塞1.3291-1.3394测试区：决策根收盘1.3242不在该带±0.25×段均幅内"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹未走出第二腿"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "无P4带内顺向阴实体信号K"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-XRPUSDT-15m-1792680300000::G1": {
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::G1",
+   "setup": "G1",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "R3到达行为未成立：敞开缺口attempts均为0，无回补未遂后反向跟进、无第二次回补未遂"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "决策根非强信号K：实体占比0.4531、与前根重叠0.9846"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1792926000000::B2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::B2",
+   "setup": "B2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "收盘有效跌破P1并有阴跟进未成立：决策根为阳线、收80337.28仅贴80340.0下方2.72点，无阴实体跟进"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反抽收不回带内的确认未成立"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1792926000000::B3": {
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::B3",
+   "setup": "B3",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "跌破P1后1-3根内收盘收回80340.0上方未成立：决策根收80337.28仍在80340.0下方"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "阳跟进强信号未成立：决策根阳线实体约41%、收盘位于振幅中部，非强阳收复"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  },
+  "fw-BTCUSDT-15m-1792926000000::A2": {
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::A2",
+   "setup": "A2",
+   "side": "",
+   "point_id": "",
+   "map_version": null,
+   "strategy_version": "",
+   "state": "WAITING_BEHAVIOR",
+   "revision": 0,
+   "conditions": [
+    {
+     "id": "m1",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "价格未到达P2测试区：决策根收80337.28距P2 80542.0-80650.01超过0.25×段均幅"
+    },
+    {
+     "id": "m2",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "P2受阻的合格阴信号K未出现"
+    },
+    {
+     "id": "m3",
+     "role": "required",
+     "basis_type": "",
+     "basis_ref": "",
+     "evaluator": "model",
+     "status": "not_met",
+     "scope": "current",
+     "recheck_mode": "new_evidence",
+     "text": "反弹第二腿未由图读确认完整"
+    }
+   ],
+   "cancel_conditions": [],
+   "assessment_count": 1,
+   "test_sequence": 1,
+   "unknown_streak": {},
+   "unknown_policy": "",
+   "unknown_limit": 0,
+   "review_status": "",
+   "cancel_requested": false,
+   "armed": false,
+   "deferred": false,
+   "reason_code": "",
+   "history": []
+  }
+ },
+ "tasks": [
+  {
+   "request_key": "fw-BTCUSDT-15m-1793393100000::B3:0:1793409300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::B3",
+   "revision": 0,
+   "due_t": 1793409300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793393100000::B1:0:1793409300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::B1",
+   "revision": 0,
+   "due_t": 1793409300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793393100000::A2:0:1793409300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793393100000::A2",
+   "revision": 0,
+   "due_t": 1793409300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1793239200000::B3:0:1793253600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1793239200000::B3",
+   "revision": 0,
+   "due_t": 1793253600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1793383200000::B1:0:1793394000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::B1",
+   "revision": 0,
+   "due_t": 1793394000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1793383200000::B3:0:1793394000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::B3",
+   "revision": 0,
+   "due_t": 1793394000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1793383200000::A2:0:1793394000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1793383200000::A2",
+   "revision": 0,
+   "due_t": 1793394000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793363400000::B2:0:1793373300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::B2",
+   "revision": 0,
+   "due_t": 1793373300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793363400000::B3:0:1793373300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::B3",
+   "revision": 0,
+   "due_t": 1793373300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793363400000::A1:0:1793373300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793363400000::A1",
+   "revision": 0,
+   "due_t": 1793373300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793389500000::B3:0:1793394000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793389500000::B3",
+   "revision": 0,
+   "due_t": 1793394000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1793390400000::A2:0:1793392200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1793390400000::A2",
+   "revision": 0,
+   "due_t": 1793392200000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1793390400000::B2:0:1793392200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1793390400000::B2",
+   "revision": 0,
+   "due_t": 1793392200000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1793365200000::B2:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1793365200000::B2",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1793365200000::B3:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1793365200000::B3",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1793385900000::B3:0:1793387700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1793385900000::B3",
+   "revision": 0,
+   "due_t": 1793387700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-1h-1793318400000::B1:0:1793325600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B1",
+   "revision": 0,
+   "due_t": 1793325600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-1h-1793318400000::B3:0:1793325600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B3",
+   "revision": 0,
+   "due_t": 1793325600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-1h-1793318400000::B2:0:1793325600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::B2",
+   "revision": 0,
+   "due_t": 1793325600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-1h-1793318400000::A2:0:1793325600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-1h-1793318400000::A2",
+   "revision": 0,
+   "due_t": 1793325600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1793370600000::B3:0:1793385900000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1793370600000::B3",
+   "revision": 0,
+   "due_t": 1793385900000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1793370600000::B2:0:1793385900000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1793370600000::B2",
+   "revision": 0,
+   "due_t": 1793385900000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793363400000::B2:0:1793370600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B2",
+   "revision": 0,
+   "due_t": 1793370600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793363400000::B3:0:1793370600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B3",
+   "revision": 0,
+   "due_t": 1793370600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793363400000::B1:0:1793370600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793363400000::B1",
+   "revision": 0,
+   "due_t": 1793370600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793372400000::B3:0:1793376900000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::B3",
+   "revision": 0,
+   "due_t": 1793376900000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793372400000::A2:0:1793376900000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::A2",
+   "revision": 0,
+   "due_t": 1793376900000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793372400000::G1:0:1793376900000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793372400000::G1",
+   "revision": 0,
+   "due_t": 1793376900000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793400300000::B2:0:1793412000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::B2",
+   "revision": 0,
+   "due_t": 1793412000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793400300000::A1:0:1793412000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::A1",
+   "revision": 0,
+   "due_t": 1793412000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793400300000::B3:0:1793412000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::B3",
+   "revision": 0,
+   "due_t": 1793412000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793400300000::A2:0:1793412000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::A2",
+   "revision": 0,
+   "due_t": 1793412000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1793400300000::G1:0:1793412000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1793400300000::G1",
+   "revision": 0,
+   "due_t": 1793412000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1793370600000::B2:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1793370600000::B2",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1793370600000::B3:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1793370600000::B3",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793373300000::B2:0:1793381400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::B2",
+   "revision": 0,
+   "due_t": 1793381400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793373300000::A1:0:1793381400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::A1",
+   "revision": 0,
+   "due_t": 1793381400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793373300000::B3:0:1793381400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::B3",
+   "revision": 0,
+   "due_t": 1793381400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793373300000::C1:0:1793381400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793373300000::C1",
+   "revision": 0,
+   "due_t": 1793381400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1792922400000::A1:0:1792929600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1792922400000::A1",
+   "revision": 0,
+   "due_t": 1792929600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1792922400000::A2:0:1792929600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1792922400000::A2",
+   "revision": 0,
+   "due_t": 1792929600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-1h-1790449200000::B3:0:1790456400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-1h-1790449200000::B3",
+   "revision": 0,
+   "due_t": 1790456400000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-ETHUSDT-1h-1790449200000::G1:0:1790456400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-1h-1790449200000::G1",
+   "revision": 0,
+   "due_t": 1790456400000,
+   "status": "done",
+   "outcome": "ready"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1792921500000::B2:0:1792927800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1792921500000::B2",
+   "revision": 0,
+   "due_t": 1792927800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1792921500000::B3:0:1792927800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1792921500000::B3",
+   "revision": 0,
+   "due_t": 1792927800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792920600000::B2:0:1792935000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792920600000::B2",
+   "revision": 0,
+   "due_t": 1792935000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792920600000::B3:0:1792935000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792920600000::B3",
+   "revision": 0,
+   "due_t": 1792935000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-1h-1790395200000::B3:0:1790434800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::B3",
+   "revision": 0,
+   "due_t": 1790434800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-XRPUSDT-1h-1790395200000::A1:0:1790434800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::A1",
+   "revision": 0,
+   "due_t": 1790434800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-XRPUSDT-1h-1790395200000::G1:0:1790434800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-1h-1790395200000::G1",
+   "revision": 0,
+   "due_t": 1790434800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792663200000::A2:0:1792667700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::A2",
+   "revision": 0,
+   "due_t": 1792667700000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792663200000::B2:0:1792667700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::B2",
+   "revision": 0,
+   "due_t": 1792667700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792663200000::B3:0:1792667700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::B3",
+   "revision": 0,
+   "due_t": 1792667700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792663200000::G1:0:1792667700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792663200000::G1",
+   "revision": 0,
+   "due_t": 1792667700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-1h-1790452800000::B2:0:1790463600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::B2",
+   "revision": 0,
+   "due_t": 1790463600000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-1h-1790452800000::B3:0:1790463600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::B3",
+   "revision": 0,
+   "due_t": 1790463600000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-1h-1790452800000::G1:0:1790463600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-1h-1790452800000::G1",
+   "revision": 0,
+   "due_t": 1790463600000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792922400000::B2:0:1792926000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::B2",
+   "revision": 0,
+   "due_t": 1792926000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792922400000::B3:0:1792926000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::B3",
+   "revision": 0,
+   "due_t": 1792926000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792922400000::A2:0:1792926000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::A2",
+   "revision": 0,
+   "due_t": 1792926000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792922400000::G1:0:1792926000000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792922400000::G1",
+   "revision": 0,
+   "due_t": 1792926000000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-1h-1792231200000::B3:0:1792238400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::B3",
+   "revision": 0,
+   "due_t": 1792238400000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-ETHUSDT-1h-1792231200000::B2:0:1792238400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::B2",
+   "revision": 0,
+   "due_t": 1792238400000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-ETHUSDT-1h-1792231200000::A2:0:1792238400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-1h-1792231200000::A2",
+   "revision": 0,
+   "due_t": 1792238400000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792238400000::B2:0:1792249200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::B2",
+   "revision": 0,
+   "due_t": 1792249200000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792238400000::B3:0:1792249200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::B3",
+   "revision": 0,
+   "due_t": 1792249200000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792238400000::G1:0:1792249200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::G1",
+   "revision": 0,
+   "due_t": 1792249200000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792238400000::A2:0:1792249200000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792238400000::A2",
+   "revision": 0,
+   "due_t": 1792249200000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-XRPUSDT-1h-1791511200000::A2:0:1791741600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-1h-1791511200000::A2",
+   "revision": 0,
+   "due_t": 1791741600000,
+   "status": "done",
+   "outcome": "ready"
+  },
+  {
+   "request_key": "fw-XRPUSDT-1h-1791511200000::B3:0:1791741600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-1h-1791511200000::B3",
+   "revision": 0,
+   "due_t": 1791741600000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792930500000::B2:0:1792934100000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::B2",
+   "revision": 0,
+   "due_t": 1792934100000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792930500000::B3:0:1792934100000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::B3",
+   "revision": 0,
+   "due_t": 1792934100000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1792930500000::C1:0:1792934100000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1792930500000::C1",
+   "revision": 0,
+   "due_t": 1792934100000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792328400000::A2:0:1792342800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::A2",
+   "revision": 0,
+   "due_t": 1792342800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792328400000::B1:0:1792342800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::B1",
+   "revision": 0,
+   "due_t": 1792342800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792328400000::B3:0:1792342800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::B3",
+   "revision": 0,
+   "due_t": 1792342800000,
+   "status": "done",
+   "outcome": "invalidated"
+  },
+  {
+   "request_key": "fw-SOLUSDT-1h-1792328400000::G1:0:1792342800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-1h-1792328400000::G1",
+   "revision": 0,
+   "due_t": 1792342800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793125800000::A2:0:1793129400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::A2",
+   "revision": 0,
+   "due_t": 1793129400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793125800000::B1:0:1793129400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::B1",
+   "revision": 0,
+   "due_t": 1793129400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-LINKUSDT-15m-1793125800000::B3:0:1793129400000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-LINKUSDT-15m-1793125800000::B3",
+   "revision": 0,
+   "due_t": 1793129400000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793383200000::A2:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::A2",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793383200000::B2:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::B2",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793383200000::B3:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::B3",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793383200000::G1:0:1793389500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793383200000::G1",
+   "revision": 0,
+   "due_t": 1793389500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793403000000::B3:0:1793405700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793403000000::B3",
+   "revision": 0,
+   "due_t": 1793405700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1793403000000::G1:0:1793405700000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1793403000000::G1",
+   "revision": 0,
+   "due_t": 1793405700000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1790463600000::B3:0:1790470800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1790463600000::B3",
+   "revision": 0,
+   "due_t": 1790470800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-BTCUSDT-1h-1790463600000::A1:0:1790470800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-1h-1790463600000::A1",
+   "revision": 0,
+   "due_t": 1790470800000,
+   "status": "done",
+   "outcome": "still_missing"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1792946700000::A2:0:1792948500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1792946700000::A2",
+   "revision": 0,
+   "due_t": 1792948500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1792926000000::B3:0:1792927800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1792926000000::B3",
+   "revision": 0,
+   "due_t": 1792927800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-SOLUSDT-15m-1792926000000::G1:0:1792927800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-SOLUSDT-15m-1792926000000::G1",
+   "revision": 0,
+   "due_t": 1792927800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792926900000::B1:0:1792941300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::B1",
+   "revision": 0,
+   "due_t": 1792941300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792926900000::A2:0:1792941300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::A2",
+   "revision": 0,
+   "due_t": 1792941300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792926900000::B3:0:1792941300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792926900000::B3",
+   "revision": 0,
+   "due_t": 1792941300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792926000000::B3:0:1792941300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792926000000::B3",
+   "revision": 0,
+   "due_t": 1792941300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792926000000::A2:0:1792941300000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792926000000::A2",
+   "revision": 0,
+   "due_t": 1792941300000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792946700000::A2:0:1792948500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::A2",
+   "revision": 0,
+   "due_t": 1792948500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792946700000::B1:0:1792948500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::B1",
+   "revision": 0,
+   "due_t": 1792948500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-DOGEUSDT-15m-1792946700000::B3:0:1792948500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-DOGEUSDT-15m-1792946700000::B3",
+   "revision": 0,
+   "due_t": 1792948500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792945800000::A2:0:1792954800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::A2",
+   "revision": 0,
+   "due_t": 1792954800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792945800000::B1:0:1792954800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::B1",
+   "revision": 0,
+   "due_t": 1792954800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792945800000::B3:0:1792954800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::B3",
+   "revision": 0,
+   "due_t": 1792954800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-ETHUSDT-15m-1792945800000::G1:0:1792954800000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-ETHUSDT-15m-1792945800000::G1",
+   "revision": 0,
+   "due_t": 1792954800000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1792680300000::B2:0:1792687500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::B2",
+   "revision": 0,
+   "due_t": 1792687500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1792680300000::B3:0:1792687500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::B3",
+   "revision": 0,
+   "due_t": 1792687500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1792680300000::A2:0:1792687500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::A2",
+   "revision": 0,
+   "due_t": 1792687500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-XRPUSDT-15m-1792680300000::G1:0:1792687500000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-XRPUSDT-15m-1792680300000::G1",
+   "revision": 0,
+   "due_t": 1792687500000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1792926000000::B2:0:1792929600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::B2",
+   "revision": 0,
+   "due_t": 1792929600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1792926000000::B3:0:1792929600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::B3",
+   "revision": 0,
+   "due_t": 1792929600000,
+   "status": "pending"
+  },
+  {
+   "request_key": "fw-BTCUSDT-15m-1792926000000::A2:0:1792929600000:rejudge",
+   "type": "rejudge",
+   "opportunity_id": "fw-BTCUSDT-15m-1792926000000::A2",
+   "revision": 0,
+   "due_t": 1792929600000,
+   "status": "pending"
+  }
+ ]
+}
