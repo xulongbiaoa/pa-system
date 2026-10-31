@@ -1,0 +1,130 @@
+[
+ {
+  "item": "X01",
+  "cls": "T",
+  "event": "fw-SOLUSDT-15m-1792926000000"
+ },
+ {
+  "item": "X02",
+  "cls": "T",
+  "event": "fw-LINKUSDT-15m-1792671300000"
+ },
+ {
+  "item": "X03",
+  "cls": "F",
+  "event": "fw-LINKUSDT-15m-1793373300000",
+  "shift": 5
+ },
+ {
+  "item": "X04",
+  "cls": "L",
+  "event": "fw-XRPUSDT-1h-1793260800000"
+ },
+ {
+  "item": "X05",
+  "cls": "T",
+  "event": "fw-ETHUSDT-15m-1792922400000"
+ },
+ {
+  "item": "X06",
+  "cls": "L",
+  "event": "fw-SOLUSDT-1h-1792328400000"
+ },
+ {
+  "item": "X07",
+  "cls": "F",
+  "event": "fw-XRPUSDT-15m-1793370600000",
+  "shift": 5
+ },
+ {
+  "item": "X08",
+  "cls": "L",
+  "event": "fw-LINKUSDT-15m-1793373300000"
+ },
+ {
+  "item": "X09",
+  "cls": "L",
+  "event": "fw-BTCUSDT-15m-1793403000000"
+ },
+ {
+  "item": "X10",
+  "cls": "F",
+  "event": "fw-XRPUSDT-1h-1790395200000",
+  "shift": 5
+ },
+ {
+  "item": "X11",
+  "cls": "T",
+  "event": "fw-BTCUSDT-15m-1793393100000"
+ },
+ {
+  "item": "X12",
+  "cls": "T",
+  "event": "fw-ETHUSDT-15m-1793363400000"
+ },
+ {
+  "item": "X13",
+  "cls": "T",
+  "event": "fw-LINKUSDT-1h-1790452800000"
+ },
+ {
+  "item": "X14",
+  "cls": "L",
+  "event": "fw-XRPUSDT-15m-1793370600000"
+ },
+ {
+  "item": "X15",
+  "cls": "F",
+  "event": "fw-DOGEUSDT-15m-1792920600000",
+  "shift": 5
+ },
+ {
+  "item": "X16",
+  "cls": "F",
+  "event": "fw-XRPUSDT-1h-1793260800000",
+  "shift": 5
+ },
+ {
+  "item": "X17",
+  "cls": "T",
+  "event": "fw-BTCUSDT-15m-1792682100000"
+ },
+ {
+  "item": "X18",
+  "cls": "L",
+  "event": "fw-SOLUSDT-15m-1792921500000"
+ },
+ {
+  "item": "X19",
+  "cls": "F",
+  "event": "fw-BTCUSDT-15m-1793403000000",
+  "shift": 5
+ },
+ {
+  "item": "X20",
+  "cls": "T",
+  "event": "fw-ETHUSDT-15m-1792654200000"
+ },
+ {
+  "item": "X21",
+  "cls": "L",
+  "event": "fw-DOGEUSDT-15m-1792920600000"
+ },
+ {
+  "item": "X22",
+  "cls": "L",
+  "event": "fw-XRPUSDT-1h-1790395200000"
+ },
+ {
+  "item": "X23",
+  "cls": "F",
+  "event": "fw-SOLUSDT-15m-1792921500000",
+  "shift": 5
+ },
+ {
+  "item": "X24",
+  "cls": "F",
+  "event": "fw-SOLUSDT-1h-1792328400000",
+  "shift": 5
+ }
+]
