@@ -1,1 +1,2 @@
 {"event": "fw-XRPUSDT-15m-1792665900000", "outcome": "traded", "r": -0.797372093023249, "exit_reason": "scale:void,void,void", "exit_bar": 3, "exit_mode": "scale", "symbol": "XRPUSDT", "interval": "15m", "setup": "B3", "side": "long", "entry": 1.3285}
+{"event": "fw-BTCUSDT-15m-1792923300000", "outcome": "traded", "r": -0.42927144642859016, "exit_reason": "scale:void,void", "exit_bar": 45, "exit_mode": "scale", "symbol": "BTCUSDT", "interval": "15m", "setup": "B3", "side": "long", "entry": 80340.0}

@@ -1,3 +1,8 @@
+## 2026-10-31 影子批量轮第二批：合并账 resolved 2 笔、sum_r −1.2266
+- 存量尾部 7 + 增量新扫 16 入队，判读落账 22（no_trade 21、tracked 1）；中途派单通道断裂一次，接续批补完 10 个，全部首稿合法零重写。
+- 第二个 tracked：fw-BTCUSDT-15m B3 多头限价 80340（scale），收尾 scan 解析 traded、exit_bar 45 两档 void 出场，R=−0.4293。影子累计 resolved=2（均为 B3 多头、均成交、均 void 出场）、sum_r=−1.2266、tracked_open=0。
+- trigger_missing 累计 6 例根因查实：批量扫盘按 480 根窗特征包选事件、compute_trigger 按全快照口径重算点位集，两口径不一致，6 个事件决策根在全快照口径容差内未触任何点位，确定性复现——根治需扫盘与 trigger 统一口径，待裁。
+- 队列剩 7 未判（6 trigger_missing + 1 尾部新 gap-confirm），留下批。
 ## 2026-10-31 影子批量轮：首个 tracked 计划诞生并已解析（−0.7974R）
 - 批量扫盘（eval/forward_batch_scan.py，12 对 ×1000 根、480 窗步长 300、mine_segment 同口径）：入队 30 个 fortress 事件（gap-confirm 0），27 判读落账、3 trigger_missing 跳过。record 分布：no_trade 26、tracked 1、violation/format_error 0。
 - 首个 tracked：fw-XRPUSDT-15m-1792665900000，B3 多头限价 1.3285（scale），收尾 scan 当场解析：traded、exit_bar 3 触发 void、R=−0.7974。影子 resolved_total=1、sum_r=−0.7974。
