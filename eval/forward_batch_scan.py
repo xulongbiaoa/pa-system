@@ -202,6 +202,17 @@ def main():
         "precheck_rejected": rejected,
         "picked_ids": [ev["eid"] for _, ev in picked],
     }, ensure_ascii=False, indent=1))
+    # Build 3 收尾（2026-10-31）：登记本批新判读的 waits 并机械核
+    # open waits（due = 价格离开又回到观察带；cancelled = 被接受
+    # 粗口径/到期）。失败不许拖垮扫盘主流程，只打印一行。
+    try:
+        import forward_waits
+        forward_waits.register()
+        s = forward_waits.scan()
+        print(f"waits: open_scanned={s['open']} due={len(s['due'])} "
+              f"cancelled={len(s['cancelled'])} expired={len(s['expired'])}")
+    except Exception as e:  # noqa: BLE001
+        print(f"waits 收尾失败（不影响本批）：{e}")
 
 
 if __name__ == "__main__":

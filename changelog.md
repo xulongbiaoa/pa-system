@@ -1,3 +1,6 @@
+## 2026-10-31 Build 3 等待对象化落地：waits 注册表 + 两段式机械核对
+- eval/forward_waits.py：判读的 pending 按四段链登记为等待对象（eval/forward/waits.json）——冻结 missing 原文、观察带（basis=branch 的地图点位优先、否则事件 levels）、watch 原文；register/scan 两命令，批量扫盘收尾已挂接（失败不拖垮主流程）。scan 只做机械两件事：due（价格离开观察带又回到带内）与 cancelled（收盘越带远侧 1×段均幅连续 2 根的被接受粗口径）/expired（300 根）；行为与触发的核对不在机械层，due 只是送回重判的信号，重判沿用冻结地图与冻结条件集。
+- 首扫教训已修：v1「触带即 due」在 215 个 waits 上打出 177 due（事件本就选在触带处、无筛选力）→ 改两段式（先整根离开、再回到）并加回归测试；重扫（存量回溯数日 bars）due 110 / cancelled 102 / 仍 open 3——长窗口下价格要么回来要么走远，此数为回溯口径，注册表真实考验在后续批次的增量运行。存量 legacy waits 的带是事件 levels 并集（偏宽），basis 时代 waits 用分支点位原带，选择性更好。182 passed（新增 waits 测试 5）。
 ## 2026-10-31 分支预写 A/B 收官：跟进 63%→1%，产出 2→8，三条款保留
 - 同 55 脱带事件、maps2 三条款重画 + 同口径到达提示回判（eval/reports/branch-ab-verdict-2026-10-31.md）：操作检查——跟进要求 220/350（63%）→5/451（1.1%）、不创新极值 51→1、腿数 86→11、每分支必带价格事件；点位覆盖 44/55=80%；产出 qualified 8（基准 touch B 臂 2）、violations 0、gate 拒 3（H2）；已解析 4 笔 +0.833R（XRP 1h B3 空 +3.225 挑大梁；n 小只作参考），1 笔未解析待复跑补数。捆绑变量登记：到达提示含 Build 1 依据引用，产出为纲领合并效应、不单独归因三条款。
 - 附带：抓到 A2 标多头矛盾候选 → validate 新增 A1 只多/A2 只空定版规则 + 测试（177 passed）；score 的 gate_reject 键 bug 修复（branch_ab/touch_ab 同修）；B3 多头限价跨实验已解析 4 笔全亏 vs 空头 2 胜 1 负，多空不对称续证、维持待证伪。
