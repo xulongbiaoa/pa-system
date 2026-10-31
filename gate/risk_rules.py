@@ -96,7 +96,7 @@ def _round_level(price):
 
 def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=None,
                mode="annotation"):
-    """plan: {side, entry, stop, targets[], risk_frac, order_type?, limit_in?,
+    """plan: {side, entry, stop, stop_basis, targets[], risk_frac, order_type?, limit_in?,
               cap_reason?}
     flags: {trample}（gate/flags.py 生产，来自感知层带状态）
     ledger: {(setup, 语境): {'n': int, 'wins': int}}，语境须为
@@ -187,20 +187,41 @@ def adjudicate(plan, pack, *, bars_left, feature_refs=(), flags=None, ledger=Non
         hard.append({"rule": "H8", "detail":
                      f"毛RR={rr_gross} < 设计目标 {target_rr} 且未说明封顶结构"
                      f"（plan.cap_reason 缺失）"})
-    # H2 止损在结构外：止损须越过入场最近一侧的摆动极值（大小级别合并看；
-    # 2026-10-30 修正：原先只看大级别摆动，DOT A2 案的第二腿高点 1.576
-    # 只是小级别摆动，大级别最近高点远在 1.896，合理止损 1.585 被误杀）
+    # H2 止损在结构外（2026-10-31 眼主导改造）：结构极值由判读（眼睛）
+    # 在 plan.stop_basis 点名，gate 只核对两件事——① 声明的极值在附件
+    # 摆动点中真实存在（防编造：同向 kind、容差内匹配）；② 止损确实
+    # 越到该极值外侧、且极值位于入场正确一侧。旧口径「止损须越过附件
+    # 最近一侧摆动极值」是数据侧代行识别（附件的最近极值未必是眼睛
+    # 认定的结构，2026-10-30 DOT 案即其误杀），废止。
     swings = pack.get("swings", {}).get("major", []) + pack.get("swings", {}).get("minor", [])
     seg_avg = pack.get("seg_avg_range") or 0
     entry, stop = plan["entry"], plan["stop"]
-    if plan["side"] == "long":
-        below = [s["anchor"] for s in swings if s["kind"] == "L" and s["anchor"] < entry]
-        if below and stop >= max(below):
-            hard.append({"rule": "H2", "detail": f"止损 {stop} 在摆动低点 {max(below)} 之内"})
+    basis = plan.get("stop_basis")
+    if basis is None:
+        hard.append({"rule": "H2", "detail":
+                     "plan 未声明止损所依结构极值（stop_basis 缺失）"})
     else:
-        above = [s["anchor"] for s in swings if s["kind"] == "H" and s["anchor"] > entry]
-        if above and stop <= min(above):
-            hard.append({"rule": "H2", "detail": f"止损 {stop} 在摆动高点 {min(above)} 之内"})
+        kind = "L" if plan["side"] == "long" else "H"
+        tol = max(0.15 * seg_avg, 0.001 * abs(basis))
+        if not any(s["kind"] == kind and abs(s["anchor"] - basis) <= tol
+                   for s in swings):
+            hard.append({"rule": "H2", "detail":
+                         f"声明的结构极值 {basis} 在附件摆动点中不存在"
+                         f"（{kind} 类、容差 ±{tol:.4g} 内无匹配）"})
+        if plan["side"] == "long":
+            if not basis < entry:
+                hard.append({"rule": "H2", "detail":
+                             f"多头 stop_basis {basis} 不在入场 {entry} 下方"})
+            elif stop >= basis:
+                hard.append({"rule": "H2", "detail":
+                             f"止损 {stop} 未越过所依结构极值 {basis}"})
+        else:
+            if not basis > entry:
+                hard.append({"rule": "H2", "detail":
+                             f"空头 stop_basis {basis} 不在入场 {entry} 上方"})
+            elif stop <= basis:
+                hard.append({"rule": "H2", "detail":
+                             f"止损 {stop} 未越过所依结构极值 {basis}"})
     if seg_avg:
         level = _round_level(stop)
         # 紧口径：止损须**几乎正好**压在关口上才算命中（容差 5% 个关口步长）。

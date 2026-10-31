@@ -31,6 +31,7 @@ def _plan(**kw):
         # 毛 RR 1.63 不到设计目标 2:1：夹具按 H8 口径带封顶说明，
         # 个别测试要验 H8 时自行 del p["cap_reason"]
         "cap_reason": "110 上方完好要塞封顶，目标按序列只能取到此处",
+        "stop_basis": 94.3,  # 止损所依结构极值 = 夹具包里的摆动低点
     }
     p.update(kw)
     return p
@@ -108,10 +109,36 @@ def test_h2_round_level_reject_any_price_scale():
     # 原来的 round(stop) 判据对非整数报价资产恒不命中（死代码）
     p = _pack()
     p["seg_avg_range"] = 0.4
-    base = _plan(side="short", entry=11.5, stop=12.0, targets=[10.0])
+    p["swings"]["minor"] = [{"bar": 9, "kind": "H", "close": 11.8, "anchor": 11.88}]
+    base = _plan(side="short", entry=11.5, stop=12.0, targets=[10.0],
+                 stop_basis=11.88)
     assert any(h["rule"] == "H2" for h in adjudicate(base, p, bars_left=50)["hard_hits"])
-    off = _plan(side="short", entry=11.5, stop=11.91, targets=[10.0])
+    off = _plan(side="short", entry=11.5, stop=11.91, targets=[10.0],
+                stop_basis=11.88)
     assert not any(h["rule"] == "H2" for h in adjudicate(off, p, bars_left=50)["hard_hits"])
+
+
+def test_h2_missing_stop_basis_reject():
+    # 眼主导 H2：未点名止损所依结构极值 = 无从核对，拒
+    p = _plan()
+    del p["stop_basis"]
+    r = adjudicate(p, _pack(), bars_left=50)
+    assert any(h["rule"] == "H2" for h in r["hard_hits"])
+
+
+def test_h2_fabricated_basis_reject():
+    # 点名的极值在附件摆动点中不存在（防编造）
+    r = adjudicate(_plan(stop_basis=90.0), _pack(), bars_left=50)
+    assert any(h["rule"] == "H2" for h in r["hard_hits"])
+
+
+def test_h2_eye_named_minor_structure_passes():
+    # 眼睛点名小级别结构、止损越过它即可——附件最近大级别极值不再代行识别
+    p = _pack()
+    p["swings"]["minor"] = [{"bar": 40, "kind": "L", "close": 97.2, "anchor": 97.05}]
+    plan = _plan(stop=96.9, stop_basis=97.05, targets=[110.0])
+    r = adjudicate(plan, p, bars_left=50)
+    assert not any(h["rule"] == "H2" for h in r["hard_hits"])
 
 
 def test_h5_undefined_feature_reject():

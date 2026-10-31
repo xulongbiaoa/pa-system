@@ -54,7 +54,8 @@ def test_no_fortress_pack_is_safe():
 def _clean_pack():
     return {
         "last_close": 100.0, "seg_avg_range": 2.0,
-        "swings": {"major": [], "minor": []},
+        "swings": {"major": [{"bar": 5, "kind": "H", "close": 100.4,
+                              "anchor": 100.6}], "minor": []},
         "gaps": {"confidence": "确定"}, "ema": {"confidence": "确定"},
         "trend": {"confidence": "确定"},
         "fortress": {"bands": [dict(BAND_TRAMPLED)]},
@@ -62,7 +63,7 @@ def _clean_pack():
 
 
 def _plan(**kw):
-    p = {"side": "short", "entry": 100.0, "stop": 101.0,
+    p = {"side": "short", "entry": 100.0, "stop": 101.0, "stop_basis": 100.6,
          "targets": [97.0], "risk_frac": 0.01, "setup": "B3",
          "context": "震荡"}
     p.update(kw)

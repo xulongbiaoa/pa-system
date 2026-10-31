@@ -1,322 +1,325 @@
 {
- "$schema": "http://json-schema.org/draft-07/schema#",
- "additionalProperties": false,
- "properties": {
-  "candidates": {
-   "items": {
-    "additionalProperties": false,
-    "properties": {
-     "conditions": {
-      "description": "条件矩阵（G1 必备，其余 setup 可选）：role 与 rule_id 由 setup 卡定义，判断层只申报状态、裁决层 H7 执法；groups 为证据同源组，证据计数按组去重，同源不许数成多证据",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
       "items": {
-       "additionalProperties": false,
-       "properties": {
-        "dimension": {
-         "description": "证据维度（账本/位置/过程/触发/背景/反证/风险）：多证据按维度计数，同维只算一票；G1 必备且须与 rule_id 的固定映射一致",
-         "enum": [
-          "账本",
-          "位置",
-          "过程",
-          "触发",
-          "背景",
-          "反证",
-          "风险"
-         ],
-         "type": "string"
-        },
-        "evidence_refs": {
-         "items": {
-          "type": "string"
-         },
-         "type": "array"
-        },
-        "groups": {
-         "items": {
-          "type": "string"
-         },
-         "type": "array"
-        },
-        "note": {
-         "type": "string"
-        },
-        "role": {
-         "enum": [
-          "required",
-          "enhancing",
-          "veto"
-         ]
-        },
-        "rule_id": {
-         "type": "string"
-        },
-        "status": {
-         "enum": [
-          "met",
-          "not_met",
-          "unknown",
-          "not_applicable"
-         ]
-        }
-       },
-       "required": [
-        "rule_id",
-        "role",
-        "status",
-        "evidence_refs",
-        "groups"
-       ],
-       "type": "object"
-      },
-      "type": "array"
-     },
-     "feature_refs": {
-      "items": {
-       "type": "string"
-      },
-      "minItems": 1,
-      "type": "array"
-     },
-     "plan": {
-      "additionalProperties": false,
-      "properties": {
-       "entry": {
-        "type": "number"
-       },
-       "risk_frac": {
-        "type": "number"
-       },
-       "stop": {
-        "type": "number"
-       },
-       "targets": {
-        "items": {
-         "type": "number"
-        },
-        "minItems": 1,
-        "type": "array"
-       },
-       "void_if": {
-        "type": "string"
-       },
-       "exit_mode": {
-        "enum": [
-         "full",
-         "scale"
-        ],
-        "description": "出场方式：full 全仓首目标结算；scale 分批（T1 出 1/2、T2 出 1/4、余 1/4 跟末目标，须 targets≥2）"
-       },
-       "order_type": {
-        "enum": [
-         "market",
-         "limit"
-        ],
-        "default": "market",
-        "description": "限价单按 core 限价口径回放：穿越才成交、未成交留档"
-       },
-       "void": {
-        "type": "object",
         "additionalProperties": false,
         "properties": {
-         "level": {
-          "type": "number"
-         },
-         "side": {
-          "enum": [
-           "above",
-           "below"
-          ]
-         }
+          "conditions": {
+            "description": "条件矩阵（G1 必备，其余 setup 可选）：role 与 rule_id 由 setup 卡定义，判断层只申报状态、裁决层 H7 执法；groups 为证据同源组，证据计数按组去重，同源不许数成多证据",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "dimension": {
+                  "description": "证据维度（账本/位置/过程/触发/背景/反证/风险）：多证据按维度计数，同维只算一票；G1 必备且须与 rule_id 的固定映射一致",
+                  "enum": [
+                    "账本",
+                    "位置",
+                    "过程",
+                    "触发",
+                    "背景",
+                    "反证",
+                    "风险"
+                  ],
+                  "type": "string"
+                },
+                "evidence_refs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "groups": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "role": {
+                  "enum": [
+                    "required",
+                    "enhancing",
+                    "veto"
+                  ]
+                },
+                "rule_id": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "met",
+                    "not_met",
+                    "unknown",
+                    "not_applicable"
+                  ]
+                }
+              },
+              "required": [
+                "rule_id",
+                "role",
+                "status",
+                "evidence_refs",
+                "groups"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "feature_refs": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "plan": {
+            "additionalProperties": false,
+            "properties": {
+              "entry": {
+                "type": "number"
+              },
+              "risk_frac": {
+                "type": "number"
+              },
+              "stop": {
+                "type": "number"
+              },
+              "targets": {
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "void_if": {
+                "type": "string"
+              },
+              "exit_mode": {
+                "enum": [
+                  "full",
+                  "scale"
+                ],
+                "description": "出场方式：full 全仓首目标结算；scale 分批（T1 出 1/2、T2 出 1/4、余 1/4 跟末目标，须 targets≥2）"
+              },
+              "order_type": {
+                "enum": [
+                  "market",
+                  "limit"
+                ],
+                "default": "market",
+                "description": "限价单按 core 限价口径回放：穿越才成交、未成交留档"
+              },
+              "void": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "level": {
+                    "type": "number"
+                  },
+                  "side": {
+                    "enum": [
+                      "above",
+                      "below"
+                    ]
+                  }
+                },
+                "required": [
+                  "level",
+                  "side"
+                ],
+                "description": "结构化前提失效：生命周期内任一根收盘越过 level（side 指失效侧）即按收盘价出场，回放强制执行；void_if 文字说明与此并存，冲突时以结构化为准"
+              },
+              "cap_reason": {
+                "type": "string",
+                "description": "封顶结构说明：首目标毛 RR 取不到设计目标 2:1 时必填，点名挡住目标的是哪条结构（要塞/MM/摆动极值）；缺失且毛 RR < 2:1 时 gate 以 H8 拒（2026-10-31）"
+              },
+              "stop_basis": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "entry",
+              "stop",
+              "targets",
+              "void_if",
+              "void",
+              "risk_frac"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "qualified": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "setup": {
+            "enum": [
+              "B1",
+              "B2",
+              "B3",
+              "A1",
+              "A2",
+              "C1",
+              "G1"
+            ],
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "long",
+              "short"
+            ],
+            "type": "string"
+          },
+          "strongest_countercase": {
+            "description": "最强反证一句话：什么事实最可能让这单错（G1 必备，反证优先）",
+            "type": "string"
+          }
         },
         "required": [
-         "level",
-         "side"
+          "setup",
+          "side",
+          "qualified",
+          "reason",
+          "feature_refs"
         ],
-        "description": "结构化前提失效：生命周期内任一根收盘越过 level（side 指失效侧）即按收盘价出场，回放强制执行；void_if 文字说明与此并存，冲突时以结构化为准"
-       },
-       "cap_reason": {
-        "type": "string",
-        "description": "封顶结构说明：首目标毛 RR 取不到设计目标 2:1 时必填，点名挡住目标的是哪条结构（要塞/MM/摆动极值）；缺失且毛 RR < 2:1 时 gate 以 H8 拒（2026-10-31）"
-       }
-      },
-      "required": [
-       "entry",
-       "stop",
-       "targets",
-       "void_if",
-       "void",
-       "risk_frac"
-      ],
-      "type": [
-       "object",
-       "null"
-      ]
-     },
-     "qualified": {
-      "type": "boolean"
-     },
-     "reason": {
-      "type": "string"
-     },
-     "setup": {
-      "enum": [
-       "B1",
-       "B2",
-       "B3",
-       "A1",
-       "A2",
-       "C1",
-       "G1"
-      ],
-      "type": "string"
-     },
-     "side": {
-      "enum": [
-       "long",
-       "short"
-      ],
-      "type": "string"
-     },
-     "strongest_countercase": {
-      "description": "最强反证一句话：什么事实最可能让这单错（G1 必备，反证优先）",
-      "type": "string"
-     }
-    },
-    "required": [
-     "setup",
-     "side",
-     "qualified",
-     "reason",
-     "feature_refs"
-    ],
-    "type": "object"
-   },
-   "type": "array"
-  },
-  "hypotheses": {
-   "items": {
-    "additionalProperties": false,
-    "properties": {
-     "holds_if": {
-      "type": "string"
-     },
-     "id": {
-      "type": "string"
-     },
-     "menu": {
-      "items": {
-       "type": "string"
+        "type": "object"
       },
       "type": "array"
-     },
-     "statement": {
-      "type": "string"
-     },
-     "takeover_if": {
-      "description": "备选升为主的触发事实；主假设填空字符串",
-      "type": "string"
-     },
-     "void_if": {
-      "type": "string"
-     }
     },
-    "required": [
-     "id",
-     "statement",
-     "holds_if",
-     "void_if",
-     "takeover_if",
-     "menu"
-    ],
-    "type": "object"
-   },
-   "maxItems": 3,
-   "minItems": 1,
-   "type": "array"
-  },
-  "no_trade_reason": {
-   "enum": [
-    null,
-    "无命中",
-    "位置不对",
-    "成色不合格",
-    "背景不明",
-    "感知未定"
-   ],
-   "type": [
-    "string",
-    "null"
-   ]
-  },
-  "pending_conditions": {
-   "description": "挂起候选的结构化记录：哪个 setup、缺哪几项、等什么到达（新判断必须用对象形式）",
-   "items": {
-    "anyOf": [
-     {
-      "type": "string",
-      "description": "旧格式（历史判断），新判断禁用"
-     },
-     {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-       "setup",
-       "missing"
-      ],
-      "properties": {
-       "setup": {
-        "enum": [
-         "B1",
-         "B2",
-         "B3",
-         "A1",
-         "A2",
-         "C1",
-         "G1"
-        ]
-       },
-       "missing": {
-        "type": "array",
-        "items": {
-         "type": "string"
+    "hypotheses": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "holds_if": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "menu": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "takeover_if": {
+            "description": "备选升为主的触发事实；主假设填空字符串",
+            "type": "string"
+          },
+          "void_if": {
+            "type": "string"
+          }
         },
-        "minItems": 1
-       },
-       "watch": {
+        "required": [
+          "id",
+          "statement",
+          "holds_if",
+          "void_if",
+          "takeover_if",
+          "menu"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "type": "array"
+    },
+    "no_trade_reason": {
+      "enum": [
+        null,
+        "无命中",
+        "位置不对",
+        "成色不合格",
+        "背景不明",
+        "感知未定"
+      ],
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pending_conditions": {
+      "description": "挂起候选的结构化记录：哪个 setup、缺哪几项、等什么到达（新判断必须用对象形式）",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "description": "旧格式（历史判断），新判断禁用"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "setup",
+              "missing"
+            ],
+            "properties": {
+              "setup": {
+                "enum": [
+                  "B1",
+                  "B2",
+                  "B3",
+                  "A1",
+                  "A2",
+                  "C1",
+                  "G1"
+                ]
+              },
+              "missing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "watch": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "primary": {
+      "description": "主假设编号，如 H1",
+      "type": "string"
+    },
+    "uncertainty": {
+      "description": "本次判断依赖的、置信为边界/未定的特征字段名",
+      "items": {
         "type": "string"
-       }
-      }
-     }
-    ]
-   },
-   "type": "array"
+      },
+      "type": "array"
+    },
+    "context": {
+      "enum": [
+        "上升",
+        "下降",
+        "震荡"
+      ],
+      "description": "判断层对本段语境的定性（与主假设一致）；金标准对照的语境轴"
+    }
   },
-  "primary": {
-   "description": "主假设编号，如 H1",
-   "type": "string"
-  },
-  "uncertainty": {
-   "description": "本次判断依赖的、置信为边界/未定的特征字段名",
-   "items": {
-    "type": "string"
-   },
-   "type": "array"
-  },
-  "context": {
-   "enum": [
-    "上升",
-    "下降",
-    "震荡"
-   ],
-   "description": "判断层对本段语境的定性（与主假设一致）；金标准对照的语境轴"
-  }
- },
- "required": [
-  "context",
-  "primary",
-  "hypotheses",
-  "candidates",
-  "uncertainty"
- ],
- "title": "PAJudgment",
- "type": "object"
+  "required": [
+    "context",
+    "primary",
+    "hypotheses",
+    "candidates",
+    "uncertainty"
+  ],
+  "title": "PAJudgment",
+  "type": "object"
 }

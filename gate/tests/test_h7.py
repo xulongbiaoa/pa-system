@@ -47,6 +47,7 @@ def _plan(**kw):
         "side": "long", "entry": 100.0, "stop": 93.87,
         "targets": [110.0], "risk_frac": 0.01,
         "cap_reason": "110 完好要塞封顶（H8 说明义务，毛 RR 1.63）",
+        "stop_basis": 94.3,
         "setup": "G1", "context": "上升",
         "conditions": _matrix(),
         "strongest_countercase": "缺口被一根强阴线回补关闭，立论消失",

@@ -8,7 +8,8 @@ from gate.risk_rules import adjudicate
 
 PACK = {
     "last_close": 100.0, "seg_avg_range": 2.0,
-    "swings": {"major": [], "minor": []},
+    "swings": {"major": [{"bar": 5, "kind": "L", "close": 98.6,
+                          "anchor": 98.3}], "minor": []},
     "gaps": {"confidence": "确定"}, "ema": {"confidence": "确定"},
     "trend": {"confidence": "确定"},
 }
@@ -17,7 +18,7 @@ PACK = {
 def _plan(**kw):
     # 多：入 100、止损 97.87（风险 2.13，不压整数关口）、目标 103.62
     # → 毛 RR 1.7（过 H1 地板、不到设计目标 2:1）
-    p = {"side": "long", "entry": 100.0, "stop": 97.87,
+    p = {"side": "long", "entry": 100.0, "stop": 97.87, "stop_basis": 98.3,
          "targets": [103.62], "risk_frac": 0.01, "setup": "A1",
          "context": "上升"}
     p.update(kw)

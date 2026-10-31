@@ -178,8 +178,9 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
     parts.append("## 本次路由依据（机器按特征包判定，卡已按此装载）\n"
                  + "；".join(reasons)
                  + "\n卡内门槛（三件套、MM、腿数）感知层未算，须你自行认定；"
-                   "认定不了就写进 uncertainty 并空仓。")
-    parts.append("## 数字附件（特征包：精确价位、缺口账本与数字证据；语境与形态以图读为准——附件 trend 是机器摆动标签，与图读冲突时以图为准）\n```json\n"
+                   "认定不了写进 uncertainty。图读认定成立时，不许因附件"
+                   "特征置信「未定」而空仓（感知门已废，见 router 空仓节）。")
+    parts.append("## 数字附件（特征包：只供精确价位、缺口账本与 RR 核对；一切识别——语境、形态、到达、成色——以图读为准。附件 trend 标签与各特征 confidence 只是机器口径，不得推翻图读认定、不得作空仓理由）\n```json\n"
                  + json.dumps(pack, ensure_ascii=False) + "\n```")
     exs = recall_examples(pack, segment=segment, symbol=symbol, bars=bars)
     if exs:
@@ -213,8 +214,12 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
     parts.append("## 最近 K 线（OHLC 数值表）\n```\n" + bars_table(bars[-120:]) + "\n```")
     parts.append(
         "## 任务（输出格式是硬契约，先看骨架再判断）\n"
-        "判读顺序：先看图（若随附图表）定语境、形态与 setup，再用数字附件的"
-        "精确价位定价、核对账本与红线；附件 trend 标签与图读冲突时以图为准。\n"
+        "判读顺序（眼主导，2026-10-31 定版）：先看图（若随附图表）定语境、"
+        "形态、setup 与到达行为，识别结论只来自图；再用数字附件的精确价位"
+        "定价、核对账本与红线。附件与图读冲突，一律以图为准，并把冲突写进 "
+        "uncertainty。附件特征置信「未定」不构成空仓理由（感知门已废）：未定"
+        "特征只是不许引作证据（feature_refs 引了会被 gate H5 拒），图读认定"
+        "成立就照常写候选。\n"
         "入场方式分工（2026-10-31 定版）：顺势延续类（A1/A2/B2）的入场是 "
         "stop 触发——入场价写信号 K 极值外侧、order_type 写 market（按触发 "
         "价计）；限价（order_type=limit）只用于翻面类（B3/G1）与区间边缘，"
@@ -237,8 +242,8 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "等于主假设的 id；hypothesis 六字段（id/statement/holds_if/void_if/"
         "takeover_if/menu）一个不许少，menu 是 setup 数组；假设不许带数字权重。"
         "有合格候选时 candidates 每项含 setup/side/qualified/reason/feature_refs 与 "
-        "plan（entry/stop/targets/void_if/risk_frac 必备，可加 order_type/exit_mode/"
-        "cap_reason；void 必备且必须是结构化对象 "
+        "plan（entry/stop/stop_basis/targets/void_if/risk_frac 必备，可加 order_type/exit_mode/"
+        "cap_reason；stop_basis = 止损所依的结构极值价（你图读认定的、止损必须越过的那个摆动极值——认定归你，gate 只核对它在附件摆动点中真实存在、且止损确实越过它）；void 必备且必须是结构化对象 "
         "{\"level\": 数字, \"side\": \"above\" 或 \"below\"}——回放只执行结构化 "
         "void，只写文字版等于前提破无人出场，缺 void 直接判格式不合格）。"
         "首目标毛 RR 取不到设计目标 2:1 时，plan 必须带 cap_reason 点名封顶"
@@ -261,6 +266,7 @@ def build_prompt(pack, bars, prev_hypotheses=None, *, segment=None, symbol=None)
         "\"B3\", \"missing\": [\"缺哪项\", \"...\"], \"watch\": \"等什么价位/"
         "到达行为\"}，不许写散文字符串。"
         "无合格候选时 candidates=[] 且 no_trade_reason 必填"
-        "枚举（无命中/位置不对/成色不合格/背景不明/感知未定）。空仓是合法输出。"
+        "枚举（无命中/位置不对/成色不合格/背景不明）。「感知未定」已废止："
+        "附件未定不是空仓理由，图读认定不了写背景不明/成色不合格。空仓是合法输出。"
     )
     return "\n\n".join(parts)
