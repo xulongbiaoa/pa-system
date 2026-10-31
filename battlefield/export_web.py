@@ -68,7 +68,8 @@ def export_symbol(sym: str) -> dict:
             r = s["result"]
             segs.append({
                 "segment_id": s["segment_id"], "level_key": s["level_key"], "open": s["open"],
-                "direction": r.get("direction"), "net_progress": _num(r.get("net_progress")),
+                "direction": r.get("direction"), "p0": _num(r.get("p0")),
+                "net_progress": _num(r.get("net_progress")),
                 "favorable": _num(r.get("favorable_excursion")), "giveback": _num(r.get("giveback")),
                 "giveback_ratio": _num(r.get("giveback_ratio")), "elapsed_bars": r.get("elapsed_bars"),
             })
