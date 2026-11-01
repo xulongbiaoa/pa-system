@@ -158,12 +158,19 @@ function humanize(text) {
     t = t.replace(/\bH\d+\b/g, "该推演");
     t = t.replace(/[（(]锚\s*[\d.,]+[）)]/g, "");
     t = t.replace(/锚线/g, "缺口线").replace(/触锚/g, "触线");
+    t = t.replace(/该锚位/g, "该位置").replace(/锚位/g, "");
     t = t.replace(/锚\s*(?=[\d])/g, "");
     t = t.replace(/open状态/g, "开放状态");
     return t;
 }
 function renderHeader() {
     const m = snap.meta;
+    if (liveOk) {
+        const lb0 = $("liveBadge");
+        lb0.textContent = "● LIVE 实时";
+        lb0.style.color = "#2fbf71";
+        return;
+    }
     const ageMin = Math.max(0, Math.round((Date.now() - m.cursor_close_ms) / 60000));
     const lb = $("liveBadge");
     if (ageMin <= 17) {
@@ -202,7 +209,7 @@ function renderChart() {
     });
     candleSeries.setData(bars.map((b) => ({ time: Math.floor(b.t / 1000), open: b.o, high: b.h, low: b.l, close: b.c })));
     const last = bars[bars.length - 1];
-    candleSeries.createPriceLine({ price: last.c, color: "#e8a33d", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" });
+    liveLine = candleSeries.createPriceLine({ price: last.c, color: "#e8a33d", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" });
     // 测试标记 T1/T2…：开放缺口 + 最近关账缺口的回补测试起点
     const markers = [];
     const allGaps = [...snap.open_gaps];
@@ -218,11 +225,15 @@ function renderChart() {
     markers.sort((a, b) => a.time - b.time);
     if (markers.length)
         candleSeries.setMarkers(markers);
+    // 实时层：把正在形成的那根接上（视图宽度把它算在内），并确保 WS 已订阅
+    applyLiveBar();
+    startLive(snap.meta.symbol);
+    const total = bars.length + (liveBar && liveBar.t > last.t ? 1 : 0);
     // 默认缩放 = 最近 24h（96 根）满屏；全量历史仍在数据里，左拖可回看
     const DEFAULT_VIEW_BARS = 96;
-    if (bars.length > DEFAULT_VIEW_BARS) {
+    if (total > DEFAULT_VIEW_BARS) {
         chart.timeScale().setVisibleLogicalRange({
-            from: bars.length - DEFAULT_VIEW_BARS - 0.5, to: bars.length - 0.5,
+            from: total - DEFAULT_VIEW_BARS - 0.5, to: total - 0.5,
         });
     }
     else {
@@ -230,6 +241,103 @@ function renderChart() {
     }
     chart.timeScale().subscribeVisibleLogicalRangeChange(positionBands);
     setTimeout(positionBands, 60);
+}
+// ---------- 实时行情（只管图表层） ----------
+// 快照给已收盘 K 线；正在形成的当根由 Binance WebSocket 直推，图表实时
+// 跳动（用户 2026-11-01：别 15 分钟推一根，实时弄）。简报/账本/时间线
+// 仍是 15 分钟判读口径，不受实时层影响。
+let liveWs = null;
+let liveSym = "";
+let liveBar = null;
+let liveLine = null;
+let liveLineAt = 0;
+let liveOk = false;
+function renderLiveBadge() {
+    if (!liveOk)
+        return;
+    const lb = $("liveBadge");
+    lb.textContent = "● LIVE 实时";
+    lb.style.color = "#2fbf71";
+}
+function applyLiveBar() {
+    if (!candleSeries || !liveBar || !snap)
+        return;
+    const bars = snap.bars;
+    const lastT = bars[bars.length - 1].t;
+    if (liveBar.t < lastT)
+        return; // 已被更新的快照收编
+    try {
+        candleSeries.update({ time: Math.floor(liveBar.t / 1000), open: liveBar.o, high: liveBar.h, low: liveBar.l, close: liveBar.c });
+    }
+    catch { /* 系列重建瞬间可能抛错，下一推自愈 */ }
+    const prev = liveBar.t === lastT ? (bars[bars.length - 2] || liveBar) : bars[bars.length - 1];
+    const chg = liveBar.c - prev.c, pct = prev.c ? chg / prev.c * 100 : 0;
+    $("ohlcLine").innerHTML = `<span><b>${snap.meta.symbol}</b> · 15 · Binance</span>` +
+        `<span>开 <b>${fmtPx(liveBar.o)}</b></span><span>高 <b>${fmtPx(liveBar.h)}</b></span><span>低 <b>${fmtPx(liveBar.l)}</b></span>` +
+        `<span>收 <b>${fmtPx(liveBar.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>` +
+        `<span style="color:#2fbf71">· 实时</span>`;
+    const now = Date.now();
+    if (now - liveLineAt > 1000) {
+        liveLineAt = now;
+        try {
+            if (liveLine)
+                candleSeries.removePriceLine(liveLine);
+            liveLine = candleSeries.createPriceLine({ price: liveBar.c, color: "#e8a33d", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" });
+        }
+        catch { /* 同上 */ }
+    }
+}
+function startLive(sym) {
+    if (liveSym === sym && liveWs)
+        return;
+    liveSym = sym;
+    liveBar = null;
+    liveOk = false;
+    if (liveWs) {
+        try {
+            liveWs.close();
+        }
+        catch { /* 已断开 */ }
+        liveWs = null;
+    }
+    const hosts = ["wss://stream.binance.com:9443", "wss://data-stream.binance.vision"];
+    let hi = 0;
+    const connect = () => {
+        if (liveSym !== sym)
+            return;
+        const ws = new WebSocket(`${hosts[hi]}/ws/${sym.toLowerCase()}@kline_15m`);
+        liveWs = ws;
+        let opened = false;
+        ws.onopen = () => { opened = true; liveOk = true; renderLiveBadge(); };
+        ws.onmessage = (ev) => {
+            try {
+                const k = JSON.parse(ev.data).k;
+                if (!k)
+                    return;
+                liveBar = { t: k.t, o: parseFloat(k.o), h: parseFloat(k.h), l: parseFloat(k.l), c: parseFloat(k.c) };
+                applyLiveBar();
+            }
+            catch { /* 单帧坏数据忽略 */ }
+        };
+        ws.onerror = () => { try {
+            ws.close();
+        }
+        catch { /* 忽略 */ } };
+        ws.onclose = () => {
+            if (liveWs === ws)
+                liveWs = null;
+            if (liveSym !== sym)
+                return;
+            liveOk = false;
+            if (!opened && hi < hosts.length - 1) {
+                hi++;
+                connect();
+            }
+            else
+                setTimeout(connect, 3000);
+        };
+    };
+    connect();
 }
 // ---------- 右栏 ----------
 // 引用 → 人话事实：证据/反证不许只摆数字（用户 2026-11-01 点名「写个数字
