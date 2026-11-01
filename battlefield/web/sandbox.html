@@ -46,13 +46,16 @@
   .step .sd { color: #9db8cc; font-size: 12.5px; }
   .waitB { margin-left: auto; flex: none; border: 1px solid #a67c1f; color: #ffd97a; border-radius: 4px; font-size: 10.5px; padding: 0 6px; height: fit-content; }
   .bottomRow { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-  .tl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 6px; position: relative; margin-top: 4px; }
   .reason { color: #8fa9bd; font-size: 12px; line-height: 1.55; background: rgba(23,42,59,.5); border-left: 2px solid #3d5a73; padding: 6px 8px; border-radius: 0 6px 6px 0; margin-bottom: 4px; }
-  .tl .node { text-align: center; position: relative; }
+  .tl { overflow-x: auto; overflow-y: hidden; margin-top: 4px; cursor: grab; scrollbar-width: thin; }
+  .tl:active { cursor: grabbing; }
+  .tlTrack { display: flex; width: max-content; position: relative; padding: 0 4px; }
+  .tlTrack:before { content: ""; position: absolute; left: 0; right: 0; top: 30px; border-top: 1px solid #2a4d6d; }
+  .tl .node { width: 150px; flex: none; text-align: center; position: relative; padding: 0 5px; }
   .tl .tm { color: #7e97ab; font-size: 11px; height: 26px; }
   .tl .dot { width: 9px; height: 9px; border-radius: 50%; background: #3fa9f5; margin: 0 auto 5px; position: relative; z-index: 1; box-shadow: 0 0 0 3px #0d1b29; }
   .tl .tt { font-weight: 700; font-size: 12.5px; }
-  .tl .ts { color: #7e97ab; font-size: 11.5px; min-height: 30px; }
+  .tl .ts { color: #7e97ab; font-size: 11.5px; min-height: 46px; }
   table.cmp { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   table.cmp th, table.cmp td { padding: 5px 4px; border-bottom: 1px solid #1c3448; text-align: right; }
   table.cmp th:first-child, table.cmp td:first-child { text-align: left; color: #9db8cc; }
@@ -76,7 +79,7 @@
         <div id="chartWrap"><div id="chart"></div><div id="bands"></div></div>
       </div>
       <div class="bottomRow">
-        <div class="card"><h3>◎ 事件时间线</h3><div class="tl" id="tlBody"></div></div>
+        <div class="card"><h3>◎ 事件时间线<span class="r">按住拖动 · 滚轮横移</span></h3><div class="tl" id="tlBody"></div></div>
       </div>
     </div>
 

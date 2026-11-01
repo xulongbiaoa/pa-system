@@ -315,7 +315,7 @@ function renderPlan() {
 }
 
 // ---------- 底部：时间线 + 多空对照 ----------
-function sparkline(barMs: number, anchor?: number): string {
+function sparkline(barMs: number, anchor?: number | number[]): string {
   const bars = snap!.bars;
   let idx = bars.findIndex((b: AnyObj) => b.t >= barMs - 1);
   if (idx < 0) idx = bars.length - 1;
@@ -323,17 +323,18 @@ function sparkline(barMs: number, anchor?: number): string {
   const win = bars.slice(from, Math.min(bars.length, idx + 11));
   if (win.length < 2) return "";
   const cs = win.map((b: AnyObj) => b.c);
+  const anchors = anchor == null ? [] : (Array.isArray(anchor) ? anchor : [anchor]);
   let mn = Math.min(...cs), mx = Math.max(...cs);
-  if (anchor != null) { mn = Math.min(mn, anchor); mx = Math.max(mx, anchor); }
+  for (const a of anchors) { mn = Math.min(mn, a); mx = Math.max(mx, a); }
   const rg = (mx - mn) || 1;
   const X = (i: number) => (i / (win.length - 1) * 86).toFixed(1);
   const Y = (v: number) => (30 - (v - mn) / rg * 26).toFixed(1);
   const pts = cs.map((c: number, i: number) => `${X(i)},${Y(c)}`).join(" ");
   const upNet = cs[cs.length - 1] >= cs[0];
   const evI = Math.min(win.length - 1, Math.max(0, idx - from));
-  const anchorLine = anchor != null
-    ? `<line x1="0" y1="${Y(anchor)}" x2="86" y2="${Y(anchor)}" stroke="#e8a33d" stroke-width="0.8" stroke-dasharray="3 2"/>` : "";
-  return `<svg width="86" height="32">${anchorLine}<polyline points="${pts}" fill="none" stroke="${upNet ? "#22b573" : "#e5484d"}" stroke-width="1.4"/><circle cx="${X(evI)}" cy="${Y(cs[evI])}" r="2.2" fill="#f5f9fc"/></svg>`;
+  const anchorLines = anchors.slice(0, 3).map(a =>
+    `<line x1="0" y1="${Y(a)}" x2="86" y2="${Y(a)}" stroke="#e8a33d" stroke-width="0.8" stroke-dasharray="3 2"/>`).join("");
+  return `<svg width="86" height="32">${anchorLines}<polyline points="${pts}" fill="none" stroke="${upNet ? "#22b573" : "#e5484d"}" stroke-width="1.4"/><circle cx="${X(evI)}" cy="${Y(cs[evI])}" r="2.2" fill="#f5f9fc"/></svg>`;
 }
 
 function renderTimeline() {
@@ -377,11 +378,28 @@ function renderTimeline() {
         s: a != null ? `锚 ${fmtPx(a)} · 共经 ${g?.test_count ?? "?"} 次测试后城破` : "触锚关账" };
     },
   };
-  const story = snap!.events.filter((e: AnyObj) => META[e.type]).slice(-8);
-  $("tlBody").innerHTML = story.length ? story.map((e: AnyObj) => {
+  // 横向时间轴（用户 2026-11-01 定：左右动，不要上下两排）；同一根 K 线
+  // 同方向立账多座缺口合并成一个节点，免得一排看上去全是重复卡。
+  const raw = snap!.events.filter((e: AnyObj) => META[e.type]).slice(-18);
+  type Node = { e: AnyObj; merged: AnyObj[] };
+  const nodes: Node[] = [];
+  for (const e of raw) {
+    const prev = nodes[nodes.length - 1];
+    if (prev && e.type === "GAP_OPENED" && prev.e.type === "GAP_OPENED"
+        && e.bar_open_ms === prev.e.bar_open_ms && e.direction === prev.e.direction) {
+      prev.merged.push(e);
+    } else nodes.push({ e, merged: [e] });
+  }
+  $("tlBody").innerHTML = nodes.length ? `<div class="tlTrack">${nodes.map(({ e, merged }) => {
     const m = META[e.type](e);
+    if (merged.length > 1) {
+      const anchors = merged.map(x => anchorOf(x)).filter((a): a is number => a != null);
+      return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${e.direction === "up" ? "↑" : "↓"} 缺口建立 ×${merged.length}</div><div class="ts">锚 ${anchors.map(a => fmtPx(a)).join(" / ")} · 已开放 ${ageBars(e.bar_open_ms)} 根</div>${sparkline(e.bar_open_ms, anchors)}</div>`;
+    }
     return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${m.t}</div><div class="ts">${m.s}</div>${sparkline(e.bar_open_ms, anchorOf(e))}</div>`;
-  }).join("") : "暂无缺口事件。";
+  }).join("")}</div>` : "暂无缺口事件。";
+  const tlEl = $("tlBody");
+  requestAnimationFrame(() => { tlEl.scrollLeft = tlEl.scrollWidth; });
 }
 
 // 多空行动对照已按用户 2026-11-01 要求下线（数据仍在快照 sides 里，页面不显示）
@@ -425,3 +443,15 @@ setInterval(async () => {
     }
   } catch (e) { /* 网络抖动下轮再探 */ }
 }, 60000);
+
+// 时间线横向拖动 + 滚轮横移（只挂一次，tlBody 元素常驻）
+{
+  const tlEl = $("tlBody");
+  let dragX: number | null = null, dragL = 0;
+  tlEl.addEventListener("pointerdown", e => { dragX = e.clientX; dragL = tlEl.scrollLeft; });
+  window.addEventListener("pointermove", e => { if (dragX != null) tlEl.scrollLeft = dragL - (e.clientX - dragX); });
+  window.addEventListener("pointerup", () => { dragX = null; });
+  tlEl.addEventListener("wheel", e => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { tlEl.scrollLeft += e.deltaY; e.preventDefault(); }
+  }, { passive: false });
+}
