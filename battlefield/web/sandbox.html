@@ -58,15 +58,41 @@
   .tlTrack { display: flex; width: max-content; position: relative; padding: 0 4px; }
   .tlTrack:before { content: ""; position: absolute; left: 0; right: 0; top: 30px; border-top: 1px solid #2a4d6d; }
   .tl .node { width: 150px; flex: none; text-align: center; position: relative; padding: 0 5px; }
-  .tl .tm { color: #7e97ab; font-size: 11px; height: 26px; }
+  .tl .tm { color: #7e97ab; font-size: 11px; height: 22px; }
   .tl .dot { width: 9px; height: 9px; border-radius: 50%; background: #3fa9f5; margin: 0 auto 5px; position: relative; z-index: 1; box-shadow: 0 0 0 3px #0d1b29; }
   .tl .tt { font-weight: 700; font-size: 12.5px; }
-  .tl .ts { color: #7e97ab; font-size: 11.5px; min-height: 46px; }
+  .tl .ts { color: #7e97ab; font-size: 11.5px; min-height: 36px; }
   table.cmp { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   table.cmp th, table.cmp td { padding: 5px 4px; border-bottom: 1px solid #1c3448; text-align: right; }
   table.cmp th:first-child, table.cmp td:first-child { text-align: left; color: #9db8cc; }
   .foot { color: #55707f; font-size: 11.5px; padding: 2px 12px 12px; }
   @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } .bottomRow { grid-template-columns: 1fr; } }
+  /* 一屏化（用户 2026-11-01 点名）：桌面端整页锁 100vh、不滚动——
+     左图弹性伸缩，右栏简报+计划同屏装下；简报万一超高只在卡内滚 */
+  @media (min-width: 1101px) {
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .layout { flex: 1; min-height: 0; align-items: stretch; grid-template-rows: minmax(0, 1fr); }
+    .mainCol { display: flex; flex-direction: column; gap: 10px; min-height: 0; min-width: 0; }
+    .chartCard { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    #chartWrap { flex: 1; height: auto; min-height: 0; }
+    .bottomRow { margin-top: 0; flex: none; }
+    .sideCol { min-height: 0; }
+    .sideCol > .card { flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; }
+    .foot { flex: none; }
+    /* 简报排版：不靠压缩密度，靠分段与发丝线——每块之间一条发丝线、
+       段距统一，结论与主推演保持原有呼吸感 */
+    #hypBody .evT { border-top: 1px solid #1c3448; padding-top: 8px; margin-top: 9px; }
+    #hypBody .handB { margin-top: 10px; }
+    /* 一屏化的关键让位：右栏加宽到 400 只装简报（字号略收），
+       观察计划改左栏底部四段横排，高度从约 390 压到约 110 */
+    .layout { grid-template-columns: 1fr 400px; }
+    .sideCol { font-size: 12.5px; line-height: 1.5; }
+    .planCard { flex: none; }
+    .planCard .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 14px; }
+    .planCard .step { border-bottom: 0; padding: 2px 0; min-width: 0; }
+    .planCard .step .sd { overflow-wrap: anywhere; }
+  }
 </style>
 </head>
 <body>
@@ -79,19 +105,19 @@
   </div>
 
   <div class="layout">
-    <div>
-      <div class="card">
+    <div class="mainCol">
+      <div class="card chartCard">
         <div class="ohlc" id="ohlcLine"></div>
         <div id="chartWrap"><div id="chart"></div><div id="bands"></div></div>
       </div>
       <div class="bottomRow">
         <div class="card"><h3>◎ 事件时间线<span class="r">按住拖动 · 滚轮横移</span></h3><div class="tl" id="tlBody"></div></div>
       </div>
+      <div class="card planCard"><h3>◎ 观察计划<span class="r">当前状态：● 等待中</span></h3><div id="planBody"></div></div>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:10px">
+    <div class="sideCol" style="display:flex;flex-direction:column;gap:10px">
       <div class="card"><h3>◉ AI 参谋简报<span class="r" id="hypUpd"></span></h3><div id="hypBody"></div></div>
-      <div class="card"><h3>◎ 观察计划<span class="r">当前状态：● 等待中</span></h3><div id="planBody"></div></div>
     </div>
   </div>
   <div class="foot" id="footLine"></div>

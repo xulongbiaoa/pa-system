@@ -182,6 +182,7 @@ function renderChart() {
   const bars = snap!.bars;
   if (chart) { chart.remove(); chart = null; }
   chart = LightweightCharts.createChart($("chart"), {
+    autoSize: true,
     layout: { background: { color: "transparent" }, textColor: "#7e97ab", fontSize: 11, attributionLogo: false },
     grid: { vertLines: { color: "rgba(38,64,87,.35)" }, horzLines: { color: "rgba(38,64,87,.35)" } },
     rightPriceScale: { borderColor: "#24455e" },
