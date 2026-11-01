@@ -413,27 +413,7 @@ function renderTimeline() {
         return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${m.t}</div><div class="ts">${m.s}</div>${sparkline(e.bar_open_ms, anchorOf(e))}</div>`;
     }).join("") : "暂无缺口事件。";
 }
-function renderCompare() {
-    const pick = (sideKey) => {
-        const segs = snap.sides[sideKey].segments || [];
-        return [...segs].reverse().find(s => !s.open) || segs[segs.length - 1] || null;
-    };
-    const cell = (seg, kind) => {
-        if (!seg)
-            return "—";
-        const dir = seg.direction === "up" ? 1 : -1;
-        if (kind === "prog")
-            return `${seg.direction === "up" ? "+" : "−"}${fmtNum(seg.net_progress)}（${fmtPx(seg.p0)} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
-        if (kind === "give")
-            return `${fmtNum(seg.giveback)}（极值 ${fmtPx(seg.p0 + dir * (seg.favorable ?? 0))} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
-        return `${fmtDur(seg.elapsed_bars ?? 0)}${seg.open ? "（进行中）" : ""}`;
-    };
-    const up = pick("up"), dn = pick("down");
-    $("cmpBody").innerHTML = `<table class="cmp"><tr><th></th><th class="up">多方（上涨）</th><th class="down">空方（下跌）</th></tr>
-    <tr><td>推进幅度</td><td class="up">${cell(up, "prog")}</td><td class="down">${cell(dn, "prog")}</td></tr>
-    <tr><td>回撤幅度</td><td>${cell(up, "give")}</td><td>${cell(dn, "give")}</td></tr>
-    <tr><td>持续时间</td><td>${cell(up, "dur")}</td><td>${cell(dn, "dur")}</td></tr></table>`;
-}
+// 多空行动对照已按用户 2026-11-01 要求下线（数据仍在快照 sides 里，页面不显示）
 // ---------- 装配 ----------
 let curSymbol = "BTCUSDT";
 async function load(sym) {
@@ -455,7 +435,6 @@ async function load(sym) {
     renderBrief();
     renderPlan();
     renderTimeline();
-    renderCompare();
     $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
 }
 window.addEventListener("resize", positionBands);
@@ -479,7 +458,6 @@ setInterval(async () => {
             renderBrief();
             renderPlan();
             renderTimeline();
-            renderCompare();
             $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
         }
     }

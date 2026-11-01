@@ -384,24 +384,7 @@ function renderTimeline() {
   }).join("") : "暂无缺口事件。";
 }
 
-function renderCompare() {
-  const pick = (sideKey: string) => {
-    const segs: AnyObj[] = snap!.sides[sideKey].segments || [];
-    return [...segs].reverse().find(s => !s.open) || segs[segs.length - 1] || null;
-  };
-  const cell = (seg: AnyObj | null, kind: string) => {
-    if (!seg) return "—";
-    const dir = seg.direction === "up" ? 1 : -1;
-    if (kind === "prog") return `${seg.direction === "up" ? "+" : "−"}${fmtNum(seg.net_progress)}（${fmtPx(seg.p0)} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
-    if (kind === "give") return `${fmtNum(seg.giveback)}（极值 ${fmtPx(seg.p0 + dir * (seg.favorable ?? 0))} → ${fmtPx(seg.p0 + dir * (seg.net_progress ?? 0))}）`;
-    return `${fmtDur(seg.elapsed_bars ?? 0)}${seg.open ? "（进行中）" : ""}`;
-  };
-  const up = pick("up"), dn = pick("down");
-  $("cmpBody").innerHTML = `<table class="cmp"><tr><th></th><th class="up">多方（上涨）</th><th class="down">空方（下跌）</th></tr>
-    <tr><td>推进幅度</td><td class="up">${cell(up, "prog")}</td><td class="down">${cell(dn, "prog")}</td></tr>
-    <tr><td>回撤幅度</td><td>${cell(up, "give")}</td><td>${cell(dn, "give")}</td></tr>
-    <tr><td>持续时间</td><td>${cell(up, "dur")}</td><td>${cell(dn, "dur")}</td></tr></table>`;
-}
+// 多空行动对照已按用户 2026-11-01 要求下线（数据仍在快照 sides 里，页面不显示）
 
 // ---------- 装配 ----------
 let curSymbol = "BTCUSDT";
@@ -423,7 +406,6 @@ async function load(sym: string) { curSymbol = sym;
   renderBrief();
   renderPlan();
   renderTimeline();
-  renderCompare();
   $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
 }
 
@@ -438,7 +420,7 @@ setInterval(async () => {
     if (!snap || fresh.meta.token !== snap.meta.token) { snap = fresh; buildLookups(); const m = snap.meta, bars = snap.bars, last = bars[bars.length - 1]; const prev = bars[bars.length - 2] || last; const chg = last.c - prev.c, pct = (chg / prev.c * 100);
       renderHeader();
       $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span><span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span><span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>`;
-      buildZones(); renderChart(); renderBrief(); renderPlan(); renderTimeline(); renderCompare();
+      buildZones(); renderChart(); renderBrief(); renderPlan(); renderTimeline();
       $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
     }
   } catch (e) { /* 网络抖动下轮再探 */ }
