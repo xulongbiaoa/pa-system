@@ -142,3 +142,84 @@ def fetch_closed_window(symbol: str, timeframe: str = "15m",
     return select_closed_window(bars, symbol, timeframe,
                                 expected_count=expected_count,
                                 timeframe_ms=TF_MS.get(timeframe))
+
+
+def validate_chain(bars: Iterable[Bar], symbol: str, timeframe: str,
+                   timeframe_ms: int | None = None) -> List[Bar]:
+    """校验一串已收盘 Bar 自身连续：标的/周期一致、边界对齐、逐根间隔恰为
+    一个周期、顺序严格递增。长度任意（>=1）。乱序/缺根/错位一律显式报错。"""
+    tf_ms = timeframe_ms or TF_MS.get(timeframe)
+    if not tf_ms:
+        raise InputIncompleteError(f"未知周期: {timeframe}")
+    chain = list(bars)
+    if not chain:
+        raise InputIncompleteError("空 Bar 序列")
+    prev_open = None
+    for i, bar in enumerate(chain):
+        if bar.symbol != symbol or bar.timeframe != timeframe:
+            raise InputIncompleteError(
+                f"第 {i} 根标的/周期不符: {bar.symbol}/{bar.timeframe}")
+        try:
+            bar.validate()
+        except ValueError as exc:
+            raise InputIncompleteError(str(exc)) from exc
+        if bar.open_time % tf_ms != 0:
+            raise InputIncompleteError(
+                f"第 {i} 根 open_time 不在 {timeframe} 边界: {bar.open_time}")
+        if prev_open is not None and bar.open_time != prev_open + tf_ms:
+            raise InputIncompleteError(
+                f"序列不连续/乱序: 第 {i} 根 open_time={bar.open_time}，"
+                f"期望 {prev_open + tf_ms}")
+        prev_open = bar.open_time
+    return chain
+
+
+def plan_increment(existing: Sequence[Bar], fetched: Sequence[Bar],
+                   timeframe_ms: int) -> List[Bar]:
+    """连续账本增量规划：给定账本已有 Bar 与新拉取的已收盘 Bar，算出可追加
+    的新 Bar 列表。规则（任一违反 = InputIncompleteError，显式停机）：
+    - fetched 本身必须顺序严格递增（乱序不重排掩盖）；
+    - 与账本重叠的 Bar 必须同 ID 同内容（修订冲突报错）；
+    - 第一个新 Bar 必须恰好接在账本尾根之后，中间缺根报错；
+    - 新 Bar 之间逐根连续。
+    账本为空时，fetched 校验为一条连续链后全量返回（种子）。"""
+    if fetched:
+        opens = [b.open_time for b in fetched]
+        if any(b <= a for a, b in zip(opens, opens[1:])):
+            raise InputIncompleteError("拉取序列乱序：open_time 非严格递增")
+    if not existing:
+        return validate_chain(fetched, fetched[0].symbol if fetched else "",
+                              fetched[0].timeframe if fetched else "",
+                              timeframe_ms) if fetched else []
+    known = {b.open_time: b for b in existing}
+    tail_open = existing[-1].open_time
+    new_bars: List[Bar] = []
+    expected = tail_open + timeframe_ms
+    for bar in fetched:
+        prev = known.get(bar.open_time)
+        if prev is not None:
+            if not prev.same_content(bar):
+                raise InputIncompleteError(
+                    f"同 ID 内容修订冲突: {bar.id} 已收盘根 OHLC 与账本不符")
+            continue
+        if bar.open_time <= tail_open:
+            continue  # 账本尾根之前的旧重叠（超出核对范围）：不是新根，跳过
+        if bar.open_time != expected:
+            raise InputIncompleteError(
+                f"增量缺根: 期望 open_time={expected}，实际 {bar.open_time}")
+        new_bars.append(bar)
+        expected = bar.open_time + timeframe_ms
+    if new_bars:
+        validate_chain(new_bars, new_bars[0].symbol, new_bars[0].timeframe,
+                       timeframe_ms)
+    return new_bars
+
+
+def fetch_incremental(symbol: str, timeframe: str, existing: Sequence[Bar],
+                      limit: int = 1000) -> List[Bar]:
+    """为连续账本拉增量：只返回账本尾根之后、校验通过的新已收盘 Bar。
+
+    existing 为账本现有 Bar（至少尾部若干根；重叠段用于修订冲突核对）。
+    无新根返回 []（调用方据此判 no_new_bar）。"""
+    fetched = fetch_klines(symbol, timeframe, limit=limit)
+    return plan_increment(existing, fetched, TF_MS[timeframe])

@@ -1,15 +1,21 @@
-"""网站日内滚动（沙盘 data24 线，用户 2026-10-31 定版：做日内，不做连续全局账本）。
+"""网站滚动（沙盘线）。语义分两层（2026-11-01 plan-2 定版，取代 10-31 日内整窗）：
 
-语义：每一轮 = 一个全新的日内战场——抓最近 96 根已收盘 15m（24h）整窗重建，
-状态只来自本窗，上一窗的账与简报全部作废（全局信息不进日内盘）。简报每轮由
-当值判读基于本窗状态包从零写（read_cursor = 本窗 revision），落账后导出并
-上传 R2 sandbox/data24/，线上沙盘轮询读取。
+- **连续账本**（记忆层）：每标的 battlefield/shadow/<SYM>-15m/ 的 ShadowBook，
+  只追加已收盘 Bar、跨窗跨天不截断；Brain cursor、假设、观察计划、候选
+  与判读历史连续演化。缺根/修订/乱序显式报错，无新根不生成判读任务。
+- **96 根视图**（观察层）：网站快照仍是最近 96 根 15m 的切片，由连续账本
+  状态导出（export_24h.finalize_from_ledger），meta 带 ledger_revision /
+  ledger_cursor；视图不承担持久记忆。
+
+线上流程仍是 phase1 → 当值 agent 判读 → phase2，不接外部模型供应商。
 
 用法：
   python3 -m battlefield.roll_site phase1
-      双标的抓数建场（覆盖 bars/pkg，清空旧输出），输出两份包的路径与摘要
-  python3 -m battlefield.roll_site phase2 <BTC判读.json> <ETH判读.json>
-      两份判读落账 → finalize → 上传，输出 JSON 状态（人工应急入口，保留）
+      双标的增量推进连续账本；有待判读时写出 package（data24/pkg_<SYM>.json），
+      输出每标的状态（package_ready / up_to_date）
+  python3 -m battlefield.roll_site phase2 <BTC判读.json|-> <ETH判读.json|->
+      判读经 ShadowBook canonical 幂等落账 → 导出 96 根视图 → 上传；
+      "-" 表示该标的本轮无待判读（只做未完成的导出/发布恢复）
   python3 -m battlefield.roll_site run-once --adapter mock [--no-publish]
       单次可重入闭环：窗口检查 → 模型 → 幂等落账 → 导出 → 发布。
       真实供应商经 --adapter-factory module:factory 注入（factory(config)
@@ -62,53 +68,164 @@ def _upload(sym: str) -> str:
     return f"uploaded {len(data)}B"
 
 
-def phase1() -> list:
+# 连续账本目录：沿用既有 ShadowBook 账本位置（仓库根 shadow/<SYM>-15m，
+# 2026-10-31 种子 1000 根 + 既有判读历史都在那里，不迁移、不丢历史）。
+LEDGER_ROOT = os.path.join(e24.ROOT, "shadow")
+FLOW_STATE_SCHEMA = "battlefield.flow-state/v1"
+
+
+def _book(sym: str, ledger_root: str | None = None):
+    from battlefield.shadow import ShadowBook
+    return ShadowBook(os.path.join(ledger_root or LEDGER_ROOT, f"{sym}-15m"),
+                      sym, TIMEFRAME, e24.TF_MS)
+
+
+def _flow_path(book) -> str:
+    return os.path.join(book.workdir, "flow_state.json")
+
+
+def _read_flow(book) -> dict:
+    path = _flow_path(book)
+    if os.path.exists(path):
+        try:
+            flow = json.load(open(path))
+            if isinstance(flow, dict) and flow.get("schema_version") == FLOW_STATE_SCHEMA:
+                return flow
+        except json.JSONDecodeError as exc:
+            raise StateConsistencyError(f"flow_state 损坏: {path}: {exc}") from exc
+    return {"schema_version": FLOW_STATE_SCHEMA, "symbol": book.symbol,
+            "stages": {}, "last_apply": {}}
+
+
+def _write_flow(book, flow: dict) -> None:
+    flow["updated_at_ms"] = _now_ms()
+    path = _flow_path(book)
+    tmp = f"{path}.tmp"
+    with open(tmp, "w") as f:
+        json.dump(flow, f, ensure_ascii=False, default=str)
+    os.replace(tmp, path)
+
+
+def _flow_stage(book, flow: dict, name: str, status: str, **extra) -> None:
+    flow.setdefault("stages", {})[name] = {
+        "status": status, "at_ms": _now_ms(), **extra}
+    _write_flow(book, flow)
+
+
+def phase1(fetcher=None, ledger_root: str | None = None) -> list:
+    """连续账本推进：增量拉取 → 严格追加 → 有待判读则写出稳定 package。
+
+    fetcher 可注入：(symbol, existing_bars) -> 新 Bar 列表（测试用）；
+    默认 feed.fetch_incremental（以账本尾根为界，缺根/修订/乱序显式报错）。
+    无新根或 Brain 已消费到最新 revision 时，该标的返回 up_to_date，
+    不生成新判读任务；已生成未判读的 package 跨重启保持同一份（token 不变）。
+    """
+    from battlefield.feed import fetch_incremental
+    from battlefield.queries import make_token
+
     results = []
     for sym in SYMBOLS:
-        bars = fetch_klines(sym, "15m", limit=100)[-e24.BARS_N:]
-        with open(os.path.join(OUT, f"bars_{sym}.jsonl"), "w") as f:
-            for b in bars:
-                f.write(json.dumps(dataclasses.asdict(b), default=str) + "\n")
-        # 日内新窗：上一窗的简报全部作废
-        out_path = os.path.join(OUT, f"output_{sym}.json")
-        if os.path.exists(out_path):
-            os.remove(out_path)
-        marker_path = os.path.join(OUT, f"applied_{sym}.json")
-        if os.path.exists(marker_path):
-            os.remove(marker_path)
-        repo = e24.build_battlefield(sym, "15m", e24.TF_MS, bars)
-        session = BrainSession(repo, RecordedAdapter([]))
-        pkg = build_task_package(repo, session.read_revision)
-        pkg_path = os.path.join(OUT, f"pkg_{sym}.json")
-        json.dump(pkg, open(pkg_path, "w"), ensure_ascii=False, default=str)
-        results.append({"symbol": sym, "bars": len(bars), "token": pkg["token"],
-                        "pkg": pkg_path})
+        book = _book(sym, ledger_root)
+        flow = _read_flow(book)
+        existing = book._read_bars()
+        try:
+            new_bars = fetcher(sym, existing) if fetcher is not None \
+                else fetch_incremental(sym, TIMEFRAME, existing, limit=1000)
+            added = book.append_bars(new_bars) if new_bars else 0
+        except Exception as exc:
+            _flow_stage(book, flow, "input", "failed", detail=str(exc))
+            raise
+        bars_now = book._read_bars()
+        last_close = bars_now[-1].close_time if bars_now else None
+        _flow_stage(book, flow, "input", "completed", added_bars=added,
+                    ledger_bars=len(bars_now), last_close_ms=last_close)
+        repo, session, pkg = book.pending_package()
+        if pkg is None:
+            _flow_stage(book, flow, "package", "up_to_date",
+                        revision=repo.kernel.revision)
+            results.append({"symbol": sym, "status": "up_to_date",
+                            "added_bars": added, "bars": len(bars_now),
+                            "revision": repo.kernel.revision,
+                            "brain_cursor": session.read_revision,
+                            "token": make_token(repo)})
+            continue
+        pkg_path = os.path.join(e24.OUT, f"pkg_{sym}.json")
+        os.makedirs(e24.OUT, exist_ok=True)
+        with open(pkg_path, "w") as f:
+            json.dump(pkg, f, ensure_ascii=False, default=str)
+        with open(os.path.join(book.workdir, "pending_pkg.json"), "w") as f:
+            json.dump(pkg, f, ensure_ascii=False, default=str)
+        _flow_stage(book, flow, "package", "completed",
+                    token=pkg["token"], snapshot_revision=pkg["snapshot_revision"],
+                    read_cursor=session.read_revision, last_close_ms=last_close)
+        results.append({"symbol": sym, "status": "package_ready",
+                        "added_bars": added, "bars": len(bars_now),
+                        "token": pkg["token"],
+                        "snapshot_revision": pkg["snapshot_revision"],
+                        "brain_cursor": session.read_revision,
+                        "last_close_ms": last_close, "pkg": pkg_path})
     return results
 
 
-def phase2(judge_files: dict) -> list:
-    """幂等：同一窗同一份判读文件只落账一次（2026-10-31 21:15 轮教训：首跑
-    BTC 已落账、ETH 被拒后整批重跑，BTC 被追加了第二份，造成快照重复条目）。"""
+def phase2(judge_files: dict, publisher=None, ledger_root: str | None = None) -> list:
+    """判读落账（ShadowBook canonical 幂等）→ 导出 96 根视图 → 发布。
+
+    恢复语义：同一判读文件（sha256）已落账则跳过 apply 直接续跑导出/发布；
+    账本层另有 canonical 校验兜底（同 read_cursor 同输出复用、不同输出拒绝）。
+    任一阶段失败：flow_state 记 failed 并抛错，下一轮同文件重跑从失败处续。
+    judge_files 值为 "-" 或 None 的标的跳过 apply，只做导出/发布恢复检查。
+    """
     import hashlib
+
     results = []
     for sym in SYMBOLS:
-        judge_path = judge_files[sym]
-        digest = hashlib.sha256(open(judge_path, "rb").read()).hexdigest()
-        pkg = json.load(open(os.path.join(OUT, f"pkg_{sym}.json")))
-        marker_path = os.path.join(OUT, f"applied_{sym}.json")
-        marker = json.load(open(marker_path)) if os.path.exists(marker_path) else {}
-        if marker.get("judge_sha256") == digest and marker.get("token") == pkg["token"]:
-            pass  # 本窗本文件已落过账：跳过 apply，只重建快照
-        else:
-            e24.apply(sym, judge_path)
-            json.dump({"judge_sha256": digest, "token": pkg["token"]},
-                      open(marker_path, "w"))
-        e24.finalize(sym)
-        snap = json.load(open(os.path.join(OUT, f"{sym}.json")))
+        book = _book(sym, ledger_root)
+        flow = _read_flow(book)
+        judge_path = judge_files.get(sym)
+        skip_apply = judge_path in (None, "-")
+        if not skip_apply:
+            digest = hashlib.sha256(open(judge_path, "rb").read()).hexdigest()
+            marker = flow.get("last_apply") or {}
+            if marker.get("judge_sha256") == digest \
+                    and marker.get("status") == "completed":
+                _flow_stage(book, flow, "apply", "completed",
+                            detail="flow marker 命中，不重复落账",
+                            judge_sha256=digest)
+            else:
+                judge = json.load(open(judge_path))
+                res = book.apply_output(judge)
+                if res["status"] != "ok":
+                    _flow_stage(book, flow, "apply", "failed",
+                                detail=res.get("detail"), judge_sha256=digest)
+                    raise RuntimeError(f"{sym} 判读落账失败: {res}")
+                flow["last_apply"] = {"status": "completed",
+                                      "judge_sha256": digest,
+                                      "output_digest": res.get("output_digest"),
+                                      "token": res.get("token"),
+                                      "at_ms": _now_ms()}
+                _flow_stage(book, flow, "apply", "completed",
+                            judge_sha256=digest,
+                            output_digest=res.get("output_digest"))
+        try:
+            snap = e24.finalize_from_ledger(sym, book)
+        except Exception as exc:
+            _flow_stage(book, flow, "export", "failed", detail=str(exc))
+            raise
+        _flow_stage(book, flow, "export", "completed",
+                    token=snap["meta"]["token"],
+                    ledger_revision=snap["meta"]["ledger_revision"])
+        try:
+            upload = publisher(sym) if publisher is not None else _upload(sym)
+        except Exception as exc:
+            _flow_stage(book, flow, "publish", "failed", detail=str(exc))
+            raise
+        _flow_stage(book, flow, "publish", "completed", detail=str(upload))
         results.append({"symbol": sym, "token": snap["meta"]["token"],
+                        "ledger_revision": snap["meta"]["ledger_revision"],
+                        "ledger_cursor": snap["meta"]["ledger_cursor"],
                         "open_gaps": len(snap["open_gaps"]),
                         "ai_stale": snap["meta"]["ai"]["stale"],
-                        "upload": _upload(sym)})
+                        "upload": upload})
     return results
 
 

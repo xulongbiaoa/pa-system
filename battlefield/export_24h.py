@@ -221,6 +221,118 @@ def finalize(sym: str, tolerant: bool = False):
           "open_gaps:", len(snap["open_gaps"]))
 
 
+def finalize_from_ledger(sym: str, book=None) -> dict:
+    """从连续账本（ShadowBook）导出最近 96 根视图快照到 OUT/<SYM>.json。
+
+    与 finalize() 的区别：状态来自跨窗连续账本——开放缺口/假设/计划/候选
+    都是全史连续状态，只有 bars 数组切最近 96 根作视图；meta 明确
+    view_window=96、ledger_revision、ledger_cursor，视图不承担历史记忆。
+    brain_outputs 只带最近 20 份进快照（全量在账本 brain_outputs.jsonl）。
+    """
+    import dataclasses
+
+    from battlefield.shadow import ShadowBook
+
+    if book is None:
+        root = os.path.join(ROOT, "battlefield", "shadow")
+        book = ShadowBook(os.path.join(root, f"{sym}-15m"), sym, "15m", TF_MS)
+    repo, session = book.rebuild()
+    outputs = book._read_outputs()
+    bars_all = book._read_bars()
+    view_bars = bars_all[-BARS_N:]
+    token = make_token(repo)
+    qs = QueryService(repo, token)
+    scene = qs.get_scene()
+    changes = qs.get_changes(0)
+    last_out = outputs[-1] if outputs else None
+    ai_cursor = last_out.get("read_cursor") if last_out else None
+
+    LIFECYCLE = ("GAP_OPENED", "GAP_CLOSED", "TEST_STARTED", "TEST_ENDED")
+    all_events = changes["events"]
+    picked = [e for e in all_events if e["type"] in LIFECYCLE]
+    picked += [e for e in all_events if e["type"] not in LIFECYCLE][-300:]
+    picked_ids = {id(e) for e in picked}
+    picked = [e for e in all_events if id(e) in picked_ids]
+    events = []
+    for e in picked:
+        events.append({
+            "event_id": e["event_id"], "type": e["type"], "lens": e.get("lens"),
+            "level_key": e.get("level_key"), "direction": e.get("direction"),
+            "bar_open_ms": _bar_ms(e.get("bar_id", "")),
+            "event_time": e.get("event_time"), "confirmed_at": e.get("confirmed_at"),
+            "payload": e.get("payload") or {},
+        })
+
+    def side(name):
+        sa = qs.get_side_activity(name)
+        segs = []
+        for s in sa["segments"][-6:]:
+            r = s["result"]
+            segs.append({
+                "segment_id": s["segment_id"], "level_key": s["level_key"], "open": s["open"],
+                "direction": r.get("direction"), "p0": _num(r.get("p0")),
+                "net_progress": _num(r.get("net_progress")),
+                "favorable": _num(r.get("favorable_excursion")), "giveback": _num(r.get("giveback")),
+                "giveback_ratio": _num(r.get("giveback_ratio")), "elapsed_bars": r.get("elapsed_bars"),
+            })
+        return {"recorded": sa["recorded"], "events_count": len(sa["events"]), "segments": segs}
+
+    snap = {
+        "meta": {
+            "symbol": sym, "timeframe": "15m", "token": token,
+            "state_revision": scene["revision"], "cursor_close_ms": scene["cursor"],
+            "bars_count": len(view_bars), "generated_at_ms": int(time.time() * 1000),
+            "data_health": scene["data_health"],
+            "window": "15m × 24h 视图（连续账本）",
+            "view_window": BARS_N,
+            "ledger_revision": scene["revision"],
+            "ledger_cursor": session.read_revision,
+            "ledger_bars": len(bars_all),
+            "book_bars": len(bars_all),
+            "ai": {"outputs": len(outputs), "outputs_total": len(outputs),
+                   "last_read_cursor": ai_cursor,
+                   "last_action": last_out.get("action") if last_out else None,
+                   "status": "completed" if last_out else "none",
+                   "stale": ai_cursor is not None and ai_cursor < scene["revision"]},
+            "source": "连续账本（shadow book → QueryService）",
+        },
+        "bars": [{"t": b.open_time, "o": _num(b.open), "h": _num(b.high),
+                  "l": _num(b.low), "c": _num(b.close)} for b in view_bars],
+        "levels": [{"level_key": lv["level_key"], "kind": lv["kind"],
+                    "lo": _num(lv["lo"]), "hi": _num(lv["hi"]),
+                    "watch_lo": _num(lv["watch_lo"]), "watch_hi": _num(lv["watch_hi"])}
+                   for lv in scene["levels"]],
+        "open_gaps": [{"gap_id": g["gap_id"], "level_key": g["level_key"],
+                       "direction": g["direction"], "anchor": _num(g["anchor"]),
+                       "test_count": g["test_count"], "opened_ms": _bar_ms(g["opened_bar"]),
+                       "tests": [{"started_ms": _bar_ms(t.get("started_bar", "")),
+                                  "ended_ms": _bar_ms(t.get("ended_bar", ""))}
+                                 for t in g["tests"]]}
+                      for g in scene["open_gaps"]],
+        "closed_gaps_recent": [{"gap_id": g["gap_id"], "direction": g["direction"],
+                                "anchor": _num(g["anchor"]), "test_count": g["test_count"]}
+                               for g in scene["just_closed_gaps"][-10:]],
+        "events": events,
+        "hypotheses": repo.kernel.hypotheses,
+        "watch_plans": repo.kernel.watch_plans,
+        "brain_outputs": outputs[-20:],
+        "candidate_proposals": scene["candidate_proposals"],
+        "sides": {"up": side("up"), "down": side("down")},
+        "contests_count": len(scene["contests"]),
+        "as_known": [],
+    }
+    os.makedirs(OUT, exist_ok=True)
+    path = os.path.join(OUT, f"{sym}.json")
+    json.dump(snap, open(path, "w"), ensure_ascii=False, default=str)
+    # 视图 bars 切片文件（兼容旧 data24 消费方；账本本体在 shadow book）
+    with open(os.path.join(OUT, f"bars_{sym}.jsonl"), "w") as f:
+        for b in view_bars:
+            f.write(json.dumps(dataclasses.asdict(b), default=str) + "\n")
+    print(sym, "finalized(ledger):", path, os.path.getsize(path), "bytes, token", token,
+          "ledger_rev:", scene["revision"], "open_gaps:", len(snap["open_gaps"]))
+    return snap
+
+
 def main(argv) -> int:
     cmd, sym = argv[0], argv[1]
     if cmd == "prepare":

@@ -15,8 +15,10 @@ import os
 from decimal import Decimal
 from typing import Callable, List, Optional
 
-from .brain import BrainSession, RecordedAdapter, build_task_package
+from .brain import BrainSession, RecordedAdapter, build_task_package, output_digest
 from .contracts import Bar, make_bar
+from .feed import InputIncompleteError
+from .queries import make_token
 from .repository import InMemoryRepository
 from .runner import build_battlefield
 
@@ -95,14 +97,32 @@ class ShadowBook:
 
     # ---------- 推进 ----------
     def append_bars(self, new_bars: List[Bar]) -> int:
+        """只追加账本尾根之后的新 Bar（严格口径）：
+        - 与已有根同 open_time：内容必须一致（幂等忽略），OHLC 不同 = 修订
+          冲突，显式报错；
+        - 新根必须逐根连续接在尾根之后，缺根显式报错，禁止尾部切片掩盖。
+        """
         existing = self._read_bars()
+        known = {b.open_time: b for b in existing}
         last_open = existing[-1].open_time if existing else None
         added = 0
         for b in new_bars:
-            if last_open is None or b.open_time > last_open:
-                self._append_jsonl(self.bars_path, _bar_to_json(b))
-                last_open = b.open_time
-                added += 1
+            prev = known.get(b.open_time)
+            if prev is not None:
+                if not prev.same_content(b):
+                    raise InputIncompleteError(
+                        f"同 ID 内容修订冲突: {b.id} 与账本 OHLC 不符")
+                continue
+            if last_open is not None and b.open_time != last_open + self.timeframe_ms:
+                if b.open_time < last_open:
+                    continue  # 账本范围内的旧根（known 未覆盖到的更早段）：跳过
+                raise InputIncompleteError(
+                    f"账本增量缺根: 期望 open_time={last_open + self.timeframe_ms}，"
+                    f"实际 {b.open_time}")
+            self._append_jsonl(self.bars_path, _bar_to_json(b))
+            known[b.open_time] = b
+            last_open = b.open_time
+            added += 1
         return added
 
     def pending_package(self):
@@ -112,9 +132,32 @@ class ShadowBook:
         return repo, session, build_task_package(repo, session.read_revision)
 
     def apply_output(self, output: dict) -> dict:
+        """落账一份输出。canonical 幂等：同一 read_cursor 只允许一份输出——
+        同输出重试直接复用既有结果（不重复 append、不重复应用）；同 cursor
+        不同输出拒绝覆盖/追加（contract_error）。stale/契约错误不写账、
+        不推进 cursor。结果带 token/ledger revision/输出指纹供阶段状态绑定。"""
+        digest = output_digest(output)
+        for prev in self._read_outputs():
+            if prev.get("read_cursor") == output.get("read_cursor"):
+                if output_digest(prev) == digest:
+                    result = {"status": "ok", "detail": "duplicate_ignored",
+                              "action": prev.get("action"),
+                              "snapshot_revision": prev.get("read_cursor"),
+                              "output_digest": digest}
+                    self._append_jsonl(self.runs_path, {"result": result})
+                    return result
+                result = {"status": "contract_error",
+                          "detail": f"read_cursor={output.get('read_cursor')} 已有"
+                                    f"不同输出在账，拒绝覆盖/追加",
+                          "output_digest": digest}
+                self._append_jsonl(self.runs_path, {"result": result})
+                return result
         repo, session = self.rebuild()
         session.adapter = RecordedAdapter([output])
         result = session.run_once()
+        result = {**result, "output_digest": digest,
+                  "token": make_token(repo),
+                  "ledger_revision": repo.kernel.revision}
         if result["status"] == "ok":
             self._append_jsonl(self.outputs_path, output)
         self._append_jsonl(self.runs_path, {"result": result})

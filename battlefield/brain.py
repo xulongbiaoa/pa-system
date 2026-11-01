@@ -310,6 +310,8 @@ def build_task_package(repo: InMemoryRepository, since_revision: int) -> dict:
         "token": token,
         "snapshot_revision": k.revision,
         "cursor": k.cursor,
+        "ledger_revision": k.revision,
+        "ledger_cursor": k.cursor,
         "last_bar": ({"open_time": last.open_time, "close_time": last.close_time,
                       "open": str(last.open), "high": str(last.high),
                       "low": str(last.low), "close": str(last.close)} if last else None),

@@ -23,6 +23,26 @@
 向下镜像、无突破/双侧同根 unknown、缺根/迟到/重复/修订、摆动确认时间、重放确定性、
 结果向量数值、快照绑定与提案引用核验。
 
+## 连续账本 + 96 根视图（plan-2，2026-11-01 定版）
+
+沙盘线语义分两层，取代 2026-10-31 的「日内整窗」定版：
+
+- **连续账本（记忆层）**：每标的 ShadowBook 在仓库根 `shadow/<SYM>-15m/`
+  （2026-10-31 种子 1000 根起，沿用不迁移）。只追加已收盘 Bar，跨窗跨天
+  不截断；Brain cursor、假设、观察计划、候选与判读历史连续演化。
+  `feed.fetch_incremental / plan_increment` 以账本尾根为界取增量，缺根、
+  乱序、同 ID 内容修订显式报错；`ShadowBook.append_bars` 同口径严格追加；
+  `apply_output` canonical 幂等——同 read_cursor 同输出复用既有结果、
+  不同输出拒绝覆盖/追加，stale/契约错误不推进 cursor。
+- **96 根视图（观察层）**：`export_24h.finalize_from_ledger` 从连续账本
+  状态导出网站快照，bars 只切最近 96 根，meta 带 `view_window=96`、
+  `ledger_revision`、`ledger_cursor`；视图不承担历史记忆。
+- **线上流程不变其形**：`roll_site phase1`（增量推进 + 写稳定 package，
+  无新根/已消费返回 up_to_date）→ 当值 agent 按 BrainSession 契约判读 →
+  `roll_site phase2 <btc|-> <eth|->`（canonical 落账 → 视图导出 → 发布）。
+  每标的阶段状态记在账本目录 `flow_state.json`（input/package/apply/
+  export/publish），失败重跑从失败阶段恢复，不重复调用 agent 或落账。
+
 ## 实时输入闭环（run-once，2026-11-01）
 
 `roll_site.py` 新增单次、可重入编排入口，外部定时器一轮调用即完成：
@@ -44,8 +64,9 @@ feed → 窗口校验（恰 96 根已收盘 15m、连续、边界正确，缺根
   phase1/phase2 人工判读入口保留为应急路径。
 - 不接外部模型供应商（2026-11-01 用户拍板：「先不用模型供应商了，
   你来分析就行」）：判读由当值 agent 按 BrainSession 契约出简报，
-  线上 cron 维持 phase1 + agent 判读 + phase2 流程；run-once 作为
-  已备好的编排管线留置，将来若改主意接供应商再启用。
+  线上 cron 维持 phase1 + agent 判读 + phase2 流程（连续账本语义，
+  见上节）；run-once 作为已备好的编排管线留置，将来若改主意接
+  供应商再启用。
 
 ## 未实现（按方案依赖排后）
 
