@@ -60,8 +60,10 @@ def test_fixture_main_trajectory():
     kernel, repo = fresh_repo()
     per_bar = run_fixture(repo)
     assert "ATTEMPT_STARTED" in per_bar[1]
-    assert "GAP_OPENED" not in per_bar[1]          # b1 缺口尚未建立
-    assert "GAP_OPENED" in per_bar[2]              # b2 整根分离立账
+    # 定版 v0.2「破掉即开账」（2026-11-01 用户拍板，对齐线索C）：b1 收盘
+    # 穿越锚线即立账，不再等 b2 整根分离（旧 anchor_separation 代理作废）
+    assert "GAP_OPENED" in per_bar[1]
+    assert "GAP_OPENED" not in per_bar[2]
     assert "TEST_STARTED" in per_bar[3]            # b3 T1
     assert "TEST_ENDED" in per_bar[4]              # b4 T1 结束
     assert "TEST_STARTED" in per_bar[5]            # b5 T2
@@ -110,8 +112,8 @@ def test_mirror_down_gap_and_test():
     kernel.register_level(level_p1())
     seq = [
         (101, "101.4", "100.6", 101),              # 先前 close=101
-        (101, "101.2", 98, "98.5"),                # 向下尝试，收外
-        ("98.5", 99, 97, "97.5"),                  # 整根在锚下方 -> 向下缺口
+        (101, "101.2", 98, "98.5"),                # 向下尝试，收盘破锚 -> 向下缺口（v0.2 破掉即开账）
+        ("98.5", 99, 97, "97.5"),                  # 整根在锚下方（缺口已立，不重复）
         ("97.5", "99.8", "97.2", "99.6"),          # 返回带内，未触锚 -> T1
         ("99.2", "99.3", "97.5", "97.8"),          # 整根离开带（下方）-> 拒绝（代理）
     ]
@@ -119,7 +121,7 @@ def test_mirror_down_gap_and_test():
     for i, (o, h, l, c) in enumerate(seq):
         res = repo.commit_bar(bar(i, o, h, l, c))
         per_bar.append([e.type for e in res["events"]])
-    assert "GAP_OPENED" in per_bar[2]
+    assert "GAP_OPENED" in per_bar[1]
     gap = list(kernel.gaps.values())[0]
     assert gap.direction == "down"
     assert "TEST_STARTED" in per_bar[3]

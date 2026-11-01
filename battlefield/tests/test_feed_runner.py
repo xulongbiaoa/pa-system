@@ -39,28 +39,27 @@ def _bar(i, o, h, l, c):
 
 
 def test_runner_gap_opens_on_confirmed_swing():
-    # major 摆动（左5右5）高点 102 在 i=10 收盘确认；minor 摆动只作地形不立账
-    rows = [
-        (100, 100, 99, 100),
-        (100, "100.5", "99.1", "100.2"),
-        ("100.2", 101, "99.2", "100.6"),
-        ("100.6", "101.5", "99.3", "101"),
-        (101, "101.8", "99.4", "101.2"),
-        ("101.2", 102, "99.5", "101.4"),   # major 摆动高点候选 102
-        ("101.4", "101.5", "99.4", "100.8"),
-        ("100.8", "101.2", "99.3", "100.4"),
-        ("100.4", 101, "99.2", "100.2"),
-        ("100.2", "100.8", "99.1", 100),
-        (100, "100.5", 99, "100.2"),       # 右侧满 5 根 -> 确认
-        ("100.2", "103.5", 100, 103),  # 收盘越过 102 -> 尝试
-        (103, 105, "102.5", "104.5"),      # 整根在 102 上方 -> major 立账
-        ("104.5", 105, 103, 104),
-    ]
-    bars = [_bar(i, *r) for i, r in enumerate(rows)]
+    # 定版 v0.2（2026-11-01）：波段点 = 收盘折线拐点（回撤 >= 3 倍尺度
+    # 确认）。每根 range 恒 2.4（尺度 2.4，门槛 7.2）：收盘腿 100->108
+    # 的极值根影线高点 108.2 是波段高点，回撤 7.4 确认；回踩低点 100.4
+    # 再回升 7.4 确认成起点拐点；收盘破 108.2 时波段点缺口与起点缺口同开
+    closes = [100, 102, 104, 106, 108,
+              106, 104, 102, "100.6",
+              102, 104, 106, 108,
+              110]
+    bars = []
+    prev = "99"
+    for i, c in enumerate(closes):
+        c = str(c)
+        hi = max(float(prev), float(c)) + 0.2
+        lo = min(float(prev), float(c)) - 0.2
+        bars.append(_bar(i, prev, f"{hi:.1f}", f"{lo:.1f}", c))
+        prev = c
     repo = build_battlefield("TEST", "15m", TF_MS, bars)
     pkg = scene_package(repo)
     anchors = [g["anchor"] for g in pkg["scene"]["open_gaps"]]
-    assert "102" in anchors
+    assert "108.2" in anchors
+    assert "100.4" in anchors                 # 起点缺口（腿起点的背向极值）
     assert pkg["side_up"]["recorded"] is True
     text = summarize(pkg)
     assert "开放缺口" in text

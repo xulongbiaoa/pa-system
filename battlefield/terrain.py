@@ -79,6 +79,73 @@ class SwingDetector:
         return out
 
 
+class CloseZigzagDetector:
+    """收盘折线拐点（定版 v0.2 波段点认法，2026-11-01 对齐线索C《缺口篇 上》）。
+
+    只盯收盘价折线：跟踪运行极值（最高/最低收盘），收盘自极值反向回撤
+    >= reversal * 尺度才确认拐点——一段波段只有一个拐点，相邻小折腾
+    不成点（影线分形在相近价位多顶几次就多确认几个点，是旧口径的病）。
+    拐点 K = 极值收盘所在根，锚价取其影线极值；确认时刻 = 回撤达标
+    那根的收盘（因果，禁止回溯）。reversal=3.0 是工程代理：把视频里
+    肉眼认的「一段波段」量化为至少 3 根典型波幅（尺度）的腿——实测
+    1.0 时 1,088 根里出 169 个拐点（每 6 根一个，仍是噪音），3.0 时
+    43 个，腿的尺度才与视频里逐段标的波段相当。
+    """
+
+    def __init__(self, reversal=Decimal("3.0"), band_fn=None,
+                 kind="zigzag", name_prefix="ZG"):
+        self.reversal = D(reversal)
+        self.band_fn = band_fn or (lambda scale: Decimal("0.5") * scale if scale else Decimal("0"))
+        self.kind = kind
+        self.name_prefix = name_prefix
+        self._seq = 0
+        self._dir: Optional[str] = None
+        self._ext_close: Optional[Decimal] = None
+        self._ext_bar: Optional[Bar] = None
+
+    def _confirm(self, which: str, bar: Bar, scale: Optional[Decimal]) -> Level:
+        self._seq += 1
+        pb = self._ext_bar
+        band = self.band_fn(scale)
+        if which == "H":
+            return make_level(f"{self.name_prefix}-H-{self._seq}", pb.high, pb.high,
+                              kind=self.kind,
+                              source=f"close_zigzag pivot high rev={self.reversal}",
+                              available_at=bar.close_time, confirmed_at=bar.close_time,
+                              band=band, direction_hint="down")
+        return make_level(f"{self.name_prefix}-L-{self._seq}", pb.low, pb.low,
+                          kind=self.kind,
+                          source=f"close_zigzag pivot low rev={self.reversal}",
+                          available_at=bar.close_time, confirmed_at=bar.close_time,
+                          band=band, direction_hint="up")
+
+    def on_bar(self, bar: Bar, scale: Optional[Decimal]) -> List[Level]:
+        out: List[Level] = []
+        if self._ext_bar is None:
+            self._ext_close, self._ext_bar = bar.close, bar
+            return out
+        if self._dir != "down" and bar.close > self._ext_close:
+            self._ext_close, self._ext_bar = bar.close, bar
+            if self._dir is None:
+                self._dir = "up"
+            return out
+        if self._dir != "up" and bar.close < self._ext_close:
+            self._ext_close, self._ext_bar = bar.close, bar
+            if self._dir is None:
+                self._dir = "down"
+            return out
+        if scale:
+            if self._dir == "up" and self._ext_close - bar.close >= self.reversal * scale:
+                out.append(self._confirm("H", bar, scale))
+                self._dir = "down"
+                self._ext_close, self._ext_bar = bar.close, bar
+            elif self._dir == "down" and bar.close - self._ext_close >= self.reversal * scale:
+                out.append(self._confirm("L", bar, scale))
+                self._dir = "up"
+                self._ext_close, self._ext_bar = bar.close, bar
+        return out
+
+
 def make_target(target_id, price, *, formula, anchor_refs, created_at, available_at) -> Target:
     return Target(target_id=target_id, price=D(price), formula=formula,
                   anchor_refs=tuple(anchor_refs), created_at=int(created_at),

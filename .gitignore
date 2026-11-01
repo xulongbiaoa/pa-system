@@ -21,3 +21,4 @@ battlefield/web/data/
 
 # 沙盘 24h 数据（export_24h 生成：bars/待判包/判读落账/快照，均为运行产物）
 battlefield/web/data24/
+shadow-archive*/

@@ -15,9 +15,11 @@ from .repository import InMemoryRepository
 
 def build_battlefield(symbol: str, timeframe: str, timeframe_ms: int,
                       bars: List[Bar]) -> InMemoryRepository:
-    # 双尺度地形：minor (2,2) 只作位置；major (5,5) 才有资格开缺口账（v0.2 入账范围）
+    # 地形：minor (2,2) 分形只作位置；缺口账只开在收盘折线拐点（波段点）
+    # 与强突破起点上（定版 v0.2，2026-11-01 对齐线索C《缺口篇 上》；
+    # 旧 (5,5) 分形 swing_major 立账已退役——见 design/gap-booking-v02）
     kernel = Battlefield(symbol, timeframe, timeframe_ms,
-                         swing_specs=[(2, 2, "swing", "SW"), (5, 5, "swing_major", "SWM")])
+                         swing_specs=[(2, 2, "swing", "SW")], zigzag=True)
     repo = InMemoryRepository(kernel)
     for b in bars:
         repo.commit_bar(b)

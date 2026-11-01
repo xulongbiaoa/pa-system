@@ -16,16 +16,19 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Dict, List, Optional
 
-from .actions import Segment, fully_outside_band, inside_band, separated_above, separated_below, touched
+from .actions import Segment, fully_outside_band, inside_band, touched
 from .contracts import Bar, Event, Level, Target
 from .facts import BarFacts, compute_facts
-from .terrain import SwingDetector
+from .terrain import CloseZigzagDetector, SwingDetector
 
 TEST_REJECTION_PROXY = "full_bar_leave_band"
 
-# 只有这些来源的位置有资格开缺口账（缺口定义 v0.2 入账范围：据点/要塞上下沿的
-# 波段点 + 人工审定锚）。minor 摆动只作地形，不立账——否则账本被小摆动淹没。
-GAP_ELIGIBLE_KINDS = ("manual", "gap_anchor", "swing_major")
+# 只有这些来源的位置有资格开缺口账（定版 v0.2，2026-11-01 对齐线索C
+# 《缺口篇 上》）：波段点 = 收盘折线拐点（zigzag）、强突破的起点
+# （origin，挂在起点拐点 level 上）、人工审定锚。影线分形（swing /
+# 旧 swing_major）只作地形，不立账——分形在相近价位多顶几次就多
+# 确认几个点、每个被破各立一座，是旧账本相邻簇与陈年堆积的病根。
+GAP_ELIGIBLE_KINDS = ("manual", "gap_anchor", "zigzag", "origin")
 
 
 @dataclass
@@ -54,15 +57,19 @@ class GapRecord:
     closed_bar: Optional[str] = None
     test_count: int = 0
     tests: List[dict] = field(default_factory=list)
+    origin: bool = False                  # True = 强突破起点缺口（定版 v0.2 第二种锚）
 
 
 class Battlefield:
     """单标的、单周期、已收盘 K 线的翻译内核。不调用模型。"""
 
     def __init__(self, symbol: str, timeframe: str, timeframe_ms: int,
-                 enable_swings: bool = False, swing_specs=None):
+                 enable_swings: bool = False, swing_specs=None, zigzag: bool = False,
+                 zigzag_reversal=None):
         """swing_specs: [(left, right, kind, name_prefix), ...]；enable_swings=True
-        且未给 specs 时只装 minor (2,2) 摆动（兼容旧测试）。"""
+        且未给 specs 时只装 minor (2,2) 摆动（兼容旧测试）。
+        zigzag=True 时装收盘折线拐点检测器（定版 v0.2 的波段点来源）；
+        zigzag_reversal 覆盖拐点确认的回撤门槛（尺度倍数，默认 3.0）。"""
         self.symbol = symbol
         self.timeframe = timeframe
         self.timeframe_ms = int(timeframe_ms)
@@ -96,6 +103,12 @@ class Battlefield:
             self._swings = [SwingDetector()]
         else:
             self._swings = []
+        self._zigzag = (CloseZigzagDetector(reversal=zigzag_reversal)
+                        if zigzag and zigzag_reversal is not None
+                        else CloseZigzagDetector() if zigzag else None)
+        self._pivots: List[dict] = []        # 已确认拐点序列（交替 H/L）
+        self._pivot_index: Dict[str, int] = {}   # level_key -> 拐点序号（入账窗口判定）
+        self._origin_done: set = set()       # 已立过起点账的起点 level_key
 
     # ---------- 注册 ----------
     def register_level(self, level: Level) -> None:
@@ -143,6 +156,16 @@ class Battlefield:
                 out.append(self._emit("LEVEL_CONFIRMED", bar, level_key=lv.key(),
                                       direction=lv.direction_hint,
                                       payload={"source": lv.source, "anchor": str(lv.anchor)}))
+        # 收盘折线拐点（定版 v0.2 波段点；拐点序列同时定义腿与起点）
+        if self._zigzag is not None:
+            for lv in self._zigzag.on_bar(bar, facts.scale):
+                self.register_level(lv)
+                self._pivot_index[lv.key()] = len(self._pivots)
+                self._pivots.append({"which": "H" if "-H-" in lv.level_id else "L",
+                                     "level_key": lv.key(), "anchor": lv.anchor})
+                out.append(self._emit("LEVEL_CONFIRMED", bar, level_key=lv.key(),
+                                      direction=lv.direction_hint,
+                                      payload={"source": lv.source, "anchor": str(lv.anchor)}))
         self.bars.append(bar)
         self.bars_by_id[bar.id] = bar
         # 各位置状态机
@@ -150,6 +173,17 @@ class Battlefield:
             if bar.close_time < rt.level.source_available_at:
                 continue
             out.extend(self._advance_level(rt, bar, facts))
+        # 起点缺口（定版 v0.2）：当前腿收盘破掉前一反向拐点 = 强突破，
+        # 在该腿起点拐点的背向极值处同时开账（上破取起点 K 低点、
+        # 下破取起点 K 高点——即起点拐点 level 自身的锚）
+        if len(self._pivots) >= 2:
+            origin, opposing = self._pivots[-1], self._pivots[-2]
+            okey = origin["level_key"]
+            if okey not in self._origin_done:
+                if origin["which"] == "L" and bar.close > opposing["anchor"]:
+                    self._book_origin(origin, bar, "up", out)
+                elif origin["which"] == "H" and bar.close < opposing["anchor"]:
+                    self._book_origin(origin, bar, "down", out)
         # 目标触及
         for t in self.targets.values():
             if not t.touched and bar.close_time >= t.available_at and bar.low <= t.price <= bar.high:
@@ -177,10 +211,12 @@ class Battlefield:
         extra = {"intrabar_order_unknown": True} if both_sides else {}
 
         # 1) 缺口关账优先（方案 §8：先记已补，不能为保留假设继续 open）
+        closed_this_bar = False
         gap = self.gaps.get(rt.gap_id) if rt.gap_id else None
         if gap is not None and gap.status == "open" and touched(bar, anchor, anchor):
             gap.status = "closed"
             gap.closed_bar = bar.id
+            closed_this_bar = True
             out.append(self._emit("GAP_CLOSED", bar, level_key=key,
                                   direction=gap.direction,
                                   payload={"gap_id": gap.gap_id, "anchor": str(anchor), **extra}))
@@ -230,32 +266,16 @@ class Battlefield:
             if bar.id not in seg.bar_ids:
                 seg.bar_ids.append(bar.id)
 
-        # 4) 分离 -> 缺口立账（anchor_separation：整根位于锚外且此前收盘已在锚外）
+        # 4) 收盘破锚 -> 缺口立账（定版 v0.2「破掉即开账」：attempt 已由
+        #    收盘穿越启动，本根收盘仍在锚外即开账；取代旧「整根分离」代理。
+        #    假突破随后碰回锚线即销账——活了几根的短命缺口，定版认可。）
         gap = self.gaps.get(rt.gap_id) if rt.gap_id else None
-        if rt.attempt_dir == "up" and not rt.separated and prev_close is not None \
-                and prev_close > anchor and separated_above(bar, anchor):
-            rt.separated = True
-            out.append(self._emit("SEPARATED", bar, level_key=key, direction="up", payload={**extra}))
-            if gap is None and lv.kind in GAP_ELIGIBLE_KINDS:
-                self._gap_seq += 1
-                gid = f"GAP-{lv.level_id}-{self._gap_seq}"
-                self.gaps[gid] = GapRecord(gap_id=gid, level_key=key, direction="up",
-                                           anchor=anchor, opened_bar=bar.id)
-                rt.gap_id = gid
-                out.append(self._emit("GAP_OPENED", bar, level_key=key, direction="up",
-                                      payload={"gap_id": gid, "anchor": str(anchor)}))
-        elif rt.attempt_dir == "down" and not rt.separated and prev_close is not None \
-                and prev_close < anchor and separated_below(bar, anchor):
-            rt.separated = True
-            out.append(self._emit("SEPARATED", bar, level_key=key, direction="down", payload={**extra}))
-            if gap is None and lv.kind in GAP_ELIGIBLE_KINDS:
-                self._gap_seq += 1
-                gid = f"GAP-{lv.level_id}-{self._gap_seq}"
-                self.gaps[gid] = GapRecord(gap_id=gid, level_key=key, direction="down",
-                                           anchor=anchor, opened_bar=bar.id)
-                rt.gap_id = gid
-                out.append(self._emit("GAP_OPENED", bar, level_key=key, direction="down",
-                                      payload={"gap_id": gid, "anchor": str(anchor)}))
+        if gap is None and not closed_this_bar and lv.kind in GAP_ELIGIBLE_KINDS \
+                and self._in_booking_window(lv):
+            if rt.attempt_dir == "up" and bar.close > anchor:
+                self._book_gap(rt, bar, "up", out, extra)
+            elif rt.attempt_dir == "down" and bar.close < anchor:
+                self._book_gap(rt, bar, "down", out, extra)
 
         # 5) 回补测试：从缺口侧整根在带外 -> 进入带内 = 一次测试开始；
         #    整根离开带回到缺口侧 = 该次测试结束（代理：拒绝确认）。
@@ -297,6 +317,50 @@ class Battlefield:
                 out.append(self._emit("RETURN_TO_BAND", bar, level_key=key, payload={**extra}))
             rt.band_side = None
         return out
+
+    def _in_booking_window(self, lv: Level) -> bool:
+        """入账窗口（定版 v0.2 入账门槛的机械化）：只有当前波段结构内的
+        拐点能立新账——即最近 3 个已确认拐点；更早的拐点线只作地形，
+        其已开的账继续追踪到销账为止，但不再因反复穿越重复立账。
+        人工/审定锚不受窗口限制。"""
+        idx = self._pivot_index.get(lv.key())
+        if idx is None:
+            return True
+        return idx >= len(self._pivots) - 3
+
+    def _book_gap(self, rt: LevelRuntime, bar: Bar, direction: str,
+                  out: List[Event], extra: dict, *, origin: bool = False) -> str:
+        lv = rt.level
+        # 一条锚线只有一座账（定版：一条缺口 = 一条锚线）：同价（或
+        # 0.25 尺度内）已有开放缺口时不重复立账——同一道城墙在不同
+        # 时段被重新顶到同价，是同一批被套者的位置，不是两座缺口
+        eps = (self._last_scale or Decimal("0")) * Decimal("0.25")
+        for g in self.gaps.values():
+            if g.status == "open" and abs(g.anchor - lv.anchor) <= eps:
+                return g.gap_id
+        self._gap_seq += 1
+        gid = f"GAP-{lv.level_id}-{self._gap_seq}"
+        self.gaps[gid] = GapRecord(gap_id=gid, level_key=lv.key(), direction=direction,
+                                   anchor=lv.anchor, opened_bar=bar.id, origin=origin)
+        rt.gap_id = gid
+        rt.separated = True
+        out.append(self._emit("SEPARATED", bar, level_key=lv.key(), direction=direction,
+                              payload={**extra}))
+        payload = {"gap_id": gid, "anchor": str(lv.anchor)}
+        if origin:
+            payload["origin"] = True
+        out.append(self._emit("GAP_OPENED", bar, level_key=lv.key(), direction=direction,
+                              payload=payload))
+        return gid
+
+    def _book_origin(self, origin: dict, bar: Bar, direction: str,
+                     out: List[Event]) -> None:
+        okey = origin["level_key"]
+        self._origin_done.add(okey)
+        rt = self.levels.get(okey)
+        if rt is None or rt.gap_id is not None:
+            return
+        self._book_gap(rt, bar, direction, out, {}, origin=True)
 
     def _start_attempt(self, rt: LevelRuntime, bar: Bar, direction: str,
                        out: List[Event], extra: dict) -> None:
@@ -355,7 +419,7 @@ class Battlefield:
         gaps = [{"gap_id": g.gap_id, "level_key": g.level_key, "direction": g.direction,
                  "anchor": str(g.anchor), "opened_bar": g.opened_bar, "status": g.status,
                  "closed_bar": g.closed_bar, "test_count": g.test_count,
-                 "next_test_index": g.test_count + 1,
+                 "next_test_index": g.test_count + 1, "origin": g.origin,
                  "tests": copy.deepcopy(g.tests)} for g in self.gaps.values()]
         targets = [{"target_id": t.target_id, "price": str(t.price), "formula": t.formula,
                     "anchor_refs": list(t.anchor_refs), "available_at": t.available_at,
