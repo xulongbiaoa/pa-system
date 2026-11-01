@@ -82,7 +82,7 @@ function positionBands() {
         div.style.borderBottom = z.anchorEdge === "bottom" ? "none" : `1px dashed rgba(${z.color},.5)`;
         const siege = z.gap ? (z.gap.test_count > 0 ? ` · 已挡攻城 ⚔×${z.gap.test_count}` : " · 尚未被攻") : "";
         div.innerHTML = `<span class="blabel" style="color:rgba(${z.color},1);${z.anchorEdge === "top" ? "top:3px" : "bottom:3px"}">${z.kind} ${fmtPx(z.bandLo)} – ${fmtPx(z.bandHi)}</span>` +
-            (z.hasGap ? `<span class="alabel" style="${z.anchorEdge === "bottom" ? "bottom:-8px" : "top:-8px"}">${fmtPx(z.gap.anchor)} ${z.gap.direction === "up" ? "向上" : "向下"}缺口锚</span>` : `<span class="alabel">${fmtPx((z.level && (z.level.lo ?? z.level.anchor)) || 0)} 无缺口</span>`);
+            (z.hasGap ? `<span class="alabel" style="${z.anchorEdge === "bottom" ? "bottom:-8px" : "top:-8px"}">${fmtPx(z.gap.anchor)} ${z.gap.direction === "up" ? "向上" : "向下"}缺口</span>` : `<span class="alabel">${fmtPx((z.level && (z.level.lo ?? z.level.anchor)) || 0)} 无缺口</span>`);
         host.appendChild(div);
         if (z.hasGap) {
             const yA = candleSeries.priceToCoordinate(z.anchor);
@@ -132,7 +132,7 @@ const DIALECT = {
     GAP_OPENED: "缺口立账", GAP_CLOSED: "缺口关账", TEST_STARTED: "测试开始", TEST_ENDED: "测试结束",
     LEFT_BAND_UP: "向上离开支撑带", LEFT_BAND_DOWN: "向下离开阻力带", RETURN_TO_BAND: "回到带内",
     LEVEL_TOUCHED: "触及位置", LEVEL_CONFIRMED: "位置确认", RECLAIMED: "收复位置", SEPARATED: "整根分离",
-    ATTEMPT_STARTED: "尝试开始", rejected_proxy: "被拒", anchor_touched: "已触锚", sufficient: "推进充分",
+    ATTEMPT_STARTED: "尝试开始", rejected_proxy: "被拒", anchor_touched: "已触线", sufficient: "推进充分",
     test_count: "测试次数",
 };
 function humanize(text) {
@@ -152,6 +152,14 @@ function humanize(text) {
     t = t.replace(/\bWP\d+\b/g, "观察计划");
     for (const [k, v] of Object.entries(DIALECT))
         t = t.split(k).join(v);
+    // 分析是给人看的（用户 2026-11-01 点名）：假设管理方言与「锚」字一律不许上脸
+    t = t.replace(/[（(]\s*supersede\s*H\d+\s*[）)]/gi, "");
+    t = t.replace(/supersede\s*H\d+/gi, "上一推演");
+    t = t.replace(/\bH\d+\b/g, "该推演");
+    t = t.replace(/[（(]锚\s*[\d.,]+[）)]/g, "");
+    t = t.replace(/锚线/g, "缺口线").replace(/触锚/g, "触线");
+    t = t.replace(/锚\s*(?=[\d])/g, "");
+    t = t.replace(/open状态/g, "开放状态");
     return t;
 }
 function renderHeader() {
@@ -245,11 +253,11 @@ function gapStory(id) {
     const rel = g.anchor > px ? `位于现价上方 ${fmtNum(g.anchor - px)} 点`
         : g.anchor < px ? `位于现价下方 ${fmtNum(px - g.anchor)} 点` : "与现价重合";
     if (!open)
-        return `锚 ${fmtPx(g.anchor)} 的${dir}缺口：已触锚关账（共经 ${g.test_count ?? 0} 次回补测试）`;
-    let s = `锚 ${fmtPx(g.anchor)} 的${dir}缺口仍开放，${rel}`;
+        return `${fmtPx(g.anchor)} 的${dir}缺口：已回补关账（共经 ${g.test_count ?? 0} 次回补测试）`;
+    let s = `${fmtPx(g.anchor)} 的${dir}缺口仍开放，${rel}`;
     if (g.test_count) {
         const oc = lastTestOutcome(id);
-        s += `；已回补测试 ${g.test_count} 次${oc === "anchor_touched" ? "，最近一次已触锚" : oc ? "，均未触锚、被拒" : ""}`;
+        s += `；已回补测试 ${g.test_count} 次${oc === "anchor_touched" ? "，最近一次已触线" : oc ? "，均未触线、被拒" : ""}`;
         const t = (g.tests || [])[g.tests.length - 1];
         if (t?.started_ms)
             s += `（最近一次 ${fmtTc(t.started_ms, false)}–${t.ended_ms ? fmtTc(t.ended_ms, false) : "进行中"}）`;
@@ -263,11 +271,11 @@ function evStory(ev) {
     const g = ev.payload?.gap_id ? gapById(ev.payload.gap_id) : null;
     const anchor = g ? fmtPx(g.anchor) : (ev.payload?.anchor ? fmtPx(Number(ev.payload.anchor)) : "—");
     switch (ev.type) {
-        case "GAP_OPENED": return `${t} 锚 ${anchor} ${ev.direction === "up" ? "向上" : "向下"}缺口立账`;
-        case "GAP_CLOSED": return `${t} 锚 ${anchor} 缺口触锚关账`;
-        case "TEST_STARTED": return `${t} 锚 ${anchor} 第 ${ev.payload?.test_index || ""} 次回补测试开始`;
-        case "TEST_ENDED": return `${t} 锚 ${anchor} 回补测试结束：${ev.payload?.outcome === "anchor_touched" ? "已触锚" : "未触锚、被拒"}`;
-        default: return `${t} ${EV_SHORT[ev.type] || "事件"}（锚 ${anchor}）`;
+        case "GAP_OPENED": return `${t} ${anchor} ${ev.direction === "up" ? "向上" : "向下"}缺口立账`;
+        case "GAP_CLOSED": return `${t} ${anchor} 缺口回补关账`;
+        case "TEST_STARTED": return `${t} ${anchor} 第 ${ev.payload?.test_index || ""} 次回补测试开始`;
+        case "TEST_ENDED": return `${t} ${anchor} 回补测试结束：${ev.payload?.outcome === "anchor_touched" ? "已触线" : "未触线、被拒"}`;
+        default: return `${t} ${EV_SHORT[ev.type] || "事件"}（${anchor}）`;
     }
 }
 function refStory(ref) {
@@ -315,13 +323,13 @@ function renderBrief() {
     const lastHist = hist[hist.length - 1];
     const opWord = { add: "立论", confirm: "确认", challenge: "受挑战", supersede: "被接管" };
     $("hypBody").innerHTML = `
-    <div class="hypMain"><div class="t">主要观点（当前假设 ${main.hyp_id}）</div><div>${humanize(main.text || "")}</div></div>
+    <div class="hypMain"><div class="t">主要观点</div><div>${humanize(main.text || "")}</div></div>
     <div class="evT">支持证据</div>
     ${renderRefs(main.support_refs, "✓")}
     <div class="evT red">反证因素</div>
     ${renderRefs(main.counter_refs, "!")}
     ${lastHist ? `<div class="evT">最新研判（${opWord[lastHist.op] || lastHist.op}）</div><div class="reason">${humanize(lastHist.reason || "")}</div>` : ""}
-    ${backup ? `<div class="evT">备推演（${backup.hyp_id}）</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
+    ${backup ? `<div class="evT">备推演</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
     $("hypUpd").textContent = `更新于 ${fmtTc(snap.meta.generated_at_ms, false)}`;
 }
 function renderPlan() {
@@ -391,13 +399,13 @@ function renderTimeline() {
             const a = anchorOf(e);
             return { color: e.direction === "up" ? "#2fbf71" : "#f0564f",
                 t: `${e.direction === "up" ? "↑" : "↓"} 缺口建立`,
-                s: a != null ? `锚 ${fmtPx(a)} · 位于现价${a >= px ? "上方" : "下方"} ${fmtNum(Math.abs(a - px))} 点 · 已开放 ${ageBars(e.bar_open_ms)} 根` : "新缺口立账" };
+                s: a != null ? `${fmtPx(a)} · 位于现价${a >= px ? "上方" : "下方"} ${fmtNum(Math.abs(a - px))} 点 · 已开放 ${ageBars(e.bar_open_ms)} 根` : "新缺口立账" };
         },
         TEST_STARTED: e => {
             const a = anchorOf(e);
             const n = e.payload?.test_index || "";
             return { color: "#e8a33d", t: `回补测试 T${n} 开始`,
-                s: a != null ? `锚 ${fmtPx(a)} · 此前 ${Math.max(0, (Number(n) || 1) - 1)} 次测试均未破` : "回补测试开始" };
+                s: a != null ? `${fmtPx(a)} · 此前 ${Math.max(0, (Number(n) || 1) - 1)} 次测试均未破` : "回补测试开始" };
         },
         TEST_ENDED: e => {
             const a = anchorOf(e);
@@ -406,14 +414,14 @@ function renderTimeline() {
             const t = (g?.tests || []).filter((x) => x.ended_ms && Math.abs(x.ended_ms - e.bar_open_ms) < 1400000)
                 .sort((x, y) => Math.abs(x.ended_ms - e.bar_open_ms) - Math.abs(y.ended_ms - e.bar_open_ms))[0];
             const dur = t?.started_ms ? Math.max(1, Math.round((t.ended_ms - t.started_ms) / 900000)) : null;
-            return { color: touched ? "#f0564f" : "#58a6d6", t: touched ? "测试触锚" : "测试被拒",
-                s: `${a != null ? `锚 ${fmtPx(a)} · ` : ""}${touched ? "价格已摸到锚线" : "未触锚即被打回"}${dur ? ` · 历时 ${dur} 根` : ""}` };
+            return { color: touched ? "#f0564f" : "#58a6d6", t: touched ? "测试触线" : "测试被拒",
+                s: `${a != null ? `${fmtPx(a)} · ` : ""}${touched ? "价格已摸到缺口线" : "未触线即被打回"}${dur ? ` · 历时 ${dur} 根` : ""}` };
         },
         GAP_CLOSED: e => {
             const a = anchorOf(e);
             const g = e.payload?.gap_id ? gapById(e.payload.gap_id) : null;
             return { color: "#f0564f", t: "缺口回补 · 关账",
-                s: a != null ? `锚 ${fmtPx(a)} · 共经 ${g?.test_count ?? "?"} 次测试后城破` : "触锚关账" };
+                s: a != null ? `${fmtPx(a)} · 共经 ${g?.test_count ?? "?"} 次测试后城破` : "回补关账" };
         },
     };
     // 横向时间轴（用户 2026-11-01 定：左右动，不要上下两排）；同一根 K 线
@@ -433,7 +441,7 @@ function renderTimeline() {
         const m = META[e.type](e);
         if (merged.length > 1) {
             const anchors = merged.map(x => anchorOf(x)).filter((a) => a != null);
-            return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${e.direction === "up" ? "↑" : "↓"} 缺口建立 ×${merged.length}</div><div class="ts">锚 ${anchors.map(a => fmtPx(a)).join(" / ")} · 已开放 ${ageBars(e.bar_open_ms)} 根</div>${sparkline(e.bar_open_ms, anchors)}</div>`;
+            return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${e.direction === "up" ? "↑" : "↓"} 缺口建立 ×${merged.length}</div><div class="ts">${anchors.map(a => fmtPx(a)).join(" / ")} · 已开放 ${ageBars(e.bar_open_ms)} 根</div>${sparkline(e.bar_open_ms, anchors)}</div>`;
         }
         return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${m.t}</div><div class="ts">${m.s}</div>${sparkline(e.bar_open_ms, anchorOf(e))}</div>`;
     }).join("")}</div>` : "暂无缺口事件。";
@@ -462,7 +470,7 @@ async function load(sym) {
     renderBrief();
     renderPlan();
     renderTimeline();
-    $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
+    $("footLine").textContent = `缺口线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
 }
 window.addEventListener("resize", positionBands);
 $("symBTC").addEventListener("click", () => load("BTCUSDT"));
@@ -485,7 +493,7 @@ setInterval(async () => {
             renderBrief();
             renderPlan();
             renderTimeline();
-            $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
+            $("footLine").textContent = `缺口线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
         }
     }
     catch (e) { /* 网络抖动下轮再探 */ }
