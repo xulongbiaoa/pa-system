@@ -380,7 +380,7 @@ def _check_refs(kernel, refs) -> None:
 # 根因纪律：账本是永久事实层，可以无限增长；判读包是每轮决策输入，必须
 # 有界。完整 scene/累计事件不进默认包——历史走 history_summary 索引 +
 # evidence 按 ID 取证；引用校验仍对全量账本执行，不因包精简而放松。
-PKG_BARS = 96                 # 当前局面：最近 96 根
+PKG_BARS = 192                # 当前局面：最近 192 根（48h；2026-11-01 用户拍板由 96 扩至 192，账本不截断）
 PKG_SIDE_EVENTS = 60          # 每侧最近行动事件
 PKG_SIDE_SEGMENTS = 12        # 每侧最近段（另加全部 open 段）
 PKG_CLOSED_GAPS = 24          # 最近关闭缺口（总数见 history_summary）
