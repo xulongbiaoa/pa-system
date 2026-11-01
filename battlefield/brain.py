@@ -297,31 +297,257 @@ def _check_refs(kernel, refs) -> None:
         raise ModelContractError(str(exc)) from exc
 
 
+# ---------- 有界判读包预算（bounded/v1） ----------
+# 根因纪律：账本是永久事实层，可以无限增长；判读包是每轮决策输入，必须
+# 有界。完整 scene/累计事件不进默认包——历史走 history_summary 索引 +
+# evidence 按 ID 取证；引用校验仍对全量账本执行，不因包精简而放松。
+PKG_BARS = 96                 # 当前局面：最近 96 根
+PKG_SIDE_EVENTS = 60          # 每侧最近行动事件
+PKG_SIDE_SEGMENTS = 12        # 每侧最近段（另加全部 open 段）
+PKG_CLOSED_GAPS = 24          # 最近关闭缺口（总数见 history_summary）
+PKG_GAP_TESTS = 8             # 每座缺口保留的最近 tests
+PKG_LEVELS_NEAR = 40          # 现价附近地形（另加全部开放缺口宿主 level）
+PKG_CHANGES_EVENTS = 500      # 增量事件上限（生命周期事件优先）
+PKG_CONCLUDED_HYPS = 12       # 历史摘要里的已结论假设
+PACKAGE_MAX_BYTES = 1_000_000  # 包体硬预算（UTF-8 序列化）
+_LIFECYCLE_TYPES = ("GAP_OPENED", "GAP_CLOSED", "TEST_STARTED", "TEST_ENDED")
+_ACTIVE_HYP_STATUS = ("active", "challenged")
+_ACTIVE_PLAN_STATUS = ("proposed", "active")
+
+
+def _pkg_size(pkg: dict) -> int:
+    return len(json.dumps(pkg, ensure_ascii=False, default=str).encode("utf-8"))
+
+
+def _bar_ms(bar_id: str) -> int:
+    try:
+        return int(str(bar_id).rsplit("/", 1)[-1])
+    except (TypeError, ValueError):
+        return 0
+
+
+def _trim_gap_tests(gap: dict, cap: int, omitted: list) -> dict:
+    tests = gap.get("tests") or []
+    if len(tests) <= cap:
+        return gap
+    omitted.append({"field": f"gap_tests:{gap.get('gap_id')}", "kept": cap,
+                    "total": len(tests), "policy": "最近 tests 优先，总数见 test_count"})
+    return {**gap, "tests": tests[-cap:], "tests_omitted": len(tests) - cap}
+
+
+def _gap_event_index(repo) -> dict:
+    """gap_id -> {opened_event_id, closed_event_id}（摘要追溯来源用）。"""
+    idx: dict = {}
+    for e in repo.kernel.events:
+        gid = (e.payload or {}).get("gap_id")
+        if not gid:
+            continue
+        slot = idx.setdefault(gid, {})
+        if e.type == "GAP_OPENED":
+            slot["opened_event_id"] = e.event_id
+        elif e.type == "GAP_CLOSED":
+            slot["closed_event_id"] = e.event_id
+    return idx
+
+
 def build_task_package(repo: InMemoryRepository, since_revision: int) -> dict:
-    """组装单次判读的完整输入：全局 scene + 局部 changes + 当前假设与计划。"""
+    """组装单次判读的有界输入（bounded/v1）：当前局面（最近 96 根、当前
+    有效地形、开放缺口、活跃假设/计划）+ 自 since_revision 的增量变化
+    （有上限）+ 历史摘要索引。账本本体不进包；旧细节按 ID 走 evidence
+    取证。每次裁剪都在 omitted 里留痕，不静默截断。"""
     token = make_token(repo)
     qs = QueryService(repo, token)
     k = repo.kernel
     last = k.bars[-1] if k.bars else None
-    return {
-        "schema_version": PACKAGE_SCHEMA_VERSION,
-        "adapter_protocol": ADAPTER_PROTOCOL_VERSION,
-        "output_schema_version": OUTPUT_SCHEMA_VERSION,
-        "token": token,
-        "snapshot_revision": k.revision,
-        "cursor": k.cursor,
-        "ledger_revision": k.revision,
-        "ledger_cursor": k.cursor,
-        "last_bar": ({"open_time": last.open_time, "close_time": last.close_time,
-                      "open": str(last.open), "high": str(last.high),
-                      "low": str(last.low), "close": str(last.close)} if last else None),
-        "scene": qs.get_scene(),
-        "changes": qs.get_changes(since_revision),
-        "side_up": qs.get_side_activity("up"),
-        "side_down": qs.get_side_activity("down"),
-        "hypotheses": copy.deepcopy(k.hypotheses),
-        "watch_plans": copy.deepcopy(k.watch_plans),
-    }
+    last_close = float(last.close) if last else None
+    bars_all = qs.read_bars()
+
+    caps = {"side_events": PKG_SIDE_EVENTS, "side_segments": PKG_SIDE_SEGMENTS,
+            "closed_gaps": PKG_CLOSED_GAPS, "levels_near": PKG_LEVELS_NEAR,
+            "changes_events": PKG_CHANGES_EVENTS}
+
+    def assemble(caps: dict) -> dict:
+        scene = qs.get_scene()
+        omitted: list = []
+
+        # --- 地形：开放缺口宿主 level 全保留 + 现价最近 levels_near 个 ---
+        levels_all = scene["levels"]
+        gap_level_keys = {g["level_key"] for g in scene["open_gaps"]}
+        others = [lv for lv in levels_all if lv["level_key"] not in gap_level_keys]
+        if last_close is not None:
+            def _dist(lv):
+                lo, hi = float(lv["lo"]), float(lv["hi"])
+                return 0.0 if lo <= last_close <= hi else min(
+                    abs(last_close - lo), abs(last_close - hi))
+            others.sort(key=_dist)
+        near_keys = {lv["level_key"] for lv in others[:caps["levels_near"]]}
+        keep_keys = gap_level_keys | near_keys
+        levels = [lv for lv in levels_all if lv["level_key"] in keep_keys]
+        if len(levels) < len(levels_all):
+            omitted.append({"field": "scene.levels", "kept": len(levels),
+                            "total": len(levels_all),
+                            "policy": "开放缺口宿主 + 现价最近优先，其余按 ID 取证"})
+        contests_all = scene["contests"]
+        contests = [c for c in contests_all if c["level_key"] in keep_keys]
+        if len(contests) < len(contests_all):
+            omitted.append({"field": "scene.contests", "kept": len(contests),
+                            "total": len(contests_all),
+                            "policy": "只留入选地形上的争夺记录"})
+
+        # --- 缺口：开放全保留（tests 有界）；关闭只留最近若干 ---
+        open_gaps = [_trim_gap_tests(g, PKG_GAP_TESTS, omitted)
+                     for g in scene["open_gaps"]]
+        closed_all = scene["just_closed_gaps"]
+        closed_sorted = sorted(
+            closed_all, key=lambda g: _bar_ms(g.get("closed_bar") or ""))
+        closed = closed_sorted[-caps["closed_gaps"]:] if caps["closed_gaps"] else []
+        closed = [_trim_gap_tests(g, PKG_GAP_TESTS, omitted) for g in closed]
+        if len(closed) < len(closed_all):
+            omitted.append({"field": "scene.just_closed_gaps", "kept": len(closed),
+                            "total": len(closed_all),
+                            "policy": "最近关闭优先，旧缺口生命周期见 history_summary"})
+
+        # --- 双侧活动：事件/段只留最近，open 段全保留 ---
+        sides = {}
+        side_totals = {}
+        for name in ("up", "down"):
+            sa = qs.get_side_activity(name)
+            evs_all, segs_all = sa["events"], sa["segments"]
+            evs = evs_all[-caps["side_events"]:] if caps["side_events"] else []
+            seg_tail = segs_all[-caps["side_segments"]:] if caps["side_segments"] else []
+            seg_ids = {s["segment_id"] for s in seg_tail}
+            merged = [(i, s) for i, s in enumerate(segs_all)
+                      if s["segment_id"] in seg_ids or s.get("open")]
+            merged.sort(key=lambda x: x[0])
+            # open 段全保留但有硬顶：open 段随历史堆积时按最近优先封顶
+            seg_hard_cap = min(60, caps["side_segments"] + 48)
+            if len(merged) > seg_hard_cap:
+                omitted.append({"field": f"sides.{name}.segments_open", "kept": seg_hard_cap,
+                                "total": len(merged), "policy": "open 段过多，最近优先硬顶"})
+                merged = merged[-seg_hard_cap:]
+            segs = [s for _, s in merged]
+            side_totals[name] = {"events": len(evs_all), "segments": len(segs_all)}
+            if len(evs) < len(evs_all):
+                omitted.append({"field": f"side_{name}.events", "kept": len(evs),
+                                "total": len(evs_all), "policy": "最近优先，旧事件按 ID 取证"})
+            if len(segs) < len(segs_all):
+                omitted.append({"field": f"side_{name}.segments", "kept": len(segs),
+                                "total": len(segs_all), "policy": "最近 + open 段优先"})
+            sides[name] = {**sa, "events": evs, "segments": segs}
+        da = scene.get("directional_activity") or {}
+        da_slim = {name: {"segments_total": len(ids or []),
+                          "recent_segment_ids": (ids or [])[-20:]}
+                   for name, ids in da.items()}
+
+        # --- 假设/计划：活跃进正文，已结论进摘要 ---
+        hyps_all = k.hypotheses
+        hyps_active = [h for h in hyps_all
+                       if h.get("status") in _ACTIVE_HYP_STATUS]
+        hyps_concluded = [h for h in hyps_all
+                          if h.get("status") not in _ACTIVE_HYP_STATUS]
+        plans_all = k.watch_plans
+        plans_active = [p for p in plans_all
+                        if p.get("status") in _ACTIVE_PLAN_STATUS]
+
+        # --- 增量变化：生命周期事件优先，其余最近优先 ---
+        changes_full = qs.get_changes(since_revision)
+        evs = changes_full["events"]
+        if len(evs) > caps["changes_events"]:
+            life = [e for e in evs if e["type"] in _LIFECYCLE_TYPES]
+            rest = [e for e in evs if e["type"] not in _LIFECYCLE_TYPES]
+            keep_rest = rest[-(caps["changes_events"] - len(life)):] \
+                if len(life) < caps["changes_events"] else []
+            keep_ids = {id(e) for e in life + keep_rest}
+            trimmed = [e for e in evs if id(e) in keep_ids]
+            omitted.append({"field": "changes.events", "kept": len(trimmed),
+                            "total": len(evs),
+                            "policy": "生命周期事件全保留，其余最近优先"})
+            changes = {**changes_full, "events": trimmed}
+        else:
+            changes = changes_full
+
+        # --- 历史摘要：索引不是事实，带来源事件 ID 可追溯 ---
+        ev_index = _gap_event_index(repo)
+        closed_recent = []
+        for g in closed_sorted[-PKG_CLOSED_GAPS:]:
+            ids = ev_index.get(g["gap_id"], {})
+            closed_recent.append({
+                "gap_id": g["gap_id"], "level_key": g["level_key"],
+                "direction": g["direction"], "anchor": str(g["anchor"]),
+                "test_count": g["test_count"],
+                "opened_bar": g.get("opened_bar"), "closed_bar": g.get("closed_bar"),
+                "opened_event_id": ids.get("opened_event_id"),
+                "closed_event_id": ids.get("closed_event_id"),
+            })
+        history_summary = {
+            "ledger_revision": k.revision,
+            "closed_gaps_total": len(closed_all),
+            "closed_gaps_recent": closed_recent,
+            "hypotheses_concluded_recent": [
+                {"hyp_id": h.get("hyp_id"), "status": h.get("status"),
+                 "text": (h.get("text") or "")[:200],
+                 "superseded_by": h.get("superseded_by")}
+                for h in hyps_concluded[-PKG_CONCLUDED_HYPS:]],
+            "hypotheses_concluded_total": len(hyps_concluded),
+            "levels_total": len(levels_all), "levels_included": len(levels),
+            "contests_total": len(contests_all), "contests_included": len(contests),
+            "side_events_total": {n: t["events"] for n, t in side_totals.items()},
+            "segments_total": {n: t["segments"] for n, t in side_totals.items()},
+            "watch_plans_total": len(plans_all),
+            "note": ("摘要是索引不是事实：细节按 gap_id / level_key / ev- id "
+                     "走 evidence 取证；引用校验对全量账本执行。"),
+        }
+
+        pkg_scene = {**scene, "levels": levels, "open_gaps": open_gaps,
+                     "just_closed_gaps": closed, "contests": contests,
+                     "directional_activity": da_slim,
+                     "active_hypotheses": copy.deepcopy(hyps_active),
+                     "watch_plans": copy.deepcopy(plans_active)}
+        return {
+            "schema_version": PACKAGE_SCHEMA_VERSION,
+            "adapter_protocol": ADAPTER_PROTOCOL_VERSION,
+            "output_schema_version": OUTPUT_SCHEMA_VERSION,
+            "package_format": "bounded/v1",
+            "token": token,
+            "snapshot_revision": k.revision,
+            "cursor": k.cursor,
+            "ledger_revision": k.revision,
+            "ledger_cursor": k.cursor,
+            "last_bar": ({"open_time": last.open_time, "close_time": last.close_time,
+                          "open": str(last.open), "high": str(last.high),
+                          "low": str(last.low), "close": str(last.close)} if last else None),
+            "bars": [{"t": b["open_time"], "o": b["open"], "h": b["high"],
+                      "l": b["low"], "c": b["close"]}
+                     for b in bars_all[-PKG_BARS:]],
+            "scene": pkg_scene,
+            "changes": changes,
+            "side_up": sides["up"],
+            "side_down": sides["down"],
+            "hypotheses": copy.deepcopy(hyps_active),
+            "watch_plans": copy.deepcopy(plans_active),
+            "history_summary": history_summary,
+            "omitted": omitted,
+        }
+
+    pkg = assemble(caps)
+    size = _pkg_size(pkg)
+    # 预算收紧阶梯：仍超限时逐级压活动事件/关闭缺口/地形/增量，并留痕
+    tighten = [("side_events", 30), ("closed_gaps", 10), ("levels_near", 20),
+               ("side_events", 12), ("changes_events", 200), ("levels_near", 10),
+               ("side_segments", 6), ("changes_events", 80)]
+    step = 0
+    while size > PACKAGE_MAX_BYTES and step < len(tighten):
+        field, value = tighten[step]
+        step += 1
+        if caps[field] <= value:
+            continue
+        caps[field] = value
+        pkg = assemble(caps)
+        size = _pkg_size(pkg)
+    pkg["budget"] = {"max_bytes": PACKAGE_MAX_BYTES, "bytes": size,
+                     "within_budget": size <= PACKAGE_MAX_BYTES,
+                     "tighten_steps": step}
+    return pkg
 
 
 class BrainSession:

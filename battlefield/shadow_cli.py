@@ -6,6 +6,11 @@
   apply --workdir D --symbol BTCUSDT --tf 15m --output judge_output.json
       校验并落账一份大脑输出，打印结果 JSON。校验不过不落账。
 
+  evidence --workdir D --symbol BTCUSDT --tf 15m --id <gap_id|level_key|segment_id|ev-id>
+      按 ID 取证（有界判读包的配套）：从账本重放状态里展开该对象的事件
+      历史与原始 Bar 证据链。判读包只带当前局面与摘要索引，旧细节用它查；
+      查不到显式报错（exit 2），不许拿摘要冒充证据。
+
 工作目录命名与标的/周期由调用方保持一致；账本内的 bars 自带 symbol/timeframe。
 """
 from __future__ import annotations
@@ -22,17 +27,48 @@ from .shadow import ShadowBook
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="battlefield.shadow_cli")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("advance", "apply"):
+    for name in ("advance", "apply", "evidence"):
         p = sub.add_parser(name)
         p.add_argument("--workdir", required=True)
         p.add_argument("--symbol", required=True)
         p.add_argument("--tf", required=True)
         if name == "advance":
             p.add_argument("--limit", type=int, default=1000)
-        else:
+        elif name == "apply":
             p.add_argument("--output", required=True)
+        else:
+            p.add_argument("--id", required=True)
     args = ap.parse_args(argv)
     book = ShadowBook(args.workdir, args.symbol, args.tf, TF_MS[args.tf])
+
+    if args.cmd == "evidence":
+        from .queries import QueryService, make_token
+        repo, _session = book.rebuild()
+        qs = QueryService(repo, make_token(repo))
+        oid = args.id
+        try:
+            if oid.startswith("ev-"):
+                ev = next((e for e in repo.kernel.events
+                           if e.event_id == oid), None)
+                if ev is None:
+                    raise ValueError(f"事件不存在: {oid}")
+                out = {"event": ev.to_dict()}
+                anchor = (ev.payload or {}).get("gap_id") or ev.level_key
+                if anchor:
+                    try:
+                        out["object"] = qs.inspect_evidence(anchor)
+                    except ValueError:
+                        out["history"] = qs.get_history(anchor)
+                print(json.dumps(out, ensure_ascii=False, default=str))
+                return 0
+            out = qs.inspect_evidence(oid)
+            out["history"] = qs.get_history(oid)
+            print(json.dumps(out, ensure_ascii=False, default=str))
+            return 0
+        except ValueError as exc:
+            print(json.dumps({"status": "not_found", "detail": str(exc)},
+                             ensure_ascii=False))
+            return 2
 
     if args.cmd == "advance":
         bars = fetch_klines(args.symbol, args.tf, args.limit)

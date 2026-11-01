@@ -42,6 +42,18 @@
   `roll_site phase2 <btc|-> <eth|->`（canonical 落账 → 视图导出 → 发布）。
   每标的阶段状态记在账本目录 `flow_state.json`（input/package/apply/
   export/publish），失败重跑从失败阶段恢复，不重复调用 agent 或落账。
+- **判读包有界（bounded/v1）**：账本是永久事实层、可无限增长，但
+  `build_task_package` 只给当前决策上下文——最近 96 根、当前有效地形
+  （开放缺口宿主 level 全保留 + 现价最近 40）、开放缺口、活跃假设/计划、
+  本轮增量（上限 500、生命周期事件优先）、双侧最近活动（事件 60/侧、
+  段最近 + open 段硬顶 60），外加 `history_summary` 索引（最近关闭
+  缺口的生命周期 + 来源事件 ID、已结论假设、各类总量）。硬预算 1MB，
+  超限按阶梯收紧；每次裁剪都记进包内 `omitted`，不静默截断。实测：
+  r1077 账本的包从 4.80MB 降到 0.29MB。旧细节按 ID 取证：
+  `python3 -m battlefield.shadow_cli evidence --workdir shadow/<SYM>-15m
+  --symbol <SYM> --tf 15m --id <gap_id|level_key|segment_id|ev-id>`；
+  引用与测试编号校验仍对全量账本（内核）执行，不因包精简而放松。
+  事实层不压缩不删除，摘要不冒充事实。
 
 ## 实时输入闭环（run-once，2026-11-01）
 
