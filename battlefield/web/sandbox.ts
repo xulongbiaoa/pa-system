@@ -164,11 +164,8 @@ function renderHeader() {
   if (ageMin <= 17) { lb.textContent = "● LIVE"; lb.style.color = "#2fbf71"; }
   else if (ageMin <= 35) { lb.textContent = `● 延迟 ${ageMin} 分钟`; lb.style.color = "#e8a33d"; }
   else { lb.textContent = `● 陈旧 ${ageMin} 分钟`; lb.style.color = "#f0564f"; }
-  $("dataTime").textContent =
-    `最新已收盘 K 线 ${fmtTc(m.cursor_close_ms)} · 战场快照生成 ${fmtTc(m.generated_at_ms)} · AI 简报基于 rev ${m.ai.last_read_cursor ?? "—"}（UTC+8） · ${m.window}`;
-  $("tokenBadge").textContent = m.token;
-  $("aiBadge").textContent = m.ai.stale ? "AI 待复核（基于旧快照）"
-    : `AI 已复核至 ${fmtTc(m.cursor_close_ms, false)}`;
+  // 顶栏只留 LIVE 状态：快照时间/token/AI 复核徽章按用户 2026-11-01
+  // 要求全部撤下（数据在快照 meta 里，随时可查，不摆在脸上）
 }
 
 function renderChart() {
@@ -427,7 +424,7 @@ async function load(sym: string) { curSymbol = sym;
   renderPlan();
   renderTimeline();
   renderCompare();
-  $("footLine").textContent = `快照 ${m.token} · rev ${m.state_revision} · 生成 ${fmtTc(m.generated_at_ms)} · ${m.source} · 缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
+  $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
 }
 
 window.addEventListener("resize", positionBands);
@@ -442,7 +439,7 @@ setInterval(async () => {
       renderHeader();
       $("ohlcLine").innerHTML = `<span><b>${m.symbol}</b> · 15 · Binance</span><span>开 <b>${fmtPx(last.o)}</b></span><span>高 <b>${fmtPx(last.h)}</b></span><span>低 <b>${fmtPx(last.l)}</b></span><span>收 <b>${fmtPx(last.c)}</b></span><span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : ""}${fmtPx(Math.abs(chg))} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%)</span>`;
       buildZones(); renderChart(); renderBrief(); renderPlan(); renderTimeline(); renderCompare();
-      $("footLine").textContent = `快照 ${m.token} · rev ${m.state_revision} · 生成 ${fmtTc(m.generated_at_ms)} · ${m.source} · 缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
+      $("footLine").textContent = `缺口锚线 = 带的最外沿（支撑带最下 / 阻力带最上），碰到即销账 · MM 目标位未接线，本页不画 · 沙盘只读`;
     }
   } catch (e) { /* 网络抖动下轮再探 */ }
 }, 60000);
