@@ -42,8 +42,10 @@ feed → 窗口校验（恰 96 根已收盘 15m、连续、边界正确，缺根
   `--adapter-factory module:factory`（factory(config) 返回适配器）；
   `--adapter mock` 只做链路冒烟，`--adapter recorded` 回放既有判读 JSON。
   phase1/phase2 人工判读入口保留为应急路径。
-- 尚未接真实供应商：无获批的供应商/凭据前，不执行真实模型调用，
-  线上 cron 仍走人工判读流程，未切换。
+- 不接外部模型供应商（2026-11-01 用户拍板：「先不用模型供应商了，
+  你来分析就行」）：判读由当值 agent 按 BrainSession 契约出简报，
+  线上 cron 维持 phase1 + agent 判读 + phase2 流程；run-once 作为
+  已备好的编排管线留置，将来若改主意接供应商再启用。
 
 ## 未实现（按方案依赖排后）
 
