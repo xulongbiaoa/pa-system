@@ -473,23 +473,8 @@ function renderBrief() {
         ? `${weak.length ? `<div class="evT red">反对理由</div>${weak.map(c => claimLine(c, "!")).join("")}` : ""}
        ${unres.length ? `<div class="evT">尚未决出</div>${unres.map(c => claimLine(c, "?")).join("")}` : ""}`
         : `<div class="evT red">反对理由</div>${renderRefs(main.counter_refs, "!")}`;
-    // 当前进行中方向（账本事实直读，不经判读员）：哪一侧还有未结束的
-    // 推进段，那个方向就还在进行中；两侧都有 = 争夺中
-    const openSeg = (side) => {
-        const segs = (snap.sides?.[side]?.segments || []).filter((x) => x.open);
-        return segs.length ? segs[segs.length - 1] : null;
-    };
-    const upOpen = openSeg("up"), dnOpen = openSeg("down");
-    const dirLine = (() => {
-        const segInfo = (sg) => `净推进 ${fmtNum(sg.net_progress)} · 已回吐 ${Math.round((sg.giveback_ratio || 0) * 100)}% · 已走 ${sg.elapsed_bars} 根`;
-        if (upOpen && !dnOpen)
-            return `<div class="dirLine"><span class="dirArr up">▲</span><span><b>当前进行中：向上推进</b>　${segInfo(upOpen)}</span></div>`;
-        if (dnOpen && !upOpen)
-            return `<div class="dirLine"><span class="dirArr down">▼</span><span><b>当前进行中：向下推进</b>　${segInfo(dnOpen)}</span></div>`;
-        if (upOpen && dnOpen)
-            return `<div class="dirLine"><span class="dirArr">◆</span><span><b>当前进行中：双向争夺</b>　两侧都有未结束的推进段</span></div>`;
-        return `<div class="dirLine"><span class="dirArr">·</span><span><b>当前进行中：无明确方向</b>　没有未结束的推进段</span></div>`;
-    })();
+    // 「当前进行中」方向条已按用户 2026-11-01 要求撤下（结论条已含方向定性，
+    // 不再单列账本推进段直读）
     // 长块一律简介+详情（用户 2026-11-01 点名）：默认只露一行简介，
     // 全文点开才展开——本轮更新、接管条件、备推演都按此办理
     const cut = (s, n) => s.length > n ? s.slice(0, n) + "…" : s;
@@ -501,7 +486,6 @@ function renderBrief() {
         : "";
     $("hypBody").innerHTML = `
     ${conclusion ? `<div class="concl">${humanize(conclusion)}</div>` : ""}
-    ${dirLine}
     <div class="hypMain"><div class="t">主要观点${phaseB(main)}</div><div>${humanize(main.text || "")}</div></div>
     ${evHtml}
     ${counterHtml}
