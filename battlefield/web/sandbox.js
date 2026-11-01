@@ -190,7 +190,16 @@ function renderChart() {
     markers.sort((a, b) => a.time - b.time);
     if (markers.length)
         candleSeries.setMarkers(markers);
-    chart.timeScale().fitContent();
+    // 默认缩放 = 最近 24h（96 根）满屏；全量历史仍在数据里，左拖可回看
+    const DEFAULT_VIEW_BARS = 96;
+    if (bars.length > DEFAULT_VIEW_BARS) {
+        chart.timeScale().setVisibleLogicalRange({
+            from: bars.length - DEFAULT_VIEW_BARS - 0.5, to: bars.length - 0.5,
+        });
+    }
+    else {
+        chart.timeScale().fitContent();
+    }
     chart.timeScale().subscribeVisibleLogicalRangeChange(positionBands);
     setTimeout(positionBands, 60);
 }
