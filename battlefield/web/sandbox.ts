@@ -112,13 +112,17 @@ function positionBands() {
 let GAP_PX: Record<string, number> = {};
 let LV_PX: Record<string, number> = {};
 let EV_MAP: Record<string, AnyObj> = {};
+let SEG_DIR: Record<string, string> = {};
 const EV_SHORT: Record<string, string> = { GAP_OPENED: "立账", GAP_CLOSED: "关账", TEST_STARTED: "测试开始", TEST_ENDED: "测试结束" };
 function buildLookups() {
-  GAP_PX = {}; LV_PX = {}; EV_MAP = {};
+  GAP_PX = {}; LV_PX = {}; EV_MAP = {}; SEG_DIR = {};
   const s: AnyObj = snap!;
   [...(s.open_gaps || []), ...(s.closed_gaps_recent || [])].forEach((g: AnyObj) => { GAP_PX[g.gap_id] = g.anchor; });
   (s.levels || []).forEach((l: AnyObj) => { LV_PX[l.level_key] = l.lo; });
   (s.events || []).forEach((e: AnyObj) => { EV_MAP[e.event_id] = e; });
+  for (const side of ["up", "down"]) (s.sides?.[side]?.segments || []).forEach((sg: AnyObj) => {
+    SEG_DIR[sg.segment_id] = sg.direction === "up" ? "上涨段" : "下跌段";
+  });
 }
 function evTime(ev: AnyObj): number { return ev.bar_open_ms ?? ev.time_ms ?? ev.occurred_at_ms ?? 0; }
 function numRef(id: string): string {
@@ -128,12 +132,28 @@ function numRef(id: string): string {
   if (ev) return `${fmtTc(evTime(ev), false)} ${EV_SHORT[ev.type] || "事件"}`;
   return id;
 }
+const DIALECT: Record<string, string> = {
+  GAP_OPENED: "缺口立账", GAP_CLOSED: "缺口关账", TEST_STARTED: "测试开始", TEST_ENDED: "测试结束",
+  LEFT_BAND_UP: "向上离开支撑带", LEFT_BAND_DOWN: "向下离开阻力带", RETURN_TO_BAND: "回到带内",
+  LEVEL_TOUCHED: "触及位置", LEVEL_CONFIRMED: "位置确认", RECLAIMED: "收复位置", SEPARATED: "整根分离",
+  ATTEMPT_STARTED: "尝试开始", rejected_proxy: "被拒", anchor_touched: "已触锚", sufficient: "推进充分",
+  test_count: "测试次数",
+};
 function humanize(text: string): string {
   if (!text) return text;
   let t = text.replace(/GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*[（(]锚\s*([0-9.]+)[）)]/g, (_m, p) => fmtPx(Number(p)));
   t = t.replace(/GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*/g, m => (m in GAP_PX) ? fmtPx(GAP_PX[m]) : "该缺口");
   t = t.replace(/[A-Z]{1,4}-[HL]-\d+@v\d+/g, m => (m in LV_PX) ? fmtPx(LV_PX[m]) : "该位置");
-  t = t.replace(/\bev-\d+/g, m => { const ev = EV_MAP[m]; return ev ? fmtTc(evTime(ev), false) : m; });
+  // 判读员的研判原文是机器方言，展示前翻成人话：事件号/段号/类型名一律不漏
+  t = t.replace(/增量\s*ev-\d+\s*至\s*ev-\d+/g, "增量");
+  t = t.replace(/ev-\d+\s*至\s*ev-\d+/g, "新增事件");
+  t = t.replace(/\bev-\d+/g, m => { const ev = EV_MAP[m]; return ev ? fmtTc(evTime(ev), false) : "该事件"; });
+  t = t.replace(/（该事件）/g, "").replace(/、该事件/g, "").replace(/该事件、/g, "");
+  t = t.replace(/（该事件[，,]/g, "（");
+  t = t.replace(/SEG-\d+/g, m => SEG_DIR[m] || "一段行情");
+  t = t.replace(/(一段行情)(、一段行情)+/g, "多段行情");
+  t = t.replace(/\bWP\d+\b/g, "观察计划");
+  for (const [k, v] of Object.entries(DIALECT)) t = t.split(k).join(v);
   return t;
 }
 
@@ -198,18 +218,82 @@ function renderChart() {
 }
 
 // ---------- 右栏 ----------
+// 引用 → 人话事实：证据/反证不许只摆数字（用户 2026-11-01 点名「写个数字
+// 就敷衍」）——缺口要讲清方向/位置/测试史，事件要讲清几点发生了什么。
+function gapById(id: string): AnyObj | null {
+  const s: AnyObj = snap!;
+  return (s.open_gaps || []).find((g: AnyObj) => g.gap_id === id)
+      || (s.closed_gaps_recent || []).find((g: AnyObj) => g.gap_id === id) || null;
+}
+function lastTestOutcome(gapId: string): string | null {
+  const evs = (snap!.events || []).filter((e: AnyObj) => e.type === "TEST_ENDED" && e.payload?.gap_id === gapId);
+  return evs.length ? (evs[evs.length - 1].payload?.outcome || null) : null;
+}
+function gapStory(id: string): string | null {
+  const g = gapById(id);
+  if (!g) return null;
+  const dir = g.direction === "up" ? "向上" : "向下";
+  const open = (snap!.open_gaps || []).some((x: AnyObj) => x.gap_id === id);
+  const px = snap!.bars[snap!.bars.length - 1].c;
+  const rel = g.anchor > px ? `位于现价上方 ${fmtNum(g.anchor - px)} 点`
+    : g.anchor < px ? `位于现价下方 ${fmtNum(px - g.anchor)} 点` : "与现价重合";
+  if (!open) return `锚 ${fmtPx(g.anchor)} 的${dir}缺口：已触锚关账（共经 ${g.test_count ?? 0} 次回补测试）`;
+  let s = `锚 ${fmtPx(g.anchor)} 的${dir}缺口仍开放，${rel}`;
+  if (g.test_count) {
+    const oc = lastTestOutcome(id);
+    s += `；已回补测试 ${g.test_count} 次${oc === "anchor_touched" ? "，最近一次已触锚" : oc ? "，均未触锚、被拒" : ""}`;
+    const t = (g.tests || [])[g.tests.length - 1];
+    if (t?.started_ms) s += `（最近一次 ${fmtTc(t.started_ms, false)}–${t.ended_ms ? fmtTc(t.ended_ms, false) : "进行中"}）`;
+  } else s += "；尚未被回补测试";
+  return s;
+}
+function evStory(ev: AnyObj): string {
+  const t = fmtTc(evTime(ev), false);
+  const g = ev.payload?.gap_id ? gapById(ev.payload.gap_id) : null;
+  const anchor = g ? fmtPx(g.anchor) : (ev.payload?.anchor ? fmtPx(Number(ev.payload.anchor)) : "—");
+  switch (ev.type) {
+    case "GAP_OPENED": return `${t} 锚 ${anchor} ${ev.direction === "up" ? "向上" : "向下"}缺口立账`;
+    case "GAP_CLOSED": return `${t} 锚 ${anchor} 缺口触锚关账`;
+    case "TEST_STARTED": return `${t} 锚 ${anchor} 第 ${ev.payload?.test_index || ""} 次回补测试开始`;
+    case "TEST_ENDED": return `${t} 锚 ${anchor} 回补测试结束：${ev.payload?.outcome === "anchor_touched" ? "已触锚" : "未触锚、被拒"}`;
+    default: return `${t} ${EV_SHORT[ev.type] || "事件"}（锚 ${anchor}）`;
+  }
+}
+function refStory(ref: string): string {
+  const gs = gapStory(ref);
+  if (gs) return gs;
+  const ev = EV_MAP[ref];
+  if (ev) return evStory(ev);
+  if (ref in LV_PX) return `位置 ${fmtPx(LV_PX[ref])}`;
+  return humanize(ref);
+}
+
 function renderBrief() {
   const hyps: AnyObj[] = snap!.hypotheses;
-  const fmtRefs = (refs: string[]) => refs && refs.length ? refs.map(numRef).join("、") : "—";
   if (!hyps.length) { $("hypBody").innerHTML = "暂无假设。"; return; }
   const [main, ...rest] = hyps;
   const backup = rest[0];
+  const renderRefs = (refs: string[], mark: string) => {
+    if (!refs || !refs.length) return `<div class="evItem"><span class="n">${mark}</span><span>—</span></div>`;
+    const covered = new Set(refs.filter(r => gapById(r)));
+    const lines: string[] = [];
+    for (const r of refs) {
+      const ev = EV_MAP[r];
+      if (ev && ev.payload?.gap_id && covered.has(ev.payload.gap_id)) continue; // 测试事件已并入该缺口的叙事
+      lines.push(refStory(r));
+    }
+    return lines.map(s => `<div class="evItem"><span class="n">${mark}</span><span>${humanize(s)}</span></div>`).join("");
+  };
+  const hist: AnyObj[] = main.history || [];
+  const lastHist = hist[hist.length - 1];
+  const opWord: Record<string, string> = { add: "立论", confirm: "确认", challenge: "受挑战", supersede: "被接管" };
   $("hypBody").innerHTML = `
     <div class="hypMain"><div class="t">主要观点（当前假设 ${main.hyp_id}）</div><div>${humanize(main.text || "")}</div></div>
     <div class="evT">支持证据</div>
-    ${[main].map(h => `<div class="evItem"><span class="n">✓</span><span>${fmtRefs(h.support_refs)}</span></div>`).join("")}
+    ${renderRefs(main.support_refs, "✓")}
     <div class="evT red">反证因素</div>
-    <div class="evItem"><span class="n">!</span><span>${fmtRefs(main.counter_refs)}</span></div>
+    ${renderRefs(main.counter_refs, "!")}
+    ${lastHist ? `<div class="evT">最新研判（${opWord[lastHist.op] || lastHist.op}）</div><div class="reason">${humanize(lastHist.reason || "")}</div>` : ""}
     ${backup ? `<div class="evT">备推演（${backup.hyp_id}）</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
   $("hypUpd").textContent = `更新于 ${fmtTc(snap!.meta.generated_at_ms, false)}`;
 }
@@ -234,31 +318,73 @@ function renderPlan() {
 }
 
 // ---------- 底部：时间线 + 多空对照 ----------
-function sparkline(barMs: number): string {
+function sparkline(barMs: number, anchor?: number): string {
   const bars = snap!.bars;
   let idx = bars.findIndex((b: AnyObj) => b.t >= barMs - 1);
   if (idx < 0) idx = bars.length - 1;
-  const win = bars.slice(Math.max(0, idx - 8), Math.min(bars.length, idx + 9));
+  const from = Math.max(0, idx - 10);
+  const win = bars.slice(from, Math.min(bars.length, idx + 11));
   if (win.length < 2) return "";
   const cs = win.map((b: AnyObj) => b.c);
-  const mn = Math.min(...cs), mx = Math.max(...cs), rg = (mx - mn) || 1;
-  const pts = cs.map((c: number, i: number) => `${(i / (cs.length - 1) * 86).toFixed(1)},${(30 - (c - mn) / rg * 26).toFixed(1)}`).join(" ");
+  let mn = Math.min(...cs), mx = Math.max(...cs);
+  if (anchor != null) { mn = Math.min(mn, anchor); mx = Math.max(mx, anchor); }
+  const rg = (mx - mn) || 1;
+  const X = (i: number) => (i / (win.length - 1) * 86).toFixed(1);
+  const Y = (v: number) => (30 - (v - mn) / rg * 26).toFixed(1);
+  const pts = cs.map((c: number, i: number) => `${X(i)},${Y(c)}`).join(" ");
   const upNet = cs[cs.length - 1] >= cs[0];
-  return `<svg width="86" height="32"><polyline points="${pts}" fill="none" stroke="${upNet ? "#22b573" : "#e5484d"}" stroke-width="1.4"/></svg>`;
+  const evI = Math.min(win.length - 1, Math.max(0, idx - from));
+  const anchorLine = anchor != null
+    ? `<line x1="0" y1="${Y(anchor)}" x2="86" y2="${Y(anchor)}" stroke="#e8a33d" stroke-width="0.8" stroke-dasharray="3 2"/>` : "";
+  return `<svg width="86" height="32">${anchorLine}<polyline points="${pts}" fill="none" stroke="${upNet ? "#22b573" : "#e5484d"}" stroke-width="1.4"/><circle cx="${X(evI)}" cy="${Y(cs[evI])}" r="2.2" fill="#f5f9fc"/></svg>`;
 }
 
 function renderTimeline() {
-  const TITLE: Record<string, (e: AnyObj) => [string, string]> = {
-    GAP_OPENED: e => ["缺口建立", `锚 ${e.payload?.anchor ? fmtPx(Number(e.payload.anchor)) : ""}`],
-    TEST_STARTED: e => [`测试（T${e.payload?.test_index || ""}）`, `${e.payload?.gap_id || ""} 回补测试开始`],
-    TEST_ENDED: e => ["测试结束", `${e.payload?.gap_id || ""} · ${e.payload?.outcome === "anchor_touched" ? "触锚" : "被拒（代理口径）"}`],
-    GAP_CLOSED: e => ["缺口回补", `${e.payload?.gap_id || ""} 触锚关账（城破）`],
+  // 每类事件长得必须不一样（用户 2026-11-01 点名「看着都一样」）：
+  // 颜色/标题/副文案全按类型分化，副文案给锚距现价、测试史、存续根数，
+  // 迷你图叠锚线虚线 + 事件点白点，不再是同一条装饰线。
+  const bars = snap!.bars;
+  const px = bars[bars.length - 1].c;
+  const lastMs = bars[bars.length - 1].t;
+  const ageBars = (ms: number) => Math.max(0, Math.round((lastMs - ms) / 900000));
+  const anchorOf = (e: AnyObj): number | undefined => {
+    const g = e.payload?.gap_id ? gapById(e.payload.gap_id) : null;
+    if (g) return g.anchor;
+    if (e.payload?.anchor) return Number(e.payload.anchor);
+    return undefined;
   };
-  const story = snap!.events.filter((e: AnyObj) => TITLE[e.type]).slice(-5);
+  const META: Record<string, (e: AnyObj) => { t: string; s: string; color: string }> = {
+    GAP_OPENED: e => {
+      const a = anchorOf(e);
+      return { color: e.direction === "up" ? "#2fbf71" : "#f0564f",
+        t: `${e.direction === "up" ? "↑" : "↓"} 缺口建立`,
+        s: a != null ? `锚 ${fmtPx(a)} · 位于现价${a >= px ? "上方" : "下方"} ${fmtNum(Math.abs(a - px))} 点 · 已开放 ${ageBars(e.bar_open_ms)} 根` : "新缺口立账" };
+    },
+    TEST_STARTED: e => {
+      const a = anchorOf(e); const n = e.payload?.test_index || "";
+      return { color: "#e8a33d", t: `回补测试 T${n} 开始`,
+        s: a != null ? `锚 ${fmtPx(a)} · 此前 ${Math.max(0, (Number(n) || 1) - 1)} 次测试均未破` : "回补测试开始" };
+    },
+    TEST_ENDED: e => {
+      const a = anchorOf(e); const touched = e.payload?.outcome === "anchor_touched";
+      const g = e.payload?.gap_id ? gapById(e.payload.gap_id) : null;
+      const t = (g?.tests || []).filter((x: AnyObj) => x.ended_ms && Math.abs(x.ended_ms - e.bar_open_ms) < 1400000)
+        .sort((x: AnyObj, y: AnyObj) => Math.abs(x.ended_ms - e.bar_open_ms) - Math.abs(y.ended_ms - e.bar_open_ms))[0];
+      const dur = t?.started_ms ? Math.max(1, Math.round((t.ended_ms - t.started_ms) / 900000)) : null;
+      return { color: touched ? "#f0564f" : "#58a6d6", t: touched ? "测试触锚" : "测试被拒",
+        s: `${a != null ? `锚 ${fmtPx(a)} · ` : ""}${touched ? "价格已摸到锚线" : "未触锚即被打回"}${dur ? ` · 历时 ${dur} 根` : ""}` };
+    },
+    GAP_CLOSED: e => {
+      const a = anchorOf(e); const g = e.payload?.gap_id ? gapById(e.payload.gap_id) : null;
+      return { color: "#f0564f", t: "缺口回补 · 关账",
+        s: a != null ? `锚 ${fmtPx(a)} · 共经 ${g?.test_count ?? "?"} 次测试后城破` : "触锚关账" };
+    },
+  };
+  const story = snap!.events.filter((e: AnyObj) => META[e.type]).slice(-8);
   $("tlBody").innerHTML = story.length ? story.map((e: AnyObj) => {
-    const [t, s] = TITLE[e.type](e);
-    return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot"></div><div class="tt">${t}</div><div class="ts">${humanize(s)}</div>${sparkline(e.bar_open_ms)}</div>`;
-  }).join("") : "24h 内无缺口事件。";
+    const m = META[e.type](e);
+    return `<div class="node"><div class="tm">${fmtTc(e.bar_open_ms)}</div><div class="dot" style="background:${m.color}"></div><div class="tt" style="color:${m.color}">${m.t}</div><div class="ts">${m.s}</div>${sparkline(e.bar_open_ms, anchorOf(e))}</div>`;
+  }).join("") : "暂无缺口事件。";
 }
 
 function renderCompare() {
