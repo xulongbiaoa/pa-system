@@ -47,7 +47,8 @@
   .waitB { margin-left: auto; flex: none; border: 1px solid #a67c1f; color: #ffd97a; border-radius: 4px; font-size: 10.5px; padding: 0 6px; height: fit-content; }
   .bottomRow { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
   .reason { color: #8fa9bd; font-size: 12px; line-height: 1.55; background: rgba(23,42,59,.5); border-left: 2px solid #3d5a73; padding: 6px 8px; border-radius: 0 6px 6px 0; margin-bottom: 4px; }
-  .tl { overflow-x: auto; overflow-y: hidden; margin-top: 4px; cursor: grab; scrollbar-width: thin; }
+  .layout > *, .bottomRow > *, .card { min-width: 0; }
+  .tl { overflow-x: auto; overflow-y: hidden; margin-top: 4px; cursor: grab; scrollbar-width: thin; width: 100%; max-width: 100%; }
   .tl:active { cursor: grabbing; }
   .tlTrack { display: flex; width: max-content; position: relative; padding: 0 4px; }
   .tlTrack:before { content: ""; position: absolute; left: 0; right: 0; top: 30px; border-top: 1px solid #2a4d6d; }
