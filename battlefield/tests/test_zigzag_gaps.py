@@ -25,7 +25,7 @@ def bc(i, c, hi=2, lo=8):
 
 def run(closes_or_bars):
     # 合成 bar 的腿幅只有 10-25 点（尺度 10），用 reversal=1.0 才认得出
-    # 波段；生产口径 3.0 只改门槛倍数，认点/立账逻辑同一套
+    # 波段；生产口径 1.25 只改门槛倍数，认点/立账逻辑同一套
     from decimal import Decimal
     kernel = Battlefield("TEST", "15m", TF_MS, zigzag=True,
                          zigzag_reversal=Decimal("1.0"))

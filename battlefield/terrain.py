@@ -86,13 +86,14 @@ class CloseZigzagDetector:
     >= reversal * 尺度才确认拐点——一段波段只有一个拐点，相邻小折腾
     不成点（影线分形在相近价位多顶几次就多确认几个点，是旧口径的病）。
     拐点 K = 极值收盘所在根，锚价取其影线极值；确认时刻 = 回撤达标
-    那根的收盘（因果，禁止回溯）。reversal=3.0 是工程代理：把视频里
-    肉眼认的「一段波段」量化为至少 3 根典型波幅（尺度）的腿——实测
-    1.0 时 1,088 根里出 169 个拐点（每 6 根一个，仍是噪音），3.0 时
-    43 个，腿的尺度才与视频里逐段标的波段相当。
+    那根的收盘（因果，禁止回溯）。reversal 是工程代理：把视频里
+    肉眼认的「一段波段」量化为尺度倍数。初版 3.0 偏粗：2026-11-01
+    用户点名 77,068 反弹顶（自极值只回落 362 点、门槛 880 点）整段
+    被抹平、被拿下也不立账；同窗实测 1.25 时该顶被确认且立账，
+    开放缺口 7 座仍可读，用户拍板改 1.25。
     """
 
-    def __init__(self, reversal=Decimal("3.0"), band_fn=None,
+    def __init__(self, reversal=Decimal("1.25"), band_fn=None,
                  kind="zigzag", name_prefix="ZG"):
         self.reversal = D(reversal)
         self.band_fn = band_fn or (lambda scale: Decimal("0.5") * scale if scale else Decimal("0"))

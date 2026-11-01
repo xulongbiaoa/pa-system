@@ -69,7 +69,7 @@ class Battlefield:
         """swing_specs: [(left, right, kind, name_prefix), ...]；enable_swings=True
         且未给 specs 时只装 minor (2,2) 摆动（兼容旧测试）。
         zigzag=True 时装收盘折线拐点检测器（定版 v0.2 的波段点来源）；
-        zigzag_reversal 覆盖拐点确认的回撤门槛（尺度倍数，默认 3.0）。"""
+        zigzag_reversal 覆盖拐点确认的回撤门槛（尺度倍数，默认 1.25）。"""
         self.symbol = symbol
         self.timeframe = timeframe
         self.timeframe_ms = int(timeframe_ms)
