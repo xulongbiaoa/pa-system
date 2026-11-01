@@ -63,8 +63,11 @@ def _upload(sym: str) -> str:
     path = os.path.join(OUT, f"{sym}.json")
     with open(path, "rb") as f:
         data = f.read()
+    # no-cache：快照每 15 分钟换内容，浏览器必须每次校验（ETag 命中走 304，
+    # 不靠版本号/时间戳防缓存——2026-11-01 用户点名改掉 ?v= 土办法）
     cf.put_object("a17ab4f171dbde6b8de90919cee1d6bc", "abu-assets",
-                  f"sandbox/data24/{sym}.json", data, "application/json")
+                  f"sandbox/data24/{sym}.json", data, "application/json",
+                  cache_control="no-cache")
     return f"uploaded {len(data)}B"
 
 
