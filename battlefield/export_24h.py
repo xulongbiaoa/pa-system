@@ -96,8 +96,14 @@ def _rebuild_with_outputs(sym: str, tolerant: bool = False):
     return repo, session, applied
 
 
-def apply(sym: str, judge_file: str):
-    out = json.load(open(judge_file))
+def apply_output(sym: str, out: dict) -> dict:
+    """校验并落一份大脑输出，返回 BrainSession 的结构化结果。
+
+    与旧 apply() 的区别：stale/contract_error/model_unavailable 不再被压成
+    RuntimeError，编排层可按状态决定是否重试、是否继续后续阶段。只有
+    status=ok 才 append 到 output_<SYM>.json；回放旧输出失败仍显式抛错，
+    因为那说明本地账本已经损坏，不能带着坏账继续。
+    """
     repo = build_battlefield(sym, "15m", TF_MS, _load_bars(sym))
     session = BrainSession(repo, RecordedAdapter([]))
     # 先回放已有输出，再落新的一份
@@ -110,10 +116,17 @@ def apply(sym: str, judge_file: str):
                 raise RuntimeError(f"回放旧输出失败: {r}")
     session.adapter = RecordedAdapter([out])
     res = session.run_once()
+    if res["status"] == "ok":
+        with open(out_path, "a") as f:
+            f.write(json.dumps(out, ensure_ascii=False) + "\n")
+    return res
+
+
+def apply(sym: str, judge_file: str):
+    out = json.load(open(judge_file))
+    res = apply_output(sym, out)
     if res["status"] != "ok":
         raise RuntimeError(f"新输出校验不过: {res}")
-    with open(out_path, "a") as f:
-        f.write(json.dumps(out, ensure_ascii=False) + "\n")
     print(sym, "applied:", res)
 
 

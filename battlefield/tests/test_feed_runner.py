@@ -1,9 +1,26 @@
 """feed 解析与 runner 组装测试（离线，不打网络）。"""
-from battlefield.feed import parse_klines
+import pytest
+
+from battlefield import feed as feed_mod
+from battlefield.feed import (InputIncompleteError, fetch_closed_window,
+                              parse_klines, select_closed_window,
+                              validate_closed_window, window_input_hash)
 from battlefield.runner import build_battlefield, scene_package, summarize
 from battlefield.contracts import make_bar
 
 TF_MS = 900_000
+BASE = 1_700_000_100_000  # 900000 的整数倍，落在 15m 边界上
+
+
+def _closed_bar(i, close="100"):
+    return make_bar("BTCUSDT", "15m", BASE + i * TF_MS,
+                    BASE + i * TF_MS + TF_MS - 1,
+                    "100", "101", "99", close, source="binance-vision",
+                    received_at=BASE + i * TF_MS + TF_MS)
+
+
+def _window(n=96):
+    return [_closed_bar(i) for i in range(n)]
 
 
 def test_parse_klines_filters_unclosed():
@@ -47,6 +64,57 @@ def test_runner_gap_opens_on_confirmed_swing():
     assert pkg["side_up"]["recorded"] is True
     text = summarize(pkg)
     assert "开放缺口" in text
+
+
+def test_validate_closed_window_accepts_binance_style():
+    bars = _window()
+    out = validate_closed_window(bars, "BTCUSDT", "15m")
+    assert len(out) == 96 and out[-1].close_time == BASE + 96 * TF_MS - 1
+    assert window_input_hash(bars) == window_input_hash(_window())
+
+
+def test_validate_closed_window_rejects_wrong_count_and_gap():
+    with pytest.raises(InputIncompleteError):
+        validate_closed_window(_window(95), "BTCUSDT", "15m")
+    bars = _window()
+    bars[40] = make_bar("BTCUSDT", "15m", BASE + 41 * TF_MS,
+                        BASE + 41 * TF_MS + TF_MS - 1, "100", "101", "99", "100",
+                        source="binance-vision")  # 与上一根重叠、缺第 40 根
+    with pytest.raises(InputIncompleteError):
+        validate_closed_window(bars, "BTCUSDT", "15m")
+
+
+def test_validate_closed_window_rejects_misaligned_and_mixed_close_style():
+    bars = _window()
+    bars[3] = make_bar("BTCUSDT", "15m", BASE + 3 * TF_MS + 1,
+                       BASE + 3 * TF_MS + TF_MS, "100", "101", "99", "100")
+    with pytest.raises(InputIncompleteError):
+        validate_closed_window(bars, "BTCUSDT", "15m")
+    bars = _window()
+    bars[3] = make_bar("BTCUSDT", "15m", BASE + 3 * TF_MS,
+                       BASE + 4 * TF_MS, "100", "101", "99", "100")  # open+周期
+    with pytest.raises(InputIncompleteError):
+        validate_closed_window(bars, "BTCUSDT", "15m")
+
+
+def test_select_closed_window_uses_tail_only():
+    bars = _window(100)
+    out = select_closed_window(bars, "BTCUSDT", "15m")
+    assert out[0].open_time == BASE + 4 * TF_MS and len(out) == 96
+    with pytest.raises(InputIncompleteError):
+        select_closed_window(_window(90), "BTCUSDT", "15m")
+
+
+def test_fetch_closed_window_fetches_with_margin(monkeypatch):
+    seen = {}
+
+    def fake_fetch(symbol, timeframe, limit=300):
+        seen["limit"] = limit
+        return _window(100)
+
+    monkeypatch.setattr(feed_mod, "fetch_klines", fake_fetch)
+    out = fetch_closed_window("BTCUSDT", "15m", expected_count=96, margin=4)
+    assert seen["limit"] == 100 and len(out) == 96
 
 
 def test_scene_package_carries_last_bar():

@@ -23,6 +23,28 @@
 向下镜像、无突破/双侧同根 unknown、缺根/迟到/重复/修订、摆动确认时间、重放确定性、
 结果向量数值、快照绑定与提案引用核验。
 
+## 实时输入闭环（run-once，2026-11-01）
+
+`roll_site.py` 新增单次、可重入编排入口，外部定时器一轮调用即完成：
+`python3 -m battlefield.roll_site run-once`，按标的执行
+feed → 窗口校验（恰 96 根已收盘 15m、连续、边界正确，缺根 = `input_incomplete` 不建场）
+→ 模型 → 契约落账 → finalize 导出 → R2 发布。
+
+- 状态 = `web/data24/run_state/<SYM>.json`（原子写），绑定窗口 token + 输入
+  指纹 + 输出摘要：同窗重跑返回 `no_new_bar`；同窗未完成则从首个未完成阶段
+  恢复，模型不重复调用、输出不重复 append；状态/账本不一致显式停机。
+- 结果状态：`no_new_bar / input_incomplete / feed_error / model_unavailable /
+  contract_error / stale / applied / export_error / publish_error / completed`，
+  命令输出机器可读 JSON，非全 completed/no_new_bar 时退出码 2。
+- 模型层为供应商无关协议（brain.py：`battlefield.model-adapter/v1` +
+  package/output schema 版本、长度约束、超时/限流/网络/API 失败归一为
+  `model_unavailable`）。注入方式：Python 层传任意 callable/适配器，或 CLI
+  `--adapter-factory module:factory`（factory(config) 返回适配器）；
+  `--adapter mock` 只做链路冒烟，`--adapter recorded` 回放既有判读 JSON。
+  phase1/phase2 人工判读入口保留为应急路径。
+- 尚未接真实供应商：无获批的供应商/凭据前，不执行真实模型调用，
+  线上 cron 仍走人工判读流程，未切换。
+
 ## 未实现（按方案依赖排后）
 
 - W06 已落程序契约与会话层（brain.py），尚未接真实模型（适配器为 Recorded/Callable，考试与影子接模型时注入）。

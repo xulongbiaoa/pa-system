@@ -11,8 +11,10 @@ from decimal import Decimal
 
 import pytest
 
-from battlefield.brain import (BrainSession, CallableAdapter, ModelUnavailable,
-                               RecordedAdapter)
+from battlefield.brain import (OUTPUT_SCHEMA_VERSION, PACKAGE_SCHEMA_VERSION,
+                               BrainSession, CallableAdapter, MockAdapter,
+                               ModelUnavailable, RecordedAdapter,
+                               build_task_package)
 from battlefield.contracts import make_bar
 from battlefield.reducers import Battlefield
 from battlefield.repository import InMemoryRepository
@@ -146,6 +148,57 @@ def test_supersede_keeps_history():
     h1, h2 = kernel.hypotheses
     assert h1["status"] == "superseded" and h2["status"] == "active"
     assert h2["supersedes"] == "H1"
+
+
+def test_package_carries_schema_versions():
+    kernel, repo = repo_at_b6()
+    pkg = build_task_package(repo, 0)
+    assert pkg["schema_version"] == PACKAGE_SCHEMA_VERSION
+    assert pkg["output_schema_version"] == OUTPUT_SCHEMA_VERSION
+    assert pkg["adapter_protocol"].startswith("battlefield.model-adapter/")
+
+
+def test_mock_adapter_smoke_and_result_metadata():
+    kernel, repo = repo_at_b6()
+    s = BrainSession(repo, MockAdapter())
+    res = s.run_once()
+    assert res["status"] == "ok" and res["model_id"] == "mock"
+    assert res["output_summary"]["digest"]
+    assert res["output_summary"]["action"] == "WATCH"
+
+
+class _HttpishError(Exception):
+    def __init__(self, status):
+        super().__init__(f"http {status}")
+        self.status_code = status
+
+
+def test_adapter_http_failures_map_to_model_unavailable():
+    kernel, repo = repo_at_b6()
+    for status, needle in ((429, "限流"), (503, "API")):
+        s = BrainSession(repo, CallableAdapter(
+            lambda pkg, st=status: (_ for _ in ()).throw(_HttpishError(st))))
+        res = s.run_once()
+        assert res["status"] == "model_unavailable" and needle in res["detail"]
+        assert s.read_revision == 0
+
+
+def test_output_schema_violations_are_contract_errors():
+    kernel, repo = repo_at_b6()
+    bad_outputs = [
+        {"read_cursor": "7", "action": "WATCH"},                       # 类型错
+        {"schema_version": "battlefield.brain-output/v999",
+         "read_cursor": 7, "action": "WATCH"},                          # schema 不符
+        {"read_cursor": 7, "action": "WATCH", "hypothesis_ops": {}},   # 不是数组
+        {"read_cursor": 7, "action": "WATCH",
+         "hypothesis_ops": [{"op": "add", "text": "x" * 9000,
+                             "support_refs": ["GAP-P1-1"]}]},          # 文本超长
+    ]
+    for bad in bad_outputs:
+        s = BrainSession(repo, RecordedAdapter([bad]))
+        res = s.run_once()
+        assert res["status"] == "contract_error", res
+    assert kernel.hypotheses == []
 
 
 def test_test_label_out_of_range_rejected():
