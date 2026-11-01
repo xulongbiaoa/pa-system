@@ -222,7 +222,7 @@ def finalize(sym: str, tolerant: bool = False):
 
 
 DISPLAY_BARS = 4032  # 快照展示层 K 线上限（约 6 周 15m）：纯展示封顶，
-# 不影响账本事实、状态与判读包（判读包是 192 根有界窗口）
+# 不影响账本事实、状态与判读包（判读包仍是 96 根有界窗口）
 
 
 def finalize_from_ledger(sym: str, book=None) -> dict:
@@ -231,7 +231,7 @@ def finalize_from_ledger(sym: str, book=None) -> dict:
     与 finalize() 的区别：状态来自跨窗连续账本——开放缺口/假设/计划/候选
     都是全史连续状态；bars 数组给账本全量 K 线（展示层上限 DISPLAY_BARS，
     图上可一路左拖回看连续历史）；meta 带 ledger_revision/ledger_cursor/
-    bars_total。判读包的有界窗口（192 根）是另一回事，在 brain 层。
+    bars_total。判读包的有界窗口（96 根）是另一回事，在 brain 层。
     brain_outputs 只带最近 20 份进快照（全量在账本 brain_outputs.jsonl）。
     """
     import dataclasses

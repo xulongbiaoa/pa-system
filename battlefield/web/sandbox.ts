@@ -3,7 +3,7 @@
 // 口径一：支撑/阻力是带（据点/要塞的价格带，取账本位置的 watch 带）；
 // 口径二：缺口是锚线，画在带的最外沿——支撑带的最下面、阻力带的最上面
 //        （价格须穿透整条带才碰到锚线，碰到即销账，仍是定版 v0.2 的单线生死）。
-// 数据 = 连续账本快照（data24/，账本全量）；页面默认视图 48h（192 根）。本页只做展示聚合，不新造事实数值；
+// 数据 = export_24h 的 15m×24h 快照（data24/）。本页只做展示聚合，不新造事实数值；
 // MM 目标位未画：targets 尚未接线，不拿自算数字冒充系统目标。
 declare const LightweightCharts: any;
 type AnyObj = { [k: string]: any };
@@ -217,8 +217,8 @@ function renderChart() {
   startLive(snap!.meta.symbol);
   const total = bars.length + (liveBar && liveBar.t > last.t ? 1 : 0);
 
-  // 默认缩放 = 最近 48h（192 根）满屏；全量历史仍在数据里，左拖可回看
-  const DEFAULT_VIEW_BARS = 192;
+  // 默认缩放 = 最近 24h（96 根）满屏；全量历史仍在数据里，左拖可回看
+  const DEFAULT_VIEW_BARS = 96;
   if (total > DEFAULT_VIEW_BARS) {
     chart.timeScale().setVisibleLogicalRange({
       from: total - DEFAULT_VIEW_BARS - 0.5, to: total - 0.5,

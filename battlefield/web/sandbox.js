@@ -230,8 +230,8 @@ function renderChart() {
     applyLiveBar();
     startLive(snap.meta.symbol);
     const total = bars.length + (liveBar && liveBar.t > last.t ? 1 : 0);
-    // 默认缩放 = 最近 48h（192 根）满屏；全量历史仍在数据里，左拖可回看
-    const DEFAULT_VIEW_BARS = 192;
+    // 默认缩放 = 最近 24h（96 根）满屏；全量历史仍在数据里，左拖可回看
+    const DEFAULT_VIEW_BARS = 96;
     if (total > DEFAULT_VIEW_BARS) {
         chart.timeScale().setVisibleLogicalRange({
             from: total - DEFAULT_VIEW_BARS - 0.5, to: total - 0.5,

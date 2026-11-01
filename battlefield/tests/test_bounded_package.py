@@ -56,7 +56,7 @@ def test_package_bounded_as_ledger_grows():
         assert pkg["package_format"] == "bounded/v1"
         assert _pkg_bytes(pkg) <= PACKAGE_MAX_BYTES
         assert pkg["budget"]["within_budget"] is True
-        assert len(pkg["bars"]) == 192
+        assert len(pkg["bars"]) == 96
     # 账本翻倍，包不许近似同比膨胀
     assert _pkg_bytes(pkg400) < _pkg_bytes(pkg200) * 1.6
     assert pkg400["omitted"], "大账本必然发生裁剪，且必须留痕"
