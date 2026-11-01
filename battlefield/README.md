@@ -34,9 +34,12 @@
   乱序、同 ID 内容修订显式报错；`ShadowBook.append_bars` 同口径严格追加；
   `apply_output` canonical 幂等——同 read_cursor 同输出复用既有结果、
   不同输出拒绝覆盖/追加，stale/契约错误不推进 cursor。
-- **96 根视图（观察层）**：`export_24h.finalize_from_ledger` 从连续账本
-  状态导出网站快照，bars 只切最近 96 根，meta 带 `view_window=96`、
-  `ledger_revision`、`ledger_cursor`；视图不承担历史记忆。
+- **视图（观察层）**：`export_24h.finalize_from_ledger` 从连续账本状态
+  导出网站快照，状态（缺口/假设/计划）是全账本口径，bars 给账本全量
+  K 线（展示封顶 DISPLAY_BARS=4032，图上可左拖回看连续历史），meta 带
+  `ledger_revision`、`ledger_cursor`、`bars_total`。注意与判读包区分：
+  判读包是 96 根有界窗口（brain 层），展示层给全量是产品口径
+  （2026-11-01 用户实测页面后拍板：左拖必须能看到连续 K 线）。
 - **线上流程不变其形**：`roll_site phase1`（增量推进 + 写稳定 package，
   无新根/已消费返回 up_to_date）→ 当值 agent 按 BrainSession 契约判读 →
   `roll_site phase2 <btc|-> <eth|->`（canonical 落账 → 视图导出 → 发布）。

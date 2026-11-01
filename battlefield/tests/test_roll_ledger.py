@@ -163,7 +163,8 @@ def test_ledger_flow_continuous_across_96(env, tmp_path):
         assert r["ledger_revision"] == 96 and r["ledger_cursor"] == 96
         assert r["ai_stale"] is False
     snap = json.loads((env.out / "BTCUSDT.json").read_text())
-    assert snap["meta"]["view_window"] == 96
+    assert snap["meta"]["view_window"] == 96  # 账本此时共 96 根，展示全量
+    assert snap["meta"]["bars_total"] == 96
     assert snap["meta"]["ledger_revision"] == 96
     assert len(snap["bars"]) == 96
     assert snap["hypotheses"], "第一轮假设应进快照"
@@ -186,7 +187,9 @@ def test_ledger_flow_continuous_across_96(env, tmp_path):
     assert all(r["ledger_revision"] == 98 for r in res2)
     snap2 = json.loads((env.out / "BTCUSDT.json").read_text())
     assert snap2["meta"]["ledger_bars"] == 98
-    assert len(snap2["bars"]) == 96, "视图仍只含最近 96 根"
+    assert len(snap2["bars"]) == 98, "展示层给全量账本 K 线（可左拖回看）"
+    assert snap2["meta"]["view_window"] == 98
+    assert snap2["bars"][0]["t"] == BASE  # 第一根还在，没被 96 窗口截掉
     assert snap2["bars"][-1]["t"] == BASE + 97 * TF_MS
     assert snap2["meta"]["ai"]["outputs_total"] == 2
 

@@ -221,12 +221,17 @@ def finalize(sym: str, tolerant: bool = False):
           "open_gaps:", len(snap["open_gaps"]))
 
 
+DISPLAY_BARS = 4032  # 快照展示层 K 线上限（约 6 周 15m）：纯展示封顶，
+# 不影响账本事实、状态与判读包（判读包仍是 96 根有界窗口）
+
+
 def finalize_from_ledger(sym: str, book=None) -> dict:
-    """从连续账本（ShadowBook）导出最近 96 根视图快照到 OUT/<SYM>.json。
+    """从连续账本（ShadowBook）导出快照到 OUT/<SYM>.json。
 
     与 finalize() 的区别：状态来自跨窗连续账本——开放缺口/假设/计划/候选
-    都是全史连续状态，只有 bars 数组切最近 96 根作视图；meta 明确
-    view_window=96、ledger_revision、ledger_cursor，视图不承担历史记忆。
+    都是全史连续状态；bars 数组给账本全量 K 线（展示层上限 DISPLAY_BARS，
+    图上可一路左拖回看连续历史）；meta 带 ledger_revision/ledger_cursor/
+    bars_total。判读包的有界窗口（96 根）是另一回事，在 brain 层。
     brain_outputs 只带最近 20 份进快照（全量在账本 brain_outputs.jsonl）。
     """
     import dataclasses
@@ -234,12 +239,12 @@ def finalize_from_ledger(sym: str, book=None) -> dict:
     from battlefield.shadow import ShadowBook
 
     if book is None:
-        root = os.path.join(ROOT, "battlefield", "shadow")
-        book = ShadowBook(os.path.join(root, f"{sym}-15m"), sym, "15m", TF_MS)
+        book = ShadowBook(os.path.join(ROOT, "shadow", f"{sym}-15m"),
+                          sym, "15m", TF_MS)
     repo, session = book.rebuild()
     outputs = book._read_outputs()
     bars_all = book._read_bars()
-    view_bars = bars_all[-BARS_N:]
+    view_bars = bars_all[-DISPLAY_BARS:]
     token = make_token(repo)
     qs = QueryService(repo, token)
     scene = qs.get_scene()
@@ -283,8 +288,9 @@ def finalize_from_ledger(sym: str, book=None) -> dict:
             "state_revision": scene["revision"], "cursor_close_ms": scene["cursor"],
             "bars_count": len(view_bars), "generated_at_ms": int(time.time() * 1000),
             "data_health": scene["data_health"],
-            "window": "15m × 24h 视图（连续账本）",
-            "view_window": BARS_N,
+            "window": "15m 连续账本（全量展示）",
+            "view_window": len(view_bars),
+            "bars_total": len(bars_all),
             "ledger_revision": scene["revision"],
             "ledger_cursor": session.read_revision,
             "ledger_bars": len(bars_all),
