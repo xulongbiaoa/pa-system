@@ -406,36 +406,64 @@ function renderBrief() {
   if (!shownSup.length && sup.length) shownSup.push(...sup.slice(0, 2));
   const weak = claims.filter(c => c.effect === "weakens");
   const unres = claims.filter(c => c.effect === "unresolved");
-  const claimLine = (c: AnyObj, mark: string) =>
-    `<div class="evItem"><span class="n">${mark}</span><span><b>${humanize(c.claim || "")}</b>${c.fact ? `——${humanize(c.fact)}` : ""}</span></div>`;
+  // 理由两层（用户 2026-11-01 点名）：默认只显示简介（判断句一行），
+  // 事实与出处收进详情、点开才展开——右栏不再被事实长句淹没
+  const claimLine = (c: AnyObj, mark: string) => {
+    const refs = (c.refs || []).map((r: string) => refStory(r));
+    const body = [c.fact ? humanize(c.fact) : "", ...refs.map(s => humanize(s))]
+      .filter(Boolean).join("；");
+    return `<details class="claim"><summary><span class="n">${mark}</span><span class="ct">${humanize(c.claim || "")}</span><span class="more">详情</span></summary><div class="claimBody">${body || "—"}</div></details>`;
+  };
   const hist: AnyObj[] = main.history || [];
   const lastHist = hist[hist.length - 1];
   const opWord: Record<string, string> = { add: "立论", confirm: "确认", challenge: "受挑战", supersede: "被接管" };
   const evHtml = claims.length
-    ? `<div class="evT">核心证据</div>${shownSup.map(c => claimLine(c, "✓")).join("") || `<div class="evItem"><span class="n">✓</span><span>—</span></div>`}`
-    : `<div class="evT">支持证据</div>${renderRefs(main.support_refs, "✓")}`;
+    ? `<div class="evT">支持理由</div>${shownSup.map(c => claimLine(c, "✓")).join("") || `<div class="evItem"><span class="n">✓</span><span>—</span></div>`}`
+    : `<div class="evT">支持理由</div>${renderRefs(main.support_refs, "✓")}`;
   const counterHtml = (weak.length || unres.length)
-    ? `${weak.length ? `<div class="evT red">反证</div>${weak.map(c => claimLine(c, "!")).join("")}` : ""}
+    ? `${weak.length ? `<div class="evT red">反对理由</div>${weak.map(c => claimLine(c, "!")).join("")}` : ""}
        ${unres.length ? `<div class="evT">尚未决出</div>${unres.map(c => claimLine(c, "?")).join("")}` : ""}`
-    : `<div class="evT red">反证因素</div>${renderRefs(main.counter_refs, "!")}`;
+    : `<div class="evT red">反对理由</div>${renderRefs(main.counter_refs, "!")}`;
+  // 当前进行中方向（账本事实直读，不经判读员）：哪一侧还有未结束的
+  // 推进段，那个方向就还在进行中；两侧都有 = 争夺中
+  const openSeg = (side: string) => {
+    const segs = (snap!.sides?.[side]?.segments || []).filter((x: AnyObj) => x.open);
+    return segs.length ? segs[segs.length - 1] : null;
+  };
+  const upOpen = openSeg("up"), dnOpen = openSeg("down");
+  const dirLine = (() => {
+    const segInfo = (sg: AnyObj) =>
+      `净推进 ${fmtNum(sg.net_progress)} · 已回吐 ${Math.round((sg.giveback_ratio || 0) * 100)}% · 已走 ${sg.elapsed_bars} 根`;
+    if (upOpen && !dnOpen) return `<div class="dirLine"><span class="dirArr up">▲</span><span><b>当前进行中：向上推进</b>　${segInfo(upOpen)}</span></div>`;
+    if (dnOpen && !upOpen) return `<div class="dirLine"><span class="dirArr down">▼</span><span><b>当前进行中：向下推进</b>　${segInfo(dnOpen)}</span></div>`;
+    if (upOpen && dnOpen) return `<div class="dirLine"><span class="dirArr">◆</span><span><b>当前进行中：双向争夺</b>　两侧都有未结束的推进段</span></div>`;
+    return `<div class="dirLine"><span class="dirArr">·</span><span><b>当前进行中：无明确方向</b>　没有未结束的推进段</span></div>`;
+  })();
+  // 长块一律简介+详情（用户 2026-11-01 点名）：默认只露一行简介，
+  // 全文点开才展开——本轮更新、接管条件、备推演都按此办理
+  const cut = (s: string, n: number) => s.length > n ? s.slice(0, n) + "…" : s;
   const deltaHtml = delta
-    ? `<div class="evT">本轮更新 · ${DELTA_LABEL[delta.kind] || ""}</div><div class="reason">${humanize(delta.what_changed || "")}${delta.what_it_means ? `<br>意味着：${humanize(delta.what_it_means)}` : ""}${delta.effect_on_hypothesis ? `<br>对主要观点：${humanize(delta.effect_on_hypothesis)}` : ""}</div>`
+    ? `<details class="fold"><summary class="foldSum"><span>本轮更新 · ${DELTA_LABEL[delta.kind] || ""}——${cut(humanize(delta.what_changed || ""), 30)}</span><span class="more">详情</span></summary><div class="reason">${humanize(delta.what_changed || "")}${delta.what_it_means ? `<br>意味着：${humanize(delta.what_it_means)}` : ""}${delta.effect_on_hypothesis ? `<br>对主要观点：${humanize(delta.effect_on_hypothesis)}` : ""}</div></details>`
     : (lastHist ? `<div class="evT">最新研判（${opWord[lastHist.op] || lastHist.op}）</div><div class="reason">${humanize(lastHist.reason || "")}</div>` : "");
   const handHtml = handoff
-    ? `<div class="handB"><div class="t">接管条件${handoff.status === "triggered" ? "（已触发）" : ""}</div><div>${humanize(handoff.trigger || "")}</div>${(handoff.not_triggered_by || []).length ? `<div class="ntb">以下情况不算接管：${(handoff.not_triggered_by as string[]).map(s => humanize(s)).join("；")}</div>` : ""}</div>`
+    ? `<details class="fold handB"><summary class="foldSum"><span><span class="t">接管条件${handoff.status === "triggered" ? "（已触发）" : ""}</span>　${cut(humanize(handoff.trigger || ""), 34)}</span><span class="more">详情</span></summary><div class="handBody"><div>${humanize(handoff.trigger || "")}</div>${(handoff.not_triggered_by || []).length ? `<div class="ntb">以下情况不算接管：${(handoff.not_triggered_by as string[]).map(s => humanize(s)).join("；")}</div>` : ""}</div></details>`
     : "";
   $("hypBody").innerHTML = `
     ${conclusion ? `<div class="concl">${humanize(conclusion)}</div>` : ""}
+    ${dirLine}
     <div class="hypMain"><div class="t">主要观点${phaseB(main)}</div><div>${humanize(main.text || "")}</div></div>
     ${evHtml}
     ${counterHtml}
     ${deltaHtml}
     ${handHtml}
-    ${backup ? `<div class="evT">备推演${phaseB(backup)}</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
+    ${backup ? `<details class="fold"><summary class="foldSum"><span>备推演${phaseB(backup)}　${cut(humanize(backup.text || ""), 30)}</span><span class="more">详情</span></summary><div style="color:#c6dcee;font-size:12.5px;padding:4px 0 2px">${humanize(backup.text || "")}</div></details>` : ""}`;
   $("hypUpd").textContent = `更新于 ${fmtTc(snap!.meta.generated_at_ms, false)}`;
 }
 
 function renderPlan() {
+  // 观察计划卡已按用户 2026-11-01 要求下线（数据仍在账本/快照里，
+  // 页面不显示）；元素不在就直接返回，避免空指针
+  if (!document.getElementById("planBody")) return;
   const plans: AnyObj[] = snap!.watch_plans;
   if (!plans.length) { $("planBody").innerHTML = "暂无观察计划。"; return; }
   const p = plans[plans.length - 1];
