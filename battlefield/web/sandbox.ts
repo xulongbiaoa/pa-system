@@ -268,8 +268,17 @@ function refStory(ref: string): string {
 function renderBrief() {
   const hyps: AnyObj[] = snap!.hypotheses;
   if (!hyps.length) { $("hypBody").innerHTML = "暂无假设。"; return; }
-  const [main, ...rest] = hyps;
-  const backup = rest[0];
+  // 选当前主/备：账本里会留多条 active（演化链），页面只认最近更新的一对，
+  // 不能拿数组头两条——那是种子期的化石假设，现行分析在尾部（2026-11-01
+  // 用户实报「AI 分析看不到了」即此症）
+  const score = (h: AnyObj) => Math.max(0, ...(h.history || []).map((x: AnyObj) => x.revision || 0));
+  const pool = hyps.filter(h => h.status === "active");
+  const sorted = [...(pool.length ? pool : hyps)].sort((a, b) => score(b) - score(a));
+  let main = sorted[0];
+  let backup = sorted[1];
+  if (main && backup && /主推演/.test(backup.text || "") && !/主推演/.test(main.text || "")) {
+    [main, backup] = [backup, main];
+  }
   const renderRefs = (refs: string[], mark: string) => {
     if (!refs || !refs.length) return `<div class="evItem"><span class="n">${mark}</span><span>—</span></div>`;
     const covered = new Set(refs.filter(r => gapById(r)));
