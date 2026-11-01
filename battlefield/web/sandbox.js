@@ -397,21 +397,29 @@ function refStory(ref) {
         return `位置 ${fmtPx(LV_PX[ref])}`;
     return humanize(ref);
 }
+const DELTA_LABEL = {
+    no_material_change: "本轮无实质变化", strengthened: "主推演增强", weakened: "主推演削弱",
+    new_branch: "出现新分支", invalidated: "主推演已失效",
+};
 function renderBrief() {
     const hyps = snap.hypotheses;
     if (!hyps.length) {
         $("hypBody").innerHTML = "暂无假设。";
         return;
     }
-    // 选当前主/备：账本里会留多条 active（演化链），页面只认最近更新的一对，
-    // 不能拿数组头两条——那是种子期的化石假设，现行分析在尾部（2026-11-01
-    // 用户实报「AI 分析看不到了」即此症）
+    // 选当前主/备（简报 v2）：输出带 role（primary/backup）就认 role；存量
+    // v1 假设无 role，退回旧启发式——最近更新的一对、文本含「主推演」者认
+    // 主。不能拿数组头两条，那是种子期的化石假设（2026-11-01 用户实报过）
     const score = (h) => Math.max(0, ...(h.history || []).map((x) => x.revision || 0));
-    const pool = hyps.filter(h => h.status === "active");
-    const sorted = [...(pool.length ? pool : hyps)].sort((a, b) => score(b) - score(a));
-    let main = sorted[0];
-    let backup = sorted[1];
-    if (main && backup && /主推演/.test(backup.text || "") && !/主推演/.test(main.text || "")) {
+    const pool = hyps.filter(h => h.status === "active" || h.status === "challenged");
+    // 存量墓碑（旧清理法拿 supersede 写「…作废」文本、反把墓碑立成 active）
+    // 不许冒充主/备；有真推演在场时先把墓碑滤掉，新账本用 retire 销账
+    const alive = pool.filter(h => !/^旧|^上一轮.*接续|^\s*退役/.test(h.text || ""));
+    const sorted = [...(alive.length ? alive : pool.length ? pool : hyps)].sort((a, b) => score(b) - score(a));
+    let main = sorted.find(h => h.role === "primary") || sorted[0];
+    let backup = sorted.find(h => h.role === "backup" && h !== main)
+        || sorted.find(h => h !== main);
+    if (main && backup && !main.role && /主推演/.test(backup.text || "") && !/主推演/.test(main.text || "")) {
         [main, backup] = [backup, main];
     }
     const renderRefs = (refs, mark) => {
@@ -427,17 +435,50 @@ function renderBrief() {
         }
         return lines.map(s => `<div class="evItem"><span class="n">${mark}</span><span>${humanize(s)}</span></div>`).join("");
     };
+    // v2 三件套（结论/本轮更新/接管条件）随输出全量进快照，各取最近一份带
+    // 该字段的；存量 v1 输出没有这些字段，对应块自动回退旧渲染
+    const outs = [...(snap.brain_outputs || [])].reverse();
+    const conclusion = outs.find(o => o.conclusion)?.conclusion;
+    const delta = outs.find(o => o.delta)?.delta;
+    const handoff = outs.find(o => o.handoff)?.handoff;
+    const phaseB = (h) => h.phase ? `<span class="phaseB">${h.phase}</span>` : "";
+    // 证据（claims）：支持项按权重展开核心 ≤2 + 辅助 ≤1；削弱进反证、
+    // 未决进未决，两块分开，不再把所有引用一锅烩
+    const claims = main.claims || [];
+    const wRank = { core: 0, aux: 1, background: 2 };
+    const sup = claims.filter(c => c.effect === "supports")
+        .sort((a, b) => (wRank[a.weight] ?? 3) - (wRank[b.weight] ?? 3));
+    const shownSup = [...sup.filter(c => c.weight === "core").slice(0, 2),
+        ...sup.filter(c => c.weight === "aux").slice(0, 1)];
+    if (!shownSup.length && sup.length)
+        shownSup.push(...sup.slice(0, 2));
+    const weak = claims.filter(c => c.effect === "weakens");
+    const unres = claims.filter(c => c.effect === "unresolved");
+    const claimLine = (c, mark) => `<div class="evItem"><span class="n">${mark}</span><span><b>${humanize(c.claim || "")}</b>${c.fact ? `——${humanize(c.fact)}` : ""}</span></div>`;
     const hist = main.history || [];
     const lastHist = hist[hist.length - 1];
     const opWord = { add: "立论", confirm: "确认", challenge: "受挑战", supersede: "被接管" };
+    const evHtml = claims.length
+        ? `<div class="evT">核心证据</div>${shownSup.map(c => claimLine(c, "✓")).join("") || `<div class="evItem"><span class="n">✓</span><span>—</span></div>`}`
+        : `<div class="evT">支持证据</div>${renderRefs(main.support_refs, "✓")}`;
+    const counterHtml = (weak.length || unres.length)
+        ? `${weak.length ? `<div class="evT red">反证</div>${weak.map(c => claimLine(c, "!")).join("")}` : ""}
+       ${unres.length ? `<div class="evT">尚未决出</div>${unres.map(c => claimLine(c, "?")).join("")}` : ""}`
+        : `<div class="evT red">反证因素</div>${renderRefs(main.counter_refs, "!")}`;
+    const deltaHtml = delta
+        ? `<div class="evT">本轮更新 · ${DELTA_LABEL[delta.kind] || ""}</div><div class="reason">${humanize(delta.what_changed || "")}${delta.what_it_means ? `<br>意味着：${humanize(delta.what_it_means)}` : ""}${delta.effect_on_hypothesis ? `<br>对主要观点：${humanize(delta.effect_on_hypothesis)}` : ""}</div>`
+        : (lastHist ? `<div class="evT">最新研判（${opWord[lastHist.op] || lastHist.op}）</div><div class="reason">${humanize(lastHist.reason || "")}</div>` : "");
+    const handHtml = handoff
+        ? `<div class="handB"><div class="t">接管条件${handoff.status === "triggered" ? "（已触发）" : ""}</div><div>${humanize(handoff.trigger || "")}</div>${(handoff.not_triggered_by || []).length ? `<div class="ntb">以下情况不算接管：${handoff.not_triggered_by.map(s => humanize(s)).join("；")}</div>` : ""}</div>`
+        : "";
     $("hypBody").innerHTML = `
-    <div class="hypMain"><div class="t">主要观点</div><div>${humanize(main.text || "")}</div></div>
-    <div class="evT">支持证据</div>
-    ${renderRefs(main.support_refs, "✓")}
-    <div class="evT red">反证因素</div>
-    ${renderRefs(main.counter_refs, "!")}
-    ${lastHist ? `<div class="evT">最新研判（${opWord[lastHist.op] || lastHist.op}）</div><div class="reason">${humanize(lastHist.reason || "")}</div>` : ""}
-    ${backup ? `<div class="evT">备推演</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
+    ${conclusion ? `<div class="concl">${humanize(conclusion)}</div>` : ""}
+    <div class="hypMain"><div class="t">主要观点${phaseB(main)}</div><div>${humanize(main.text || "")}</div></div>
+    ${evHtml}
+    ${counterHtml}
+    ${deltaHtml}
+    ${handHtml}
+    ${backup ? `<div class="evT">备推演${phaseB(backup)}</div><div style="color:#c6dcee;font-size:12.5px">${humanize(backup.text || "")}</div>` : ""}`;
     $("hypUpd").textContent = `更新于 ${fmtTc(snap.meta.generated_at_ms, false)}`;
 }
 function renderPlan() {
@@ -447,18 +488,18 @@ function renderPlan() {
         return;
     }
     const p = plans[plans.length - 1];
-    const proposals = snap.candidate_proposals || [];
-    const cand = proposals.length ? proposals[proposals.length - 1] : null;
-    const candText = cand ? (cand.text || cand.setup || cand.reason || "已立候选（提案分区）") : null;
-    const execText = cand ? (cand.entry_trigger || cand.entry || cand.trigger || null) : null;
     const step = (n, cls, title, desc, extra = "") => `<div class="step ${cls}"><span class="n">${n}</span><div><div class="st">${title}</div><div class="sd">${desc}</div></div>${extra}</div>`;
-    $("planBody").innerHTML = `<div class="steps">` +
+    // 简报 v2：计划回四段链——候选/订单是提案区的事，不进简报主区，
+    // 免得影子分析看起来像交易指令；计划绑了推演时明示在验证哪一个
+    const serveHyp = p.hypothesis_id
+        ? (snap.hypotheses || []).find((h) => h.hyp_id === p.hypothesis_id) : null;
+    const serveNote = serveHyp
+        ? `<div style="color:#55707f;font-size:11.5px;margin-bottom:4px">本计划在验证${serveHyp.role === "backup" ? "备推演" : "主要观点"}</div>` : "";
+    $("planBody").innerHTML = serveNote + `<div class="steps">` +
         step(1, "done", "观察位置", numRef(p.watch_level || "") || "—") +
         step(2, "act", "等待行为", humanize(p.watch_behavior || "—"), `<span class="waitB">WAIT</span>`) +
         step(3, "", "复核触发", `${humanize(p.entry_trigger || "—")}<br><span style="color:#55707f;font-size:11.5px">满足后唤醒 AI 复核，不是入场指令</span>`) +
-        step(4, cand ? "done" : "", "候选条件", candText || "等待——尚无候选，复核通过后才立") +
-        step(5, execText ? "done" : "", "订单触发", execText || "等待——候选未立，无可执行触发") +
-        step(6, "", "取消条件", humanize(p.cancel_if || "—")) + `</div>`;
+        step(4, "", "取消条件", humanize(p.cancel_if || "—")) + `</div>`;
 }
 // ---------- 底部：时间线 + 多空对照 ----------
 function sparkline(barMs, anchor) {

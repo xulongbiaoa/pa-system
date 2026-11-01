@@ -24,12 +24,28 @@ from .repository import InMemoryRepository
 
 ACTIONS = ("WATCH", "WAIT_BEHAVIOR", "PROPOSE_CANDIDATE", "CANCEL",
            "INFORMATION_INSUFFICIENT")
-HYP_OPS = ("add", "confirm", "challenge", "supersede")
+HYP_OPS = ("add", "confirm", "challenge", "supersede", "retire")
 
 # 供应商无关协议版本：供应商/SDK/模型名/凭据都不进入本层。
 ADAPTER_PROTOCOL_VERSION = "battlefield.model-adapter/v1"
 PACKAGE_SCHEMA_VERSION = "battlefield.task-package/v1"
 OUTPUT_SCHEMA_VERSION = "battlefield.brain-output/v1"
+# v2（2026-11-01 简报改进，用户拍板全量落地）：假设带 role/phase/claims
+# （论点化证据），输出带 conclusion/delta/handoff（本轮变化三段式 + 接管
+# 条件独立成块）。v2 字段全部可选、v1 输出照常落账（兼容期）；判读规程
+# 侧要求 v2，页面优先渲染 v2、缺失时回退 v1 叙事。
+OUTPUT_SCHEMA_VERSION_V2 = "battlefield.brain-output/v2"
+OUTPUT_SCHEMA_VERSIONS = (OUTPUT_SCHEMA_VERSION, OUTPUT_SCHEMA_VERSION_V2)
+HYP_ROLES = ("primary", "backup")
+# 存量 v1 输出用过 role 旧写法（main/alt，旧代码不校验、原样落账）；
+# 账本重放必须能吃历史，校验前先规范化，页面与新规程只见新写法
+LEGACY_ROLE_ALIASES = {"main": "primary", "alt": "backup"}
+HYP_PHASES = ("等待确认", "正在展开", "被挑战", "接近失效")
+CLAIM_EFFECTS = ("supports", "weakens", "unresolved", "triggers_handoff")
+CLAIM_WEIGHTS = ("core", "aux", "background")
+DELTA_KINDS = ("no_material_change", "strengthened", "weakened",
+               "new_branch", "invalidated")
+MAX_CLAIMS = 6
 MAX_OUTPUT_BYTES = 128 * 1024
 MAX_HYPOTHESIS_OPS = 32
 MAX_REFS = 64
@@ -166,6 +182,9 @@ def output_summary(output) -> dict:
         "hypothesis_ops": len(hyp_ops) if isinstance(hyp_ops, list) else None,
         "has_watch_plan": output.get("watch_plan") is not None,
         "has_candidate": output.get("candidate") is not None,
+        "has_conclusion": output.get("conclusion") is not None,
+        "has_delta": output.get("delta") is not None,
+        "has_handoff": output.get("handoff") is not None,
         "digest": output_digest(output),
     }
 
@@ -176,7 +195,7 @@ _T_RE = None
 _CN_RE = None
 
 
-def _check_test_labels(k, hyp_ops, plan, candidate) -> None:
+def _check_test_labels(k, hyp_ops, plan, candidate, extra_texts=()) -> None:
     """测试编号一致性（用户 2026-10-31 点名）：简报文本里点名某缺口时，出现的
     T 编号与「第N次」必须属于该缺口的规范编号集——已发生的 1..test_count，
     加预告下一次 test_count+1。编号由事件（TEST_STARTED 的 test_index）生成，
@@ -187,9 +206,12 @@ def _check_test_labels(k, hyp_ops, plan, candidate) -> None:
         _GAP_RE = re.compile(r"GAP-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*")
         _T_RE = re.compile(r"(?<![A-Za-z0-9])T(\d+)(?!\d)")
         _CN_RE = re.compile(r"第([一二三四五六七八九十])次")
-    texts: list = []
+    texts: list = list(extra_texts or ())
     for op in hyp_ops or []:
         texts += [op.get("text") or "", op.get("reason") or ""]
+        for cl in op.get("claims") or []:
+            if isinstance(cl, dict):
+                texts += [cl.get("claim") or "", cl.get("fact") or ""]
     if plan:
         texts += [plan.get(f) or "" for f in
                   ("watch_level", "watch_behavior", "entry_trigger", "cancel_if")]
@@ -233,6 +255,27 @@ def _check_ref_list(value, field: str) -> None:
         _check_str(ref, f"{field}[{i}]", MAX_REF_CHARS, required=True)
 
 
+def _check_claims(value, field: str) -> None:
+    if value is None:
+        return
+    if not isinstance(value, list):
+        raise ModelContractError(f"{field} 必须是数组")
+    if len(value) > MAX_CLAIMS:
+        raise ModelContractError(f"{field} 数量超限: {len(value)} > {MAX_CLAIMS}")
+    for j, cl in enumerate(value):
+        if not isinstance(cl, dict):
+            raise ModelContractError(f"{field}[{j}] 必须是对象")
+        _check_str(cl.get("claim"), f"{field}[{j}].claim", 120, required=True)
+        if cl.get("effect") not in CLAIM_EFFECTS:
+            raise ModelContractError(f"{field}[{j}].effect 不在枚举内: {cl.get('effect')}")
+        if cl.get("weight") not in CLAIM_WEIGHTS:
+            raise ModelContractError(f"{field}[{j}].weight 不在枚举内: {cl.get('weight')}")
+        _check_str(cl.get("fact"), f"{field}[{j}].fact", 400, required=True)
+        _check_ref_list(cl.get("refs"), f"{field}[{j}].refs")
+        if not cl.get("refs"):
+            raise ModelContractError(f"{field}[{j}] 必须至少带一条引用")
+
+
 def _validate_output_schema(output) -> None:
     """输出结构/schema 校验：先于引用与业务语义，避免超长或错型输出进入落盘层。"""
     if not isinstance(output, dict):
@@ -244,12 +287,41 @@ def _validate_output_schema(output) -> None:
     if len(raw) > MAX_OUTPUT_BYTES:
         raise ModelContractError(f"输出超大: {len(raw)} > {MAX_OUTPUT_BYTES} bytes")
     schema = output.get("schema_version")
-    if schema is not None and schema != OUTPUT_SCHEMA_VERSION:
+    if schema is not None and schema not in OUTPUT_SCHEMA_VERSIONS:
         raise ModelContractError(f"输出 schema_version 不符: {schema}")
     read_cursor = output.get("read_cursor")
     if not isinstance(read_cursor, int) or isinstance(read_cursor, bool):
         raise ModelContractError("read_cursor 必须是整数")
     _check_str(output.get("action"), "action", 64, required=True)
+
+    # —— v2 顶层块（可选，出现则严查） ——
+    _check_str(output.get("conclusion"), "conclusion", 200)
+    delta = output.get("delta")
+    if delta is not None:
+        if not isinstance(delta, dict):
+            raise ModelContractError("delta 必须是对象")
+        if delta.get("kind") not in DELTA_KINDS:
+            raise ModelContractError(f"delta.kind 不在枚举内: {delta.get('kind')}")
+        _check_str(delta.get("what_changed"), "delta.what_changed", 600, required=True)
+        _check_str(delta.get("what_it_means"), "delta.what_it_means", 600, required=True)
+        _check_str(delta.get("effect_on_hypothesis"), "delta.effect_on_hypothesis", 300)
+        _check_ref_list(delta.get("refs"), "delta.refs")
+    handoff = output.get("handoff")
+    if handoff is not None:
+        if not isinstance(handoff, dict):
+            raise ModelContractError("handoff 必须是对象")
+        _check_str(handoff.get("trigger"), "handoff.trigger", 400, required=True)
+        _check_ref_list(handoff.get("trigger_refs"), "handoff.trigger_refs")
+        if not handoff.get("trigger_refs"):
+            raise ModelContractError("handoff 必须带 trigger_refs（接管条件不许只活在自由文本里）")
+        ntb = handoff.get("not_triggered_by")
+        if ntb is not None:
+            if not isinstance(ntb, list) or len(ntb) > 6:
+                raise ModelContractError("handoff.not_triggered_by 必须是 ≤6 条的数组")
+            for j, s in enumerate(ntb):
+                _check_str(s, f"handoff.not_triggered_by[{j}]", 200, required=True)
+        if handoff.get("status") not in (None, "not_triggered", "triggered"):
+            raise ModelContractError(f"handoff.status 不在枚举内: {handoff.get('status')}")
 
     hyp_ops = output.get("hypothesis_ops", [])
     if hyp_ops is None:
@@ -268,6 +340,13 @@ def _validate_output_schema(output) -> None:
         _check_str(op.get("reason"), f"hypothesis_ops[{i}].reason", MAX_SHORT_TEXT_CHARS)
         _check_ref_list(op.get("support_refs", []), f"hypothesis_ops[{i}].support_refs")
         _check_ref_list(op.get("counter_refs", []), f"hypothesis_ops[{i}].counter_refs")
+        if op.get("role") in LEGACY_ROLE_ALIASES:
+            op["role"] = LEGACY_ROLE_ALIASES[op["role"]]
+        if op.get("role") is not None and op.get("role") not in HYP_ROLES:
+            raise ModelContractError(f"hypothesis_ops[{i}].role 不在枚举内: {op.get('role')}")
+        if op.get("phase") is not None and op.get("phase") not in HYP_PHASES:
+            raise ModelContractError(f"hypothesis_ops[{i}].phase 不在枚举内: {op.get('phase')}")
+        _check_claims(op.get("claims"), f"hypothesis_ops[{i}].claims")
 
     plan = output.get("watch_plan")
     if plan is not None:
@@ -624,7 +703,7 @@ class BrainSession:
             kind = op.get("op")
             if kind not in HYP_OPS:
                 raise ModelContractError(f"假设操作不在枚举内: {kind}")
-            if kind in ("confirm", "challenge", "supersede") \
+            if kind in ("confirm", "challenge", "supersede", "retire") \
                     and op.get("hyp_id") not in known_hyp_ids:
                 raise ModelContractError(f"假设不存在: {op.get('hyp_id')}")
             if kind in ("add", "supersede"):
@@ -636,6 +715,43 @@ class BrainSession:
                 _check_refs(k, refs)
                 planned += 1
                 known_hyp_ids.add(f"H{planned}")
+            for cl in op.get("claims") or []:
+                _check_refs(k, list(cl.get("refs") or []))
+        # —— v2 顶层块引用核验 ——
+        delta = output.get("delta")
+        if delta is not None and delta.get("refs"):
+            _check_refs(k, list(delta["refs"]))
+        handoff = output.get("handoff")
+        if handoff is not None:
+            _check_refs(k, list(handoff.get("trigger_refs") or []))
+        # —— v2 角色唯一性：模拟本批落盘后的 active 角色分布 ——
+        # 只对 v2 输出执法：v1 历史批次（如墓碑清理批）写入时该不变量
+        # 尚不存在，账本重放必须按写入时的规则验收，不许追溯拒收
+        is_v2 = output.get("schema_version") == OUTPUT_SCHEMA_VERSION_V2
+        sim = {h.get("hyp_id"): [h.get("status"), h.get("role")]
+               for h in k.hypotheses} if is_v2 else {}
+        sim_planned = len(k.hypotheses)
+        for op in hyp_ops:
+            kind = op.get("op")
+            if kind in ("add", "supersede"):
+                sim_planned += 1
+                if kind == "supersede" and op.get("hyp_id") in sim:
+                    sim[op["hyp_id"]][0] = "superseded"
+                sim[f"H{sim_planned}"] = ["active", op.get("role")]
+            elif kind in ("confirm", "challenge") and op.get("hyp_id") in sim:
+                if kind == "challenge":
+                    sim[op["hyp_id"]][0] = "challenged"
+                if op.get("role"):
+                    sim[op["hyp_id"]][1] = op["role"]
+            elif kind == "retire" and op.get("hyp_id") in sim:
+                sim[op["hyp_id"]][0] = "superseded"
+        for role in HYP_ROLES if is_v2 else ():
+            n = sum(1 for st, ro in sim.values()
+                    if st in _ACTIVE_HYP_STATUS and ro == role)
+            if n > 1:
+                raise ModelContractError(
+                    f"角色冲突: 落盘后将有 {n} 条 active 的 {role} 假设"
+                    "（同标的只许一主一备，演化须在同批 supersede 旧同角色）")
         if plan is not None:
             for f in ("watch_level", "watch_behavior", "entry_trigger", "cancel_if"):
                 if not plan.get(f):
@@ -648,7 +764,15 @@ class BrainSession:
             if not refs:
                 raise ModelContractError("候选必须带可核验引用")
             _check_refs(k, refs)
-        _check_test_labels(k, hyp_ops, plan, candidate)
+        extra_texts = [output.get("conclusion") or ""]
+        if delta is not None:
+            extra_texts += [delta.get("what_changed") or "",
+                            delta.get("what_it_means") or "",
+                            delta.get("effect_on_hypothesis") or ""]
+        if handoff is not None:
+            extra_texts += [handoff.get("trigger") or ""]
+            extra_texts += list(handoff.get("not_triggered_by") or [])
+        _check_test_labels(k, hyp_ops, plan, candidate, extra_texts)
 
         # —— 再统一落盘（只写提案分区） ——
         applied = {"hypotheses_changed": [], "watch_plan_added": None,
@@ -681,17 +805,41 @@ class BrainSession:
                      "counter_refs": list(op.get("counter_refs", [])),
                      "history": [{"revision": rev, "op": kind,
                                   "reason": op.get("reason", "")}]}
+            # v2 结构化字段：角色/阶段/论点化证据，随假设一并存续
+            if op.get("role") is not None:
+                entry["role"] = op["role"]
+            if op.get("phase") is not None:
+                entry["phase"] = op["phase"]
+            if op.get("claims") is not None:
+                entry["claims"] = copy.deepcopy(op["claims"])
             if kind == "supersede":
                 old = self._find_hyp(op["hyp_id"])
                 old["status"] = "superseded"
                 old["history"].append({"revision": rev, "op": "superseded_by",
                                        "by": new_id, "reason": op.get("reason", "")})
                 entry["supersedes"] = op["hyp_id"]
+                # 接管默认继承角色（op 未明示时）
+                if "role" not in entry and old.get("role"):
+                    entry["role"] = old["role"]
             k.hypotheses.append(entry)
             return new_id
         hyp = self._find_hyp(op["hyp_id"])
+        if kind == "retire":
+            # 退役：只销账、不新建（清理存量多余 active 专用；旧做法拿
+            # supersede 写墓碑文本会把墓碑本身变成新的 active，越清越多）
+            hyp["status"] = "superseded"
+            hyp["history"].append({"revision": rev, "op": "retired",
+                                   "reason": op.get("reason", "")})
+            return hyp["hyp_id"]
         if kind == "challenge":
             hyp["status"] = "challenged"
+        # confirm/challenge 可刷新 v2 字段（阶段推进、证据更新）
+        if op.get("role") is not None:
+            hyp["role"] = op["role"]
+        if op.get("phase") is not None:
+            hyp["phase"] = op["phase"]
+        if op.get("claims") is not None:
+            hyp["claims"] = copy.deepcopy(op["claims"])
         hyp["history"].append({"revision": rev, "op": kind,
                                "reason": op.get("reason", "")})
         return hyp["hyp_id"]
