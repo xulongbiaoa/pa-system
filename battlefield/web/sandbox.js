@@ -95,6 +95,25 @@ function positionBands() {
             }
         }
     }
+    // 已回补缺口：灰色虚线，与敞开缺口的绿/红实线分色（用户 2026-11-01：
+    // 颜色要有不同）。同址多次立账关账只画一条；同址仍有敞开缺口时以敞开为准。
+    const openAnchors = new Set((snap.open_gaps || []).map((g) => Math.round(g.anchor * 100)));
+    const seenClosed = new Set();
+    for (const g of snap.closed_gaps_recent || []) {
+        const key = Math.round(g.anchor * 100);
+        if (openAnchors.has(key) || seenClosed.has(key))
+            continue;
+        seenClosed.add(key);
+        const y = candleSeries.priceToCoordinate(g.anchor);
+        if (y == null)
+            continue;
+        const line = document.createElement("div");
+        line.className = "anchorLine";
+        line.style.top = `${y}px`;
+        line.style.borderTop = "1px dashed rgba(150,165,180,.55)";
+        line.innerHTML = `<span style="position:absolute;left:8px;top:-7px;font-size:11px;color:#9fb0c0;background:rgba(6,17,27,.75);padding:0 6px;border-radius:3px;white-space:nowrap">已回补 ${fmtPx(g.anchor)}</span>`;
+        host.appendChild(line);
+    }
 }
 // ---------- 图表 ----------
 // —— 页面只写数字，不写机器 ID（用户 2026-10-31：GAP-SWM-H-8-4 这种很丑）——
